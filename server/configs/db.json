@@ -1,0 +1,6 @@
+{
+  "mongodb": {
+    "host": "mongodb+srv://FindMotel:LVh7m2n6OPfbA7MT@cluster0.oiucn.mongodb.net/{DataBaseName}?retryWrites=true&w=majority",
+    "database": "TheBestSolution_FindMotel"
+  }
+}
