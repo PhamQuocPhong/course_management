@@ -1,89 +1,89 @@
-CREATE TABLE "Category" (
+CREATE TABLE "category" (
   "id" SERIAL PRIMARY KEY,
-  "name" nvarchar(255),
-  "describe" nvarchar(255),
+  "name" varchar(255) NOT NULL,
+  "describe" varchar(255),
   "createdAt" date
 );
 
-CREATE TABLE "SubCategory" (
+CREATE TABLE "subCategory" (
   "id" SERIAL PRIMARY KEY,
-  "name" nvarchar(255),
-  "describe" nvarchar(255),
-  "categoryId" int,
+  "name" varchar(255) NOT NULL,
+  "describe" varchar(255),
+  "categoryId" int NOT NULL,
   "createdAt" date
 );
 
-CREATE TABLE "Course" (
+CREATE TABLE "course" (
   "id" SERIAL PRIMARY KEY,
-  "title" nvarchar(255),
-  "description" nvarchar(1000),
-  "fullDescription" nvarchar(4000),
-  "subCategoryId" int,
-  "categoryId" int,
-  "avatar" int,
-  "price" long,
-  "active" boolean,
+  "title" varchar(255) NOT NULL,
+  "description" varchar(1000),
+  "fullDescription" varchar(4000),
+  "subCategoryId" int NOT NULL,
+  "categoryId" int NOT NULL,
+  "avatar" varchar(255),
+  "price" bigint,
+  "active" boolean NOT NULL default TRUE,
   "createdAt" date
 );
 
-CREATE TABLE "Promotion" (
+CREATE TABLE "promotion" (
   "id" SERIAL PRIMARY KEY,
   "name" int,
-  "description" nvarchar(255),
-  "discout" int,
-  "courseId" int,
+  "description" varchar(255),
+  "discout" int not null,
+  "courseId" int not null,
   "createdAt" date
 );
 
-CREATE TABLE "Join" (
+CREATE TABLE "join" (
   "id" SERIAL PRIMARY KEY,
-  "userId" int,
-  "courseId" int,
+  "userId" int NOT NULL,
+  "courseId" int NOT NULL,
   "createdAt" date
 );
 
-CREATE TABLE "CourseChapter" (
+CREATE TABLE "courseChapter" (
   "id" SERIAL PRIMARY KEY,
-  "name" nvarchar(255),
-  "description" nvarchar(255),
+  "name" varchar(255) NOT NULL,
+  "description" varchar(255),
   "preview" boolean,
-  "courseId" int,
+  "courseId" int NOT NULL,
   "createdAt" date
 );
 
-CREATE TABLE "CourseDocument" (
+CREATE TABLE "courseDocument" (
   "id" SERIAL PRIMARY KEY,
-  "name" nvarchar(255),
-  "type" int,
-  "description" nvarchar(255),
-  "link" nvarchar(255),
+  "name" varchar(255) NOT NULL,
+  "type" int NOT NULL default 0,
+  "description" varchar(255),
+  "link" varchar(255),
   "preview" boolean,
-  "courseChapterId" int,
+  "courseChapterId" int NOT NULL,
   "createdAt" date
 );
 
-CREATE TABLE "WatchList" (
+CREATE TABLE "watchList" (
   "id" SERIAL PRIMARY KEY,
-  "userId" int,
-  "courseId" int,
+  "userId" int NOT NULL,
+  "courseId" int NOT NULL,
   "createdAt" date
 );
 
-CREATE TABLE "Rate" (
+CREATE TABLE "rate" (
   "id" SERIAL PRIMARY KEY,
-  "point" int,
-  "comment" nvarchar(4000),
-  "courseId" int,
+  "point" int NOT NULL,
+  "comment" varchar(4000),
+  "courseId" int NOT NULL ,
   "createdAt" date
 );
 
-CREATE TABLE "User" (
+CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
-  "name" nvarchar(255),
-  "email" nvarchar(255),
-  "password" nvarchar(255),
-  "rfToken" nvarchar(255),
-  "active" boolean,
+  "name" varchar(255),
+  "email" varchar(255) NOT NULL,
+  "password" varchar(255) NOT NULL,
+  "rfToken" varchar(255) NOT NULL,
+  "active" boolean NOT NULL default FALSE,
   "roleId" int,
   "createdAt" date
 );
@@ -91,35 +91,35 @@ CREATE TABLE "User" (
 CREATE TABLE "OTP" (
   "id" SERIAL PRIMARY KEY,
   "userId" int,
-  "code" nvarchar(8),
+  "code" varchar(8),
   "active" boolean,
   "createdAt" date
 );
 
-CREATE TABLE "Role" (
+CREATE TABLE "role" (
   "id" SERIAL PRIMARY KEY,
   "name" int,
   "createdAt" date
 );
 
-ALTER TABLE "User" ADD FOREIGN KEY ("roleId") REFERENCES "Role" ("id");
+ALTER TABLE "user" ADD FOREIGN KEY ("roleId") REFERENCES "role" ("id");
 
-ALTER TABLE "OTP" ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+ALTER TABLE "OTP" ADD FOREIGN KEY ("userId") REFERENCES "user" ("id");
 
-ALTER TABLE "WatchList" ADD FOREIGN KEY ("userId") REFERENCES "User" ("id");
+ALTER TABLE "watchList" ADD FOREIGN KEY ("userId") REFERENCES "user" ("id");
 
-ALTER TABLE "Rate" ADD FOREIGN KEY ("courseId") REFERENCES "Course" ("id");
+ALTER TABLE "rate" ADD FOREIGN KEY ("courseId") REFERENCES "course" ("id");
 
-ALTER TABLE "WatchList" ADD FOREIGN KEY ("courseId") REFERENCES "Course" ("id");
+ALTER TABLE "watchList" ADD FOREIGN KEY ("courseId") REFERENCES "course" ("id");
 
-ALTER TABLE "CourseChapter" ADD FOREIGN KEY ("courseId") REFERENCES "Course" ("id");
+ALTER TABLE "courseChapter" ADD FOREIGN KEY ("courseId") REFERENCES "course" ("id");
 
-ALTER TABLE "Promotion" ADD FOREIGN KEY ("courseId") REFERENCES "Course" ("id");
+ALTER TABLE "promotion" ADD FOREIGN KEY ("courseId") REFERENCES "course" ("id");
 
-ALTER TABLE "CourseDocument" ADD FOREIGN KEY ("courseChapterId") REFERENCES "CourseChapter" ("id");
+ALTER TABLE "courseDocument" ADD FOREIGN KEY ("courseChapterId") REFERENCES "courseChapter" ("id");
 
-ALTER TABLE "Course" ADD FOREIGN KEY ("subCategoryId") REFERENCES "SubCategory" ("id");
+ALTER TABLE "course" ADD FOREIGN KEY ("subCategoryId") REFERENCES "subCategory" ("id");
 
-ALTER TABLE "Course" ADD FOREIGN KEY ("categoryId") REFERENCES "Category" ("id");
+ALTER TABLE "course" ADD FOREIGN KEY ("categoryId") REFERENCES "category" ("id");
 
-ALTER TABLE "SubCategory" ADD FOREIGN KEY ("categoryId") REFERENCES "Category" ("id");
+ALTER TABLE "subCategory" ADD FOREIGN KEY ("categoryId") REFERENCES "category" ("id");
