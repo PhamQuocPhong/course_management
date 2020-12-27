@@ -1,11 +1,11 @@
 {
-  "name": "server",
+  "name": "sakila",
   "version": "1.0.0",
-  "main": "app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app",
-    "crawl": "node utils/phongtro123"
+    "start": "node app"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +17,10 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.6.3",
+    "knex": "^0.21.12",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.6",
+    "mysql2": "^2.2.5",
+    "pg": "^8.5.1",
     "randomstring": "^1.1.5"
   }
 }

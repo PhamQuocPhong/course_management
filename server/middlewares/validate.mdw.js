@@ -5,9 +5,7 @@ module.exports = schema => (req, res, next) => {
   const fn_validate = validator.compile(schema);
   const is_valid = fn_validate(req.body);
   if (!is_valid) {
-    var error_messages = [];
-    for(item of fn_validate.errors) error_messages.push(`[${item.dataPath}] ${item.message}`);
-    return res.status(400).json(error_messages);
+    return res.status(400).json(fn_validate.errors);
   }
 
   next();
