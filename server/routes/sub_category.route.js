@@ -24,4 +24,17 @@ router.get('/:id/course', async function (req, res) {
   res.json(list);
 })
 
+
+router.post('/search', async function (req, res) {
+  var keyword = slugify(req.body.keyword, {
+    replacement: ' ',  
+    remove: undefined, 
+    lower: true,     
+    strict: false,    
+    locale: 'vi'       
+  })
+  const list = await subCategoryModel.search(keyword);
+  res.json(list);
+})
+
 module.exports = router;

@@ -29,5 +29,9 @@ module.exports = {
     var subquery = db('subCategory').where('id', id).select('id');
     
     return db('course').where('subCategoryId', 'in', subquery).andWhere('active', true);
+  },
+  async search(keyword) {
+    return db('subCategory')
+      .whereRaw(`subCategory_tsv @@ plainto_tsquery(?)`,keyword);
   }
 };

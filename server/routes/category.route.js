@@ -4,6 +4,8 @@ const categoryModel = require('../models/category.model');
 
 const film_schema = require('../schemas/film.json');
 
+const slugify = require('slugify');
+
 const router = express.Router();
 
 router.get('/', async function (req, res) {
@@ -15,6 +17,7 @@ router.get('/sub_category', async function (req, res) {
   const list = await categoryModel.getWithSubCategory();
   res.json(list);
 })
+
 
 
 router.get('/:id', async function (req, res) {
@@ -42,6 +45,18 @@ router.post('/', async function (req, res) {
   const id_list = await categoryModel.add(category);
   category.category_id = id_list[0];
   res.status(201).json(category);
+})
+
+router.post('/search', async function (req, res) {
+  var keyword = slugify(req.body.keyword, {
+    replacement: ' ',  
+    remove: undefined, 
+    lower: true,     
+    strict: false,    
+    locale: 'vi'       
+  })
+  const list = await categoryModel.search(keyword);
+  res.json(list);
 })
 
 router.delete('/:id', async function (req, res) {

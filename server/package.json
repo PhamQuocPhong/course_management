@@ -21,6 +21,7 @@
     "morgan": "^1.10.0",
     "mysql2": "^2.2.5",
     "pg": "^8.5.1",
-    "randomstring": "^1.1.5"
+    "randomstring": "^1.1.5",
+    "slugify": "^1.4.6"
   }
 }

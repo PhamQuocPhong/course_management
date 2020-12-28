@@ -132,8 +132,8 @@ CREATE OR REPLACE FUNCTION vn_unaccent(text)
   RETURNS text AS
 $func$
 SELECT lower(translate($1,
-'¹²³ÀÁẢẠÂẤẦẨẬẪÃÄÅÆàáảạâấầẩẫậãäåæĀāĂẮẰẲẴẶăắằẳẵặĄąÇçĆćĈĉĊċČčĎďĐđÈÉẸÊẾỀỄỆËèéẹêềếễệëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨÌÍỈỊÎÏìíỉịîïĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓỎỌÔỐỒỔỖỘỐỒỔỖỘƠỚỜỞỠỢÕÖòóỏọôốồổỗộơớờỡợởõöŌōŎŏŐőŒœØøŔŕŖŗŘřßŚśŜŝŞşŠšŢţŤťŦŧÙÚỦỤƯỪỨỬỮỰÛÜùúủụûưứừửữựüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽžёЁ',
-'123AAAAAAAAAAAAAAaaaaaaaaaaaaaaAaAAAAAAaaaaaaAaCcCcCcCcCcDdDdEEEEEEEEEeeeeeeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIIIIiiiiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOOOOOOOOOOOOOOOOOOooooooooooooooooooOoOoOoEeOoRrRrRrSSsSsSsSsTtTtTtUUUUUUUUUUUUuuuuuuuuuuuuUuUuUuUuUuUuWwYyyYyYZzZzZzеЕ'));
+'¹²³ÀÁẢẠÂẤẦẨẬẪÃÄÅÆàáảạâấầẩẫậãäåæĀāĂẮẰẲẴẶăắằẳẵặĄąÇçĆćĈĉĊċČčĎďĐđÈÉẸÊẾỀỄỆËèéẹêềếễệëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨÌÍỈỊÎÏìíỉịîïĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓỎỌÔỐỒỔỖỘỐỒỔỖỘƠỚỜỞỠỢÕÖòóỏọôốồổỗộơớờỡợởõöŌōŎŏŐőŒœØøŔŕŖŗŘřßŚśŜŝŞşŠšŢţŤťŦŧÙÚỦỤƯỪỨỬỮỰÛÜùúủụûưứừửữựüŨũŪūŬŭŮůŰűŲųŴŵỹỸÝýÿŶŷŸŹźŻżŽžёЁ',
+'123AAAAAAAAAAAAAAaaaaaaaaaaaaaaAaAAAAAAaaaaaaAaCcCcCcCcCcDdDdEEEEEEEEEeeeeeeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIIIIiiiiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOOOOOOOOOOOOOOOOOOooooooooooooooooooOoOoOoEeOoRrRrRrSSsSsSsSsTtTtTtUUUUUUUUUUUUuuuuuuuuuuuuUuUuUuUuUuUuWwyYYyyYyYZzZzZzеЕ'));
 $func$ LANGUAGE sql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION category_tsv_trigger_func()
@@ -149,3 +149,40 @@ OF "name", "describe" ON category FOR EACH ROW
 EXECUTE PROCEDURE category_tsv_trigger_func();
 
 CREATE INDEX category_idx ON category USING GIN(category_tsv);
+
+
+------------------------------
+ALTER TABLE course ADD COLUMN course_tsv tsvector
+
+CREATE OR REPLACE FUNCTION course_tsv_trigger_func()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN NEW.course_tsv =
+	setweight(to_tsvector(coalesce(vn_unaccent(NEW.title))), 'A') ||
+	setweight(to_tsvector(coalesce(vn_unaccent(NEW.description))), 'C') ||
+	setweight(to_tsvector(coalesce(vn_unaccent(NEW.fullDescription))), 'D') ;
+RETURN NEW;
+END $$;
+
+CREATE TRIGGER course_tsv_trigger BEFORE INSERT OR UPDATE
+OF "title", "description", "fullDescription" ON course FOR EACH ROW
+EXECUTE PROCEDURE course_tsv_trigger_func();
+
+CREATE INDEX course_idx ON course USING GIN(course_tsv);
+
+--------------------------------
+
+ALTER TABLE "subCategory" ADD COLUMN "subCategory_tsv" tsvector
+
+CREATE OR REPLACE FUNCTION subCategory_tsv_trigger_func()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN NEW.category_tsv =
+	setweight(to_tsvector(coalesce(vn_unaccent(NEW.name))), 'A') ||
+	setweight(to_tsvector(coalesce(vn_unaccent(NEW.describe))), 'C');
+RETURN NEW;
+END $$;
+
+CREATE TRIGGER subCategory_tsv_trigger BEFORE INSERT OR UPDATE
+OF "name", "describe" ON "subCategory" FOR EACH ROW
+EXECUTE PROCEDURE subCategory_tsv_trigger_func();
+
+CREATE INDEX "subCategory_idx" ON "subCategory" USING GIN("subCategory_tsv");
