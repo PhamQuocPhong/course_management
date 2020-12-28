@@ -123,3 +123,29 @@ ALTER TABLE "course" ADD FOREIGN KEY ("subCategoryId") REFERENCES "subCategory" 
 ALTER TABLE "course" ADD FOREIGN KEY ("categoryId") REFERENCES "category" ("id");
 
 ALTER TABLE "subCategory" ADD FOREIGN KEY ("categoryId") REFERENCES "category" ("id");
+
+
+------------------
+ALTER TABLE category ADD COLUMN category_tsv tsvector
+
+CREATE OR REPLACE FUNCTION vn_unaccent(text)
+  RETURNS text AS
+$func$
+SELECT lower(translate($1,
+'¹²³ÀÁẢẠÂẤẦẨẬẪÃÄÅÆàáảạâấầẩẫậãäåæĀāĂẮẰẲẴẶăắằẳẵặĄąÇçĆćĈĉĊċČčĎďĐđÈÉẸÊẾỀỄỆËèéẹêềếễệëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨÌÍỈỊÎÏìíỉịîïĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓỎỌÔỐỒỔỖỘỐỒỔỖỘƠỚỜỞỠỢÕÖòóỏọôốồổỗộơớờỡợởõöŌōŎŏŐőŒœØøŔŕŖŗŘřßŚśŜŝŞşŠšŢţŤťŦŧÙÚỦỤƯỪỨỬỮỰÛÜùúủụûưứừửữựüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽžёЁ',
+'123AAAAAAAAAAAAAAaaaaaaaaaaaaaaAaAAAAAAaaaaaaAaCcCcCcCcCcDdDdEEEEEEEEEeeeeeeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIIIIiiiiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOOOOOOOOOOOOOOOOOOooooooooooooooooooOoOoOoEeOoRrRrRrSSsSsSsSsTtTtTtUUUUUUUUUUUUuuuuuuuuuuuuUuUuUuUuUuUuWwYyyYyYZzZzZzеЕ'));
+$func$ LANGUAGE sql IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION category_tsv_trigger_func()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN NEW.category_tsv =
+	setweight(to_tsvector(coalesce(vn_unaccent(NEW.name))), 'A') ||
+	setweight(to_tsvector(coalesce(vn_unaccent(NEW.describe))), 'C');
+RETURN NEW;
+END $$;
+
+CREATE TRIGGER category_tsv_trigger BEFORE INSERT OR UPDATE
+OF "name", "describe" ON category FOR EACH ROW
+EXECUTE PROCEDURE category_tsv_trigger_func();
+
+CREATE INDEX category_idx ON category USING GIN(category_tsv);

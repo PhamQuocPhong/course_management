@@ -19,4 +19,9 @@ router.get('/:id', async function (req, res) {
   res.json(subCategory);
 })
 
+router.get('/:id/course', async function (req, res) {
+  const list = await subCategoryModel.getCourse(req.params.id);
+  res.json(list);
+})
+
 module.exports = router;

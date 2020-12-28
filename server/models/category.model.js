@@ -7,7 +7,7 @@ module.exports = {
 
   async single(id) {
     const categorys = await db('category')
-      .where('category_id', id);
+      .where('id', id);
 
     if (categorys.length === 0) {
       return null;
@@ -22,7 +22,7 @@ module.exports = {
 
   del(id) {
     return db('category')
-      .where('category_id', id)
+      .where('id', id)
       .del();
   },
 
@@ -51,5 +51,10 @@ module.exports = {
     console.log(listCategory);
 
     return listCategory;
+  },
+  async getCourse(id) {
+    var subquery = db('category').where('id', id).select('id');
+    
+    return db('course').where('categoryId', 'in', subquery).andWhere('active', true);
   }
 };

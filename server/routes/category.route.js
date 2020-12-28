@@ -16,6 +16,7 @@ router.get('/sub_category', async function (req, res) {
   res.json(list);
 })
 
+
 router.get('/:id', async function (req, res) {
   const id = req.params.id || 0;
   const category = await categoryModel.single(id);
@@ -31,7 +32,10 @@ router.get('/:id/sub_category', async function (req, res) {
   res.json(list);
 })
 
-
+router.get('/:id/course', async function (req, res) {
+  const list = await categoryModel.getCourse(req.params.id);
+  res.json(list);
+})
 
 router.post('/', async function (req, res) {
   const category = req.body;
