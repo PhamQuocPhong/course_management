@@ -93,6 +93,84 @@ INSERT INTO "courseChapter" VALUES
 
 
 
+-- 0 tài liệu, 1 video, 2 mp3
+INSERT INTO "courseDocument" VALUES 
+(1,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,1,'2020-12-15 04:34:33'),
+(2,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,1,'2020-12-15 04:34:33'),
+(3,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,2,'2020-12-15 04:34:33'),
+(4,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,3,'2020-12-15 04:34:33'),
+
+(5,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,4,'2020-12-15 04:34:33'),
+(6,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,4,'2020-12-15 04:34:33'),
+(7,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,5,'2020-12-15 04:34:33'),
+(8,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,6,'2020-12-15 04:34:33'),
+
+(9,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,7,'2020-12-15 04:34:33'),
+(10,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,7,'2020-12-15 04:34:33'),
+(11,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,8,'2020-12-15 04:34:33'),
+(12,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,9,'2020-12-15 04:34:33'),
+
+(13,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,10,'2020-12-15 04:34:33'),
+(14,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,10,'2020-12-15 04:34:33'),
+(15,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,11,'2020-12-15 04:34:33'),
+(16,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,12,'2020-12-15 04:34:33'),
+
+(17,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,13,'2020-12-15 04:34:33'),
+(18,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,13,'2020-12-15 04:34:33'),
+(19,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,14,'2020-12-15 04:34:33'),
+(20,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,15,'2020-12-15 04:34:33'),
+
+(21,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,16,'2020-12-15 04:34:33'),
+(22,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,16,'2020-12-15 04:34:33'),
+(23,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,17,'2020-12-15 04:34:33'),
+(24,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,18,'2020-12-15 04:34:33'),
+
+(25,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,19,'2020-12-15 04:34:33'),
+(26,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,19,'2020-12-15 04:34:33'),
+(27,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,20,'2020-12-15 04:34:33'),
+(28,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,21,'2020-12-15 04:34:33'),
+
+(29,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,22,'2020-12-15 04:34:33'),
+(30,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,22,'2020-12-15 04:34:33'),
+(31,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,23,'2020-12-15 04:34:33'),
+(32,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,24,'2020-12-15 04:34:33'),
+
+(33,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,25,'2020-12-15 04:34:33'),
+(34,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,25,'2020-12-15 04:34:33'),
+(35,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,26,'2020-12-15 04:34:33'),
+(36,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,27,'2020-12-15 04:34:33'),
+
+(37,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,28,'2020-12-15 04:34:33'),
+(38,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,28,'2020-12-15 04:34:33'),
+(39,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,29,'2020-12-15 04:34:33'),
+(40,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,30,'2020-12-15 04:34:33'),
+
+(41,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,31,'2020-12-15 04:34:33'),
+(42,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,31,'2020-12-15 04:34:33'),
+(43,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,32,'2020-12-15 04:34:33'),
+(44,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,33,'2020-12-15 04:34:33'),
+
+(45,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,34,'2020-12-15 04:34:33'),
+(46,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,34,'2020-12-15 04:34:33'),
+(47,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,35,'2020-12-15 04:34:33'),
+(48,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,36,'2020-12-15 04:34:33'),
+
+(49,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,37,'2020-12-15 04:34:33'),
+(50,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,37,'2020-12-15 04:34:33'),
+(51,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,38,'2020-12-15 04:34:33'),
+(52,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,39,'2020-12-15 04:34:33'),
+
+(53,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,40,'2020-12-15 04:34:33'),
+(54,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,41,'2020-12-15 04:34:33'),
+(55,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,42,'2020-12-15 04:34:33'),
+(56,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,43,'2020-12-15 04:34:33'),
+
+(57,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,44,'2020-12-15 04:34:33'),
+(58,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,44,'2020-12-15 04:34:33'),
+(59,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,45,'2020-12-15 04:34:33'),
+(60,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,46,'2020-12-15 04:34:33')
+
+
 
 
 
