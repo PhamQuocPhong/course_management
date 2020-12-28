@@ -29,7 +29,7 @@ module.exports = {
   async getSubCategory(id) {
     var subquery = db('category').where('id', id).select('id');
     
-    return db('subCategory').where('categoryId', 'in', subquery);
+    return db('sub_category').where('category_id', 'in', subquery);
   }
   ,
   async getWithSubCategory() {
@@ -37,12 +37,12 @@ module.exports = {
     .join('subCategory', 'category.id', '=', 'subCategory.categoryId')
     .select({ categoryId: 'category.id' }, { categoryName: 'category.name' },{ subCategoryId: 'subCategory.id' }, { subCategoryName: 'subCategory.name' } );*/
     var listCategory = await db('category');
-    var listSubCategory = await db('subCategory');
+    var listSubCategory = await db('sub_category');
 
     for (var i = 0; i < listCategory.length; i++){
       var list = [];
       for (var j = 0; j < listSubCategory.length; j++){
-        if(listSubCategory[j].categoryId == listCategory[i].id)
+        if(listSubCategory[j].category_id == listCategory[i].id)
           list.push(listSubCategory[j]);
       }
       listCategory[i].listSubCategory = list;
@@ -55,7 +55,7 @@ module.exports = {
   async getCourse(id) {
     var subquery = db('category').where('id', id).select('id');
     
-    return db('course').where('categoryId', 'in', subquery).andWhere('active', true);
+    return db('course').where('category_id', 'in', subquery).andWhere('active', true);
   },
 
   async search(keyword) {

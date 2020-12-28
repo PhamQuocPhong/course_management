@@ -1,8 +1,10 @@
 const express = require('express');
 const validate = require('../middlewares/validate.mdw');
 const subCategoryModel = require('../models/sub_category.model');
+const slugify = require('slugify');
 
 const router = express.Router();
+
 
 router.get('/', async function (req, res) {
   const list = await subCategoryModel.all();

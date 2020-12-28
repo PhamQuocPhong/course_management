@@ -3,8 +3,9 @@ INSERT INTO category VALUES (1,'Lập trình','Các môn học lập trình','20
 (3,'Hội họa','Các môn học về hội họa','2020-12-15 04:34:33'),
 (4,'Kinh tế','Các môn học về kinh tế','2020-12-15 04:34:33'),
 (5,'Kỹ năng sống','Các môn học về kỹ năng sống','2020-12-15 04:34:33')
+RETURNING *;
 
-INSERT INTO "subCategory" VALUES (1,'Lập trình web','Lập trình web',1,'2020-12-15 04:34:33'),
+INSERT INTO "sub_category" VALUES (1,'Lập trình web','Lập trình web',1,'2020-12-15 04:34:33'),
 (2,'Lập trình web','Lập trình mobile',1,'2020-12-15 04:34:33'),
 (3,'Toán','Các môn học Toán',2,'2020-12-15 04:34:33'),
 (4,'Lý','Các môn học Lý',2,'2020-12-15 04:34:33'),
@@ -18,6 +19,7 @@ INSERT INTO "subCategory" VALUES (1,'Lập trình web','Lập trình web',1,'202
 (12,'Trình bày','Kỹ năng trình bày',5,'2020-12-15 04:34:33'),
 (13,'Tư duy','Kỹ năng tư duy',5,'2020-12-15 04:34:33'),
 (14,'Sắp xếp công việc','Kỹ năng sắp xếp',5,'2020-12-15 04:34:33')
+RETURNING *;
 
 INSERT INTO "course" VALUES (1,'Lập trình nodejs cơ bản','Hiểu biết cơ bản về nodejs','Node.js là một JavaScript runtime được build dựa trên Chrome’s V8 JavaScript engine. Node.js sử dụng mô hình event-driven, non-blocking I/O khiến nó trở nên nhẹ và hiệu quả.',1,1,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27'),
 (2,'Lập trình nodejs nâng cao','Hiểu biết cơ bản về nodejs','Node.js là một JavaScript runtime được build dựa trên Chrome’s V8 JavaScript engine. Node.js sử dụng mô hình event-driven, non-blocking I/O khiến nó trở nên nhẹ và hiệu quả.',1,1,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27'),
@@ -42,8 +44,9 @@ INSERT INTO "course" VALUES (1,'Lập trình nodejs cơ bản','Hiểu biết c�
 (21,'Lập trình Golang nâng cao','Lập trình Golang nâng cao','full mô tả',2,1,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27'),
 (22,'Lập trình React native cơ bản','Lập trình React native cơ bản','full mô tả',2,1,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27'),
 (23,'Lập trình React native nâng cao','Lập trình React native nâng cao','full mô tả',2,1,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27')
+RETURNING *;
 
-INSERT INTO "courseChapter" VALUES 
+INSERT INTO "course_chapter" VALUES 
 (1,'Chương 1. Giói thiệu','tổng quan',true, 1,'2020-12-15 04:34:33'),
 (2,'Chương 2. Kiểu dữ liệu','các kiểu dữ liệu',true, 1,'2020-12-15 04:34:33'),
 (3,'Chương 3. Vòng lặp','tổng quan',false, 1,'2020-12-15 04:34:33'),
@@ -91,10 +94,10 @@ INSERT INTO "courseChapter" VALUES
 (44,'Chương 2. Kiểu dữ liệu','các kiểu dữ liệu',true, 15,'2020-12-15 04:34:33'),
 (45,'Chương 3. Vòng lặp','tổng quan',false, 15,'2020-12-15 04:34:33')
 
-
+RETURNING *;
 
 -- 0 tài liệu, 1 video, 2 mp3
-INSERT INTO "courseDocument" VALUES 
+INSERT INTO "course_document" VALUES 
 (1,'Đề cương',0,'Tài liệu đề cương','https://cisse.info/pdf/2019/rr_01_artificial_intelligence.pdf', true,1,'2020-12-15 04:34:33'),
 (2,'Giới thiệu',1,'Chương 1. Video chương 1','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,1,'2020-12-15 04:34:33'),
 (3,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,2,'2020-12-15 04:34:33'),
@@ -170,7 +173,7 @@ INSERT INTO "courseDocument" VALUES
 (59,'Kiểu dữ liệu',0,'Chương 2. Video kiểu dữ liệu','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', true,45,'2020-12-15 04:34:33'),
 (60,'Vòng lặp',0,'Chương 3. Vidoe vòng lặp','https://media.w3.org/2010/05/sintel/trailer_hd.mp4', false,46,'2020-12-15 04:34:33')
 
-
+RETURNING *;
 
 
 
