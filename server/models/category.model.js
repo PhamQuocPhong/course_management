@@ -1,10 +1,6 @@
 const db = require('../utils/db');
 
 module.exports = {
-  all() {
-    return db('category');
-  },
-
   async single(id) {
     const categorys = await db('category')
       .where('id', id);
@@ -12,6 +8,7 @@ module.exports = {
     if (categorys.length === 0) {
       return null;
     }
+    console.log(categorys[0]);
 
     return categorys[0];
   },
@@ -32,17 +29,14 @@ module.exports = {
     return db('sub_category').where('category_id', 'in', subquery);
   }
   ,
-  async getWithSubCategory() {
-    /*return db('category')
-    .join('subCategory', 'category.id', '=', 'subCategory.categoryId')
-    .select({ categoryId: 'category.id' }, { categoryName: 'category.name' },{ subCategoryId: 'subCategory.id' }, { subCategoryName: 'subCategory.name' } );*/
-    var listCategory = await db('category');
-    var listSubCategory = await db('sub_category');
+  async all() {
+    var listCategory = await db('category').whereNull('parent_id');
+    var listSubCategory = await db('category').whereNotNull('parent_id');
 
     for (var i = 0; i < listCategory.length; i++){
       var list = [];
       for (var j = 0; j < listSubCategory.length; j++){
-        if(listSubCategory[j].category_id == listCategory[i].id)
+        if(listSubCategory[j].parent_id == listCategory[i].id)
           list.push(listSubCategory[j]);
       }
       listCategory[i].listSubCategory = list;
@@ -53,9 +47,27 @@ module.exports = {
     return listCategory;
   },
   async getCourse(id) {
+    var isParent = await db('category').where('id', id).select('parent_id');
     var subquery = db('category').where('id', id).select('id');
-    
-    return db('course').where('category_id', 'in', subquery).andWhere('active', true);
+    if(isParent[0].parent_id != null)
+    {
+      return await db('course').where('category_id', 'in', subquery).andWhere('active', true);
+    }
+    else
+    {
+      var listChild = await db('category').where('parent_id', 'in', subquery);
+      var listCourse = await db('course');
+      var list =[]
+
+      for (var i = 0; i < listChild.length; i++){
+        for (var j = 0; j < listCourse.length; j++){
+          if(listChild[i].id == listCourse[j].category_id)
+            list.push(listCourse[j]);
+        }    
+      }
+
+      return list;
+    }
   },
 
   async search(keyword) {

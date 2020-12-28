@@ -19,7 +19,6 @@ app.get('/', function (req, res) {
 app.use('/api/auth', require('./routes/auth.route'));
 app.use('/api/users', require('./routes/user.route'));
 app.use('/api/categorys', require('./routes/category.route'));
-app.use('/api/sub_categorys', require('./routes/sub_category.route'));
 
 app.get('/err', function (req, res) {
   throw new Error('Error!');

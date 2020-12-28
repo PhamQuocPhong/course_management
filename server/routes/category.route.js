@@ -13,13 +13,6 @@ router.get('/', async function (req, res) {
   res.json(list);
 })
 
-router.get('/sub_category', async function (req, res) {
-  const list = await categoryModel.getWithSubCategory();
-  res.json(list);
-})
-
-
-
 router.get('/:id', async function (req, res) {
   const id = req.params.id || 0;
   const category = await categoryModel.single(id);

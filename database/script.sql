@@ -2,14 +2,7 @@ CREATE TABLE "category" (
   "id" SERIAL PRIMARY KEY,
   "name" varchar(255) NOT NULL,
   "description" varchar(255),
-  "created_at" date
-);
-
-CREATE TABLE "sub_category" (
-  "id" SERIAL PRIMARY KEY,
-  "name" varchar(255) NOT NULL,
-  "description" varchar(255),
-  "category_id" int NOT NULL,
+  "parent_id" int,
   "created_at" date
 );
 
@@ -18,7 +11,6 @@ CREATE TABLE "course" (
   "title" varchar(255) NOT NULL,
   "description" varchar(1000),
   "full_description" varchar(4000),
-  "sub_category_id" int NOT NULL,
   "category_id" int NOT NULL,
   "avatar" varchar(255),
   "price" bigint,
@@ -35,7 +27,14 @@ CREATE TABLE "promotion" (
   "created_at" date
 );
 
-CREATE TABLE "join" (
+CREATE TABLE "course_teacher" (
+  "id" SERIAL PRIMARY KEY,
+  "user_id" int NOT NULL,
+  "course_id" int NOT NULL,
+  "created_at" date
+);
+
+CREATE TABLE "course_student" (
   "id" SERIAL PRIMARY KEY,
   "user_id" int NOT NULL,
   "course_id" int NOT NULL,
@@ -106,6 +105,15 @@ ALTER TABLE "user" ADD FOREIGN KEY ("role_id") REFERENCES "role" ("id");
 
 ALTER TABLE "otp" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
 
+
+ALTER TABLE "course_student" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+
+ALTER TABLE "course_teacher" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+
+ALTER TABLE "course_student" ADD FOREIGN KEY ("course_id") REFERENCES "course" ("id");
+
+ALTER TABLE "course_teacher" ADD FOREIGN KEY ("course_id") REFERENCES "course" ("id");
+
 ALTER TABLE "watch_list" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
 
 ALTER TABLE "rate" ADD FOREIGN KEY ("course_id") REFERENCES "course" ("id");
@@ -118,11 +126,10 @@ ALTER TABLE "promotion" ADD FOREIGN KEY ("course_id") REFERENCES "course" ("id")
 
 ALTER TABLE "course_document" ADD FOREIGN KEY ("course_chapter_id") REFERENCES "course_chapter" ("id");
 
-ALTER TABLE "course" ADD FOREIGN KEY ("sub_category_id") REFERENCES "sub_category" ("id");
 
 ALTER TABLE "course" ADD FOREIGN KEY ("category_id") REFERENCES "category" ("id");
 
-ALTER TABLE "sub_category" ADD FOREIGN KEY ("category_id") REFERENCES "category" ("id");
+ALTER TABLE "category" ADD FOREIGN KEY ("parent_id") REFERENCES "category" ("id");
 
 
 ------------------
@@ -139,6 +146,7 @@ $func$ LANGUAGE sql IMMUTABLE;
 ---------------------------------
 -- FTS category
 ALTER TABLE category ADD COLUMN category_tsv tsvector
+
 CREATE OR REPLACE FUNCTION category_tsv_trigger_func()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN NEW.category_tsv =
@@ -172,21 +180,3 @@ OF "title", "description", "full_description" ON course FOR EACH ROW
 EXECUTE PROCEDURE course_tsv_trigger_func();
 
 CREATE INDEX course_idx ON course USING GIN(course_tsv);
-
---------------------------------
-
-ALTER TABLE "sub_category" ADD COLUMN "sub_category_tsv" tsvector
-
-CREATE OR REPLACE FUNCTION sub_category_tsv_trigger_func()
-RETURNS TRIGGER LANGUAGE plpgsql AS $$
-BEGIN NEW.sub_category_tsv =
-	setweight(to_tsvector(coalesce(vn_unaccent(NEW.name))), 'A') ||
-	setweight(to_tsvector(coalesce(vn_unaccent(NEW.description))), 'C');
-RETURN NEW;
-END $$;
-
-CREATE TRIGGER sub_category_tsv_trigger BEFORE INSERT OR UPDATE
-OF "name", "description" ON "sub_category" FOR EACH ROW
-EXECUTE PROCEDURE sub_category_tsv_trigger_func();
-
-CREATE INDEX "sub_category_idx" ON "sub_category" USING GIN("sub_category_tsv");
