@@ -97,7 +97,7 @@ CREATE TABLE "otp" (
 
 CREATE TABLE "role" (
   "id" SERIAL PRIMARY KEY,
-  "name" int,
+  "name" varchar(255),
   "created_at" date
 );
 

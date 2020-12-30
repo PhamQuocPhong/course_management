@@ -1,4 +1,5 @@
 const db = require('../utils/db');
+var knex_populate = require('knex-populate');
 
 module.exports = {
   async single(id) {
@@ -51,7 +52,21 @@ module.exports = {
     var subquery = db('category').where('id', id).select('id');
     if(isParent[0].parent_id != null)
     {
-      return await db('course').where('category_id', 'in', subquery).andWhere('active', true);
+      //var listCourse =
+      return db('course').where('category_id', 'in', subquery).andWhere('active', true);
+      
+      
+
+      //return list;
+
+
+      /*var listTeacher = db('course_teacher')
+      .join('user', 'user.id', '=', 'course_teacher.user_id')
+      .select('user.name', 'course_teacher.course_id');*/
+
+      //return listTeacher;
+
+
     }
     else
     {

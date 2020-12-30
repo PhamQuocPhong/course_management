@@ -172,3 +172,23 @@ RETURNING *;
 
 
 
+INSERT INTO "user" VALUES 
+(1, 'admin', 'admin@gmail.com', 'pass', '', true, 1, '2020-12-15 04:34:33'),
+(2, 'admin2', 'admin2@gmail.com', 'pass', '', true, 1, '2020-12-15 04:34:33'),
+(3, 'hs1', 'hs1@gmail.com', 'pass', '', true, 3, '2020-12-15 04:34:33'),
+(4, 'hs2', 'hs2@gmail.com', 'pass', '', true, 3, '2020-12-15 04:34:33')
+RETURNING *;
+
+
+INSERT INTO "role" VALUES 
+(1, 'Quản trị viên'),
+(2, 'Giáo viên'),
+(3, 'Sinh viên')
+RETURNING *;
+
+
+INSERT INTO "course_teacher" VALUES 
+(1, 1, 1, '2020-12-15 04:34:33'),
+(2, 2, 1, '2020-12-15 04:34:33'),
+(3, 1, 6, '2020-12-15 04:34:33')
+RETURNING *;
