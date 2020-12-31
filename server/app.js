@@ -1,43 +1,51 @@
-const express = require('express');
-const morgan = require('morgan');
-const auth = require('./middlewares/auth.mdw');
-const cors = require('cors');
-require('express-async-errors');
+require('dotenv').config()
+const express = require('express')
+const bodyParser = require('body-parser')
+const db = require('./database/db')
+const path = require('path')
+const cors = require('cors')
+const app = express()
+const port = process.env.PORT || 3000
+const auth = require('./middleware/auth_middleware')
+const socketModules = require('./socket')
+require('./database/migration')
 
-const app = express();
 
-app.use(morgan('dev'));
-app.use(cors());
-app.use(express.json());
 
-app.get('/', function (req, res) {
-  res.json({
-    message: 'Hello from Sakila backend!'
-  });
-});
 
-app.use('/api/auth', require('./routes/auth.route'));
-app.use('/api/users', require('./routes/user.route'));
-app.use('/api/categorys', require('./routes/category.route'));
+// app.use(express.static(__dirname  + '/public'))
+app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use(bodyParser.urlencoded({
+  extended: true,
+  limit: '50mb'
+}))
+app.use(bodyParser.json({limit: '50mb'}));
 
-app.get('/err', function (req, res) {
-  throw new Error('Error!');
-});
 
-app.use(function (req, res, next) {
-  res.status(404).send({
-    error_message: 'Endpoint not found!'
-  })
-});
+// Set view engine
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
-app.use(function (err, req, res, next) {
-  console.error(err.stack)
-  res.status(500).send({
-    error_message: 'Something broke!'
-  });
-});
+app.locals = require('./helpers/helper')
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, function () {
-  console.log(`Sakila backend api is running at http://localhost:${PORT}`);
-});
+
+app.use(express.json())
+
+app.use(cors())
+
+// conect socket
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+
+server.listen(port)
+
+//Connect database
+db.sync().then(function() {
+     // { force: true }
+  	console.log(`Server is listening on port ${port}`)
+}).catch(function(err) {
+  console.log(err)
+  process.exit(1)
+})
+
+
