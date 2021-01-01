@@ -8,10 +8,10 @@ import Logout from "./views/pages/auth/Logout";
 
 import AuthLayout from "./views/layouts/AuthLayout";
 import MainLayout from "./views/layouts/MainLayout";
+import AdminLayout from "./views/layouts/AdminLayout";
 
-import ChatLayout from './views/layouts/ChatLayout';
 
-import Message from "./views/pages/chat/Message";
+
 
 import NotFoundPage from "./views/pages/errors/404.vue";
 import ForbiddenPage from "./views/pages/errors/403.vue";
@@ -29,8 +29,27 @@ import store from "./store/index";
 Vue.use(VueRouter);
 
 const routes = [
+
   {
-    path: "/auth",
+    path: "/admin",
+    component: AdminLayout,
+    children: [
+      {
+        path: "login",
+        component: AdminLogin,
+        name: "adminLogin",
+      },
+      {
+        path: "register",
+        component: AdminRegister,
+        name: "adminRegister"
+      }
+
+    ]
+  },
+
+  {
+    path: "/",
     component: AuthLayout,
     name: "auth",
     children: [
