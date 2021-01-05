@@ -47,7 +47,9 @@ WatchList.belongsTo(Course, {onDelete: 'cascade', hooks:true})
 WatchList.belongsTo(User, {onDelete: 'cascade', hooks:true})
 
 
-Category.hasOne(Category, {foreignKey: 'parentId', onDelete: 'cascade', hooks:true})
+Category.hasMany(Category, {foreignKey: 'parentId', as: 'subCategory'})
+
+//Category.belongsTo(Category, {foreignKey: 'parentId', onDelete: 'cascade', hooks:true})
 
 
 /*

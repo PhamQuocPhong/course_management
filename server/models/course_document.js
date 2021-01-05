@@ -16,11 +16,11 @@ const CourseDocument = db.define('courseDocument', {
     allowNull: false,
   },
   description:{
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: true,
   },
   link:{
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: false,
   },
   preview: {

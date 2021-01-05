@@ -12,7 +12,7 @@ const CourseChapter = db.define('courseChapter', {
     allowNull: false,
   },  
   description:{
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: true,
   },
   preview: {

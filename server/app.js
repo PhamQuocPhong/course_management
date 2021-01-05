@@ -39,6 +39,10 @@ var io = require('socket.io')(server);
 
 server.listen(port)
 
+var categoryRouter = require('./routes/category')
+
+app.use('/api/category/', categoryRouter)
+
 //Connect database
 db.sync().then(function() {
      // { force: true }

@@ -12,7 +12,7 @@ const Promotion = db.define('promotion', {
     allowNull: true,
   },  
   description:{
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: true,
   },
   discout: {
