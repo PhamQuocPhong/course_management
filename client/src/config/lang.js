@@ -24,4 +24,6 @@ export default {
 	ERROR: "Lỗi",
 	SUCCESS: "Thành công",
 
+
+	CATEGORY: "Danh mục",
 }
