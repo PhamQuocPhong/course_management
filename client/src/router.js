@@ -2,27 +2,33 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import AuthService from "./services/auth";
 
-import Login from "./views/pages/auth/Login";
-import Register from "./views/pages/auth/Register";
-import Logout from "./views/pages/auth/Logout";
-
-import AuthLayout from "./views/layouts/AuthLayout";
-import MainLayout from "./views/layouts/MainLayout";
-import AdminLayout from "./views/layouts/AdminLayout";
+import Login from "@/views/web/pages/auth/Login";
+import Register from "@/views/web/pages/auth/Register";
+import Logout from "@/views/web/pages/auth/Logout";
 
 
 
+import AuthLayout from "@/views/web/layouts/AuthLayout";
+import MainLayout from "@/views/web/layouts/MainLayout";
 
-import NotFoundPage from "./views/pages/errors/404.vue";
-import ForbiddenPage from "./views/pages/errors/403.vue";
+
+import NotFoundPage from "@/views/web/pages/errors/404.vue";
+import ForbiddenPage from "@/views/web/pages/errors/403.vue";
 
 // pages
-import Home from "./views/pages/home/Index.vue";
-import Detail from './views/pages/home/Detail';
+import Home from "@/views/web/pages/home/Index.vue";
+import Detail from '@/views/web/pages/home/Detail';
 
-import Motel from "./views/pages/motel/Motel.vue";
-import MotelIndex from "./views/pages/motel/Index.vue";
-import MotelDetail from "./views/pages/motel/Detail.vue";
+
+// ADMIN 
+import AuthAdminLayout from "@/views/admin/layouts/AuthLayout";
+import MainAdminLayout from "@/views/admin/layouts/MainLayout";
+
+
+import Category from "@/views/admin/category/Category";
+import CategoryIndex from "@/views/admin/category/Index";
+import CategoryCreate from "@/views/admin/category/Create";
+import CategoryEdit from "@/views/admin/category/Edit";
 
 import store from "./store/index";
 
