@@ -13,7 +13,11 @@ const Course = db.define('course', {
     allowNull: false,
   },  
   description:{
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
+    allowNull: true,
+  },
+  fullDescription:{
+    type: Sequelize.TEXT,
     allowNull: true,
   },
   avatar: {

@@ -12,6 +12,9 @@ const Role = require('../models/role')
 const User = require('../models/user')
 const WatchList = require('../models/watch_list')
 
+Category.hasMany(Course, {onDelete: 'cascade', hooks:true})
+Course.belongsTo(Category, {onDelete: 'cascade', hooks:true})
+
 Role.hasOne(User, {onDelete: 'cascade', hooks:true})
 User.belongsTo(Role, {onDelete: 'cascade', hooks:true})
 
