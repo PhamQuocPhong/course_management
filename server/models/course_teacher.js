@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../database/db')
 
-const CourseJoin = db.define('courseJoin', {
+const CourseTeacher = db.define('courseTeacher', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -9,4 +9,4 @@ const CourseJoin = db.define('courseJoin', {
   }
 });
 
-module.exports = db.model('courseJoin', CourseJoin);
+module.exports = db.model('courseTeacher', CourseTeacher);
