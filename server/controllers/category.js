@@ -6,7 +6,8 @@ const courseTeacherModel = require('../models/course_teacher');
 const userModel = require('../models/user');
 const rateModel = require('../models/rate');
 const promotionModel = require('../models/promotion');
-const course = require('../models/course');
+
+const slugify = require('slugify');
 
 let getAllCategory = async (req, res) => {
 
@@ -18,7 +19,7 @@ let getAllCategory = async (req, res) => {
               }},
             include:[{model: categoryModel, as: 'subCategory'}]});
     
-        return res.status(200).json({message: 'Success!', data: emplyeeByPosition})
+        return res.status(200).json({message: 'Success!', data: categoryData})
     }
     catch(error) {
 		return res.status(500).json(error)
@@ -285,10 +286,35 @@ let pagingCourseWithCategory = async (req, res) => {
 	}
 }
 
+let searchCategory = async (req, res) => {
+    const keyword = slugify(req.body.keyword, {
+        replacement: ' ',  
+        remove: undefined, 
+        lower: true,     
+        strict: false,    
+        locale: 'vi'       
+    });
+    try
+    {
+        const categoryData = await categoryModel.findAll({
+            where: {
+                [Op.and]: Sequelize.literal(`"category_tsv" @@ plainto_tsquery('${keyword}')`)
+            }
+        });
+    
+        return res.status(200).json({message: 'Success!', data: categoryData})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+   
+}
+
 
 
 module.exports = {
     getAllCategory,
     getCourseWithCategory,
-    pagingCourseWithCategory
+    pagingCourseWithCategory,
+    searchCategory
 }
