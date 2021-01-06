@@ -145,7 +145,7 @@ $func$ LANGUAGE sql IMMUTABLE;
 
 ---------------------------------
 -- FTS category
-ALTER TABLE category ADD COLUMN category_tsv tsvector
+ALTER TABLE categories ADD COLUMN category_tsv tsvector
 
 CREATE OR REPLACE FUNCTION category_tsv_trigger_func()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
@@ -156,27 +156,27 @@ RETURN NEW;
 END $$;
 
 CREATE TRIGGER category_tsv_trigger BEFORE INSERT OR UPDATE
-OF "name", "description" ON category FOR EACH ROW
+OF "name", "description" ON categories FOR EACH ROW
 EXECUTE PROCEDURE category_tsv_trigger_func();
 
-CREATE INDEX category_idx ON category USING GIN(category_tsv);
+CREATE INDEX category_idx ON categories USING GIN(category_tsv);
 
 
 ------------------------------
 -- FTS course
-ALTER TABLE course ADD COLUMN course_tsv tsvector
+ALTER TABLE courses ADD COLUMN course_tsv tsvector
 
 CREATE OR REPLACE FUNCTION course_tsv_trigger_func()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN NEW.course_tsv =
 	setweight(to_tsvector(coalesce(vn_unaccent(NEW.title))), 'A') ||
 	setweight(to_tsvector(coalesce(vn_unaccent(NEW.description))), 'C') ||
-	setweight(to_tsvector(coalesce(vn_unaccent(NEW.full_description))), 'D') ;
+	setweight(to_tsvector(coalesce(vn_unaccent(NEW."fullDescription"))), 'D') ;
 RETURN NEW;
 END $$;
 
 CREATE TRIGGER course_tsv_trigger BEFORE INSERT OR UPDATE
-OF "title", "description", "full_description" ON course FOR EACH ROW
+OF "title", "description", "fullDescription" ON courses FOR EACH ROW
 EXECUTE PROCEDURE course_tsv_trigger_func();
 
-CREATE INDEX course_idx ON course USING GIN(course_tsv);
+CREATE INDEX course_idx ON courses USING GIN(course_tsv);

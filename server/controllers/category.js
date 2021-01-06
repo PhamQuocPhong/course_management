@@ -254,7 +254,20 @@ let pagingCourseWithCategory = async (req, res) => {
             }
         }
 
+        //khác: mặc định, 1: đánh giá giảm, 2: giá tăng
+        const filter = req.query.filter;
+        console.log(courseData[0].dataValues.rates_avg)
+        if(filter == 1)
+        {
+            courseData.sort((a,b) => (a.dataValues.rates_avg < b.dataValues.rates_avg) ? 1 : ((b.dataValues.rates_avg < a.dataValues.rates_avg) ? -1 : 0)); 
+        }
+        else if(filter == 2)
+        {
+            courseData.sort((a,b) => (a.dataValues.promotion_price > b.dataValues.promotion_price) ? 1 : ((b.dataValues.promotion_price > a.dataValues.promotion_price) ? -1 : 0)); 
+        }
+
         var itemPerPage = req.query.itemPerPage
+        const counts = Math.ceil(courseData.length / itemPerPage);
         var page = req.params.page
         var offset = 0
         if(page == 1){
@@ -264,9 +277,6 @@ let pagingCourseWithCategory = async (req, res) => {
             offset = ((page - 1) * itemPerPage) 
         }
         courseData = courseData.slice(offset, page * itemPerPage)
-
-        const counts = Math.ceil(courseData.length / itemPerPage);
-
         return res.status(200).json({message: 'Success!', data: courseData, pageCounts: counts})
     
     }

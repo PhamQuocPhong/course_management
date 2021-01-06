@@ -36,6 +36,7 @@
     "randomstring": "^1.1.5",
     "redis": "^3.0.2",
     "sequelize": "^5.22.3",
+    "slugify": "^1.4.6",
     "socket.io": "^2.3.0",
     "web-push": "^3.4.4"
   },

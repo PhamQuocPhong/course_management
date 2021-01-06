@@ -31,6 +31,11 @@ const Course = db.define('course', {
   active: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
+  },
+  course_tvs:
+  {
+    type: Sequelize.VIRTUAL,
+    allowNull: true,
   }
 });
 
