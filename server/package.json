@@ -1,28 +1,47 @@
 {
-  "name": "sakila",
+  "name": "quanlymubanxe",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Quan ly mua ban xe ",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app"
+    "dev": "set NODE_ENV=dev && nodemon app.js",
+    "start": "node app.js",
+    "migrate": "cd database && node migration.js",
+    "seed": "cd database && node seeder.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "haohao",
   "license": "ISC",
   "dependencies": {
-    "ajv": "^6.12.6",
-    "bcryptjs": "^2.4.3",
+    "@google-cloud/storage": "^4.7.0",
+    "aws-sdk": "^2.738.0",
+    "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
-    "express-async-errors": "^3.1.1",
+    "express-session": "^1.17.1",
+    "faker": "^4.1.0",
+    "firebase": "^7.19.0",
+    "fs": "0.0.1-security",
+    "heroku-ssl-redirect": "^0.1.1",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.21.12",
-    "knex-populate": "^2.1.2",
-    "morgan": "^1.10.0",
-    "mysql2": "^2.2.5",
-    "pg": "^8.5.1",
+    "moment": "^2.27.0",
+    "nodemailer": "^6.4.11",
+    "passport": "^0.4.1",
+    "pg": "^8.3.2",
+    "puppeteer": "^5.2.1",
+    "puppeteer-core": "^5.2.1",
     "randomstring": "^1.1.5",
-    "slugify": "^1.4.6"
+    "redis": "^3.0.2",
+    "sequelize": "^5.22.3",
+    "slugify": "^1.4.6",
+    "socket.io": "^2.3.0",
+    "web-push": "^3.4.4"
+  },
+  "devDependencies": {
+    "dot-prop": ">=4.2.1",
+    "nodemon": "^2.0.4"
   }
 }
