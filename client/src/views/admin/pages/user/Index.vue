@@ -39,7 +39,7 @@
                              <skeleton-custom></skeleton-custom>
                           </td>
                       </tr>
-                      <tr v-else v-for="(item, index) in categories" :key="item.id">
+                      <tr v-else v-for="(item, index) in users" :key="item.id">
                         <td class="text-center">
                            {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
                         </td>
@@ -96,7 +96,7 @@ import IsMobile from "@/mixins/is_mobile";
 
 
 // services
-import CateogoryServices from "@/services/hobby";
+import UserService from "@/services/user";
 export default {
 
   mixins: [IsMobile],
@@ -105,13 +105,13 @@ export default {
       currentPage: this.$constant.pagination.CURRENT_PAGE,
       itemsPerPage: this.$constant.pagination.ITEMS_PER_PAGE,
       isLoading: false,
-      categories: [],
+      users: [],
     }
   },
 
 
   watch: {
-    categories(data){
+    users(data){
       this.isLoading = true
       this.$store.dispatch("components/actionProgressHeader", {option: "show"});
       if(data.length > 0 ){
@@ -130,18 +130,18 @@ export default {
   methods: {
 
     edit(item){
-      this.$router.push('/categories/' + item.id);
+      this.$router.push('/users/' + item.id);
     },
 
     create(){
-      this.$router.push('/categories/create');
+      this.$router.push('/users/create');
     },
 
     async remove(item){
       var conf = confirm(this.$lang.REMOVE_CONFIRM);
 
       if(conf){
-        const res = await CateogoryServices.delete(item.id);
+        const res = await UserService.delete(item.id);
         if(!res){
           
           toastr.error(this.$lang.REMOVE_FAIL, this.$lang.ERROR, { timeOut: 1000 });

@@ -96,7 +96,7 @@ import IsMobile from "@/mixins/is_mobile";
 
 
 // services
-import CateogoryServices from "@/services/hobby";
+import CategoryService from "@/services/category";
 export default {
 
   mixins: [IsMobile],
@@ -141,7 +141,7 @@ export default {
       var conf = confirm(this.$lang.REMOVE_CONFIRM);
 
       if(conf){
-        const res = await CateogoryServices.delete(item.id);
+        const res = await CategoryService.delete(item.id);
         if(!res){
           
           toastr.error(this.$lang.REMOVE_FAIL, this.$lang.ERROR, { timeOut: 1000 });

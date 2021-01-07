@@ -89,7 +89,7 @@
 import IsMobile from "@/mixins/is_mobile";
 import BackToList from "@/mixins/back_list";
 
-import CategoryServices from "@/services/category";
+import CategoryService from "@/services/category";
 
 export default {
 
@@ -97,7 +97,7 @@ export default {
 
   async created(){
 
-     const res = await CategoryServices.fetch(this.id);
+     const res = await CategoryService.fetch(this.id);
       if(res.data){
         this.getCategory = res.data.category;
       }
@@ -120,7 +120,7 @@ export default {
           var conf = confirm(this.$lang.SAVE_CONFIRM);
           if(conf){
 
-            const res = await CategoryServices.update(this.id, this.getCategory);
+            const res = await CategoryService.update(this.id, this.getCategory);
             if(!res){
               toastr.error(this.$lang.UPDATE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
             }else{

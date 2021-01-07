@@ -8,19 +8,24 @@
             width="50"
             src="@/assets/img/logo.png"
           ></v-img>
-        <v-list-item-title>MFIND</v-list-item-title>
+        <v-list-item-title>ACADEMY</v-list-item-title>
       </v-list-item>
     </div>
 
       <v-spacer></v-spacer>
 
 
-      <v-col cols="6" lg="4" md="4">
+      <v-col cols="6" lg="4" md="4" class="d-flex">
         <search-header
         :data.sync="inputSearch"
 
         >
         </search-header>
+        <v-btn small class="primary"  style="border-radius: 0 30px 30px 0;">
+          <v-icon>
+            mdi-search-web
+          </v-icon>
+        </v-btn>
       </v-col>
 
 <!--       <div style="width: 60px;">
@@ -64,10 +69,16 @@
   cursor: pointer;
 }
 
+#header-top{
+  min-height: 70px;
+
+}
+
 #header-top .v-app-bar {
     background-color: transparent;
     border-radius: 0;
     position: absolute;
+
 }
 </style>
 

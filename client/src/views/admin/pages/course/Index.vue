@@ -96,7 +96,7 @@ import IsMobile from "@/mixins/is_mobile";
 
 
 // services
-import CourseServices from "@/services/course";
+import CourseService from "@/services/course";
 export default {
 
   mixins: [IsMobile],
@@ -141,7 +141,7 @@ export default {
       var conf = confirm(this.$lang.REMOVE_CONFIRM);
 
       if(conf){
-        const res = await CourseServices.delete(item.id);
+        const res = await CourseService.delete(item.id);
         if(!res){
           
           toastr.error(this.$lang.REMOVE_FAIL, this.$lang.ERROR, { timeOut: 1000 });

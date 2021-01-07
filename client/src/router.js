@@ -17,18 +17,20 @@ import ForbiddenPage from "@/views/web/pages/errors/403.vue";
 
 // pages
 import Home from "@/views/web/pages/home/Index.vue";
-import Detail from '@/views/web/pages/home/Detail';
+
 
 
 // ADMIN 
 import AuthAdminLayout from "@/views/admin/layouts/AuthLayout";
 import MainAdminLayout from "@/views/admin/layouts/MainLayout";
 
+import AdminLogin from "@/views/admin/pages/auth/Login";
 
-import Category from "@/views/admin/category/Category";
-import CategoryIndex from "@/views/admin/category/Index";
-import CategoryCreate from "@/views/admin/category/Create";
-import CategoryEdit from "@/views/admin/category/Edit";
+
+import Category from "@/views/admin/pages/category/Category";
+import CategoryIndex from "@/views/admin/pages/category/Index";
+import CategoryCreate from "@/views/admin/pages/category/Create";
+import CategoryEdit from "@/views/admin/pages/category/Edit";
 
 import store from "./store/index";
 
@@ -38,20 +40,20 @@ const routes = [
 
   {
     path: "/admin",
-    component: AdminLayout,
+    component: AuthAdminLayout,
     children: [
       {
         path: "login",
         component: AdminLogin,
         name: "adminLogin",
       },
-      {
-        path: "register",
-        component: AdminRegister,
-        name: "adminRegister"
-      }
 
     ]
+  },
+
+  {
+        path: "",
+        component: Home,
   },
 
   {
@@ -59,6 +61,7 @@ const routes = [
     component: AuthLayout,
     name: "auth",
     children: [
+
       {
         path: "login",
         component: Login,
@@ -76,51 +79,12 @@ const routes = [
       }
     ]
   },
-  {
-    path: "/chat",
-    component: ChatLayout,
-    name: "chat",
-    children: [
-      {
-        path: "message",
-        component: Message,
-        name: "message"
-      }
-    ]
-  },
-
-  // {
-  //   path: "/",
-  //   component: Home,
-  // },
 
   {
     path: "/",
     component: MainLayout,
     children: [
-      {
-
-        path: "",
-        component: Home,
-        name: "home",
-      },
-      {
-        path: "motels",
-        component: Motel, 
-
-        children: [
-          {
-            path: "/",
-            component: MotelIndex,
-            name: "motelIndex",
-          },
-          {
-            path: ":id",
-            component: MotelDetail,
-            name: "motelDetail"
-          }
-        ]
-      }
+  
     ]
   },
 
@@ -130,7 +94,7 @@ const routes = [
     name: "forbidden"
   },
 
-  // { path: "*", component: NotFoundPage }
+  { path: "*", component: NotFoundPage }
 ];
 
 const router = new VueRouter({
