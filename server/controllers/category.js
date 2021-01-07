@@ -6,6 +6,7 @@ const courseTeacherModel = require('../models/course_teacher');
 const userModel = require('../models/user');
 const rateModel = require('../models/rate');
 const promotionModel = require('../models/promotion');
+const rateTotalModel = require('../models/rate_total');
 
 const slugify = require('slugify');
 
@@ -57,6 +58,9 @@ let getCourseWithCategory = async (req, res) => {
     
                         {
                             model: promotionModel
+                        },
+                        {
+                            model: rateTotalModel
                         }
                     ],
             });
@@ -89,6 +93,9 @@ let getCourseWithCategory = async (req, res) => {
     
                         {
                             model: promotionModel
+                        },
+                        {
+                            model: rateTotalModel
                         }
                     ],
                 });
@@ -99,26 +106,6 @@ let getCourseWithCategory = async (req, res) => {
         }
     
     
-        for(var i = 0; i < courseData.length; i++)
-        {
-            if(courseData[i].rates.length == 0)
-            {
-                courseData[i].dataValues.rates_count = 0;
-                courseData[i].dataValues.rates_avg = 0;
-        
-            }
-            else
-            {
-                var sum = 0;
-                courseData[i].rates.forEach(element => {
-                    sum += element.point;
-                });
-               
-                courseData[i].dataValues.rates_count = courseData[i].rates.length;
-                courseData[i].dataValues.rates_avg = sum / courseData[i].rates.length;
-            }
-        }
-
         for(var i = 0; i < courseData.length; i++)
         {
             if(courseData[i].promotions.length == 0)
@@ -175,6 +162,9 @@ let pagingCourseWithCategory = async (req, res) => {
     
                         {
                             model: promotionModel
+                        },
+                        {
+                            model: rateTotalModel
                         }
                     ],
             });
@@ -207,33 +197,15 @@ let pagingCourseWithCategory = async (req, res) => {
     
                         {
                             model: promotionModel
+                        },
+                        {
+                            model: rateTotalModel
                         }
                     ],
                 });
                 course.forEach(element => {
                     courseData.push(element);
                 });
-            }
-        }
-    
-    
-        for(var i = 0; i < courseData.length; i++)
-        {
-            if(courseData[i].rates.length == 0)
-            {
-                courseData[i].dataValues.rates_count = 0;
-                courseData[i].dataValues.rates_avg = 0;
-        
-            }
-            else
-            {
-                var sum = 0;
-                courseData[i].rates.forEach(element => {
-                    sum += element.point;
-                });
-               
-                courseData[i].dataValues.rates_count = courseData[i].rates.length;
-                courseData[i].dataValues.rates_avg = sum / courseData[i].rates.length;
             }
         }
 
@@ -310,11 +282,78 @@ let searchCategory = async (req, res) => {
    
 }
 
+let test = async (req, res) => {
+    try
+    {
+        courseData = await courseModel.findAll({
+                
+            include: [
+                {
+                    model: rateModel
+                },
+
+                {
+                    model: promotionModel
+                }
+            ],
+    });
+    
+    
+        for(var i = 0; i < courseData.length; i++)
+        {
+            if(courseData[i].rates.length == 0)
+            {
+                courseData[i].dataValues.rates_count = 0;
+                courseData[i].dataValues.rates_avg = 0;
+            }
+            else
+            {
+                var sum = 0;
+                courseData[i].rates.forEach(element => {
+                    sum += element.point;
+                });
+               
+                courseData[i].dataValues.rates_count = courseData[i].rates.length;
+                courseData[i].dataValues.rates_avg = sum / courseData[i].rates.length;
+            }
+            console.log(courseData[i].id);
+            console.log(courseData[i].dataValues.rates_count);
+            console.log(courseData[i].dataValues.rates_avg);
+            console.log("----------------");
+        }
+
+        for(var i = 0; i < courseData.length; i++)
+        {
+            if(courseData[i].promotions.length == 0)
+            {
+                courseData[i].dataValues.promotion_price = courseData[i].price;
+            }
+            else
+            {
+                var max = 0;
+                courseData[i].promotions.forEach(element => {
+                    if(max < element.discout)
+                        max = element.discout
+                });
+
+                courseData[i].dataValues.promotion_price = Math.ceil(courseData[i].price - courseData[i].price * max / 100);
+            }
+        }
+
+        return res.status(200).json({message: 'Success!', data: courseData})
+    
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+}
+
 
 
 module.exports = {
     getAllCategory,
     getCourseWithCategory,
     pagingCourseWithCategory,
-    searchCategory
+    searchCategory,
+    test
 }
