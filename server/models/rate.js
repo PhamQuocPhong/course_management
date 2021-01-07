@@ -3,11 +3,6 @@ const db = require('../database/db')
 
 const Rate = db.define('rate', {
   // attributes
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
   point:{
     type: Sequelize.INTEGER,
     allowNull: false,

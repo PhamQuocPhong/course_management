@@ -8,6 +8,7 @@ const rateModel = require('../models/rate');
 const promotionModel = require('../models/promotion');
 const courseChapter = require('../models/course_chapter');
 const courseDocument = require('../models/course_document');
+const rateTotalModel = require('../models/rate_total');
 
 const slugify = require('slugify');
 
@@ -35,6 +36,10 @@ let getDeatailCourse = async (req, res) => {
                     model: promotionModel
                 },
                 {
+                    model: rateTotalModel
+                }
+                ,
+                {
                     model: courseChapter,
                     where: {preview: true},
                     required: false,
@@ -48,40 +53,6 @@ let getDeatailCourse = async (req, res) => {
                 }
             ]
         });
-
-
-        if(courseData.rates.length == 0)
-        {
-            courseData.dataValues.rates_count = 0;
-            courseData.dataValues.rates_avg = 0;
-        }
-        else
-        {
-            var sum = 0;
-            courseData.rates.forEach(element => {
-                sum += element.point;
-            });
-               
-            courseData.dataValues.rates_count = courseData.rates.length;
-            courseData.dataValues.rates_avg = sum / courseData.rates.length;
-        }
-
-        
-
-        if(courseData.promotions.length == 0)
-        {
-            courseData.dataValues.promotion_price = courseData.price;
-        }
-        else
-        {
-            var max = 0;
-            courseData.promotions.forEach(element => {
-                if(max < element.discout)
-                    max = element.discout
-            });
-
-            courseData.dataValues.promotion_price = Math.ceil(courseData.price - courseData.price * max / 100);
-        }
     
         return res.status(200).json({message: 'Success!', data: courseData})
     }
@@ -121,58 +92,10 @@ let searchCourse = async (req, res) => {
                     model: promotionModel
                 },
                 {
-                    model: courseChapter,
-                    where: {preview: true},
-                    required: false,
-                    include: [
-                    {
-                        model: courseDocument,
-                        where: {preview: true},
-                        required: false
-                    }]
-
+                    model: rateTotalModel
                 }
             ]
         });
-
-
-        for(var i = 0; i < courseData.length; i++)
-        {
-            if(courseData[i].rates.length == 0)
-            {
-                courseData[i].dataValues.rates_count = 0;
-                courseData[i].dataValues.rates_avg = 0;
-        
-            }
-            else
-            {
-                var sum = 0;
-                courseData[i].rates.forEach(element => {
-                    sum += element.point;
-                });
-               
-                courseData[i].dataValues.rates_count = courseData[i].rates.length;
-                courseData[i].dataValues.rates_avg = sum / courseData[i].rates.length;
-            }
-        }
-
-        for(var i = 0; i < courseData.length; i++)
-        {
-            if(courseData[i].promotions.length == 0)
-            {
-                courseData[i].dataValues.promotion_price = courseData[i].price;
-            }
-            else
-            {
-                var max = 0;
-                courseData[i].promotions.forEach(element => {
-                    if(max < element.discout)
-                        max = element.discout
-                });
-
-                courseData[i].dataValues.promotion_price = Math.ceil(courseData[i].price - courseData[i].price * max / 100);
-            }
-        }
 
         //khác: mặc định, 1: đánh giá giảm, 2: giá tăng
         const filter = req.query.filter;
@@ -209,9 +132,46 @@ let searchCourse = async (req, res) => {
 	}
 }
 
+let getNewCourse = async (req, res) => {
+    try
+    {
+        courseData = await courseModel.findAll({
+            order: [
+                ['createdAt', 'DESC']
+            ],
+                include: [
+                    {
+                        model: courseTeacherModel, 
+                        include: [
+                        {
+                            model: userModel
+                        }]
+                    },
+                    {
+                        model: rateModel
+                    },
+
+                    {
+                        model: promotionModel
+                    },
+                    {
+                        model: rateTotalModel
+                    }
+                ],
+        });
+
+        return res.status(200).json({message: 'Success!', data: courseData})
+    
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+}
+
 
 
 module.exports = {
     getDeatailCourse,
-    searchCourse
+    searchCourse,
+    getNewCourse
 }

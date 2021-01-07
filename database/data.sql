@@ -44,7 +44,8 @@ VALUES (1,'Lập trình nodejs cơ bản','Hiểu biết cơ bản về nodejs',
 (20,'Lập trình Golang cơ bản','Lập trình Golang cơ bản','full mô tả',7,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27','2006-02-15 04:46:27'),
 (21,'Lập trình Golang nâng cao','Lập trình Golang nâng cao','full mô tả',7,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27','2006-02-15 04:46:27'),
 (22,'Lập trình React native cơ bản','Lập trình React native cơ bản','full mô tả',7,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27','2006-02-15 04:46:27'),
-(23,'Lập trình React native nâng cao','Lập trình React native nâng cao','full mô tả',7,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27','2006-02-15 04:46:27')
+(23,'Lập trình React native nâng cao','Lập trình React native nâng cao','full mô tả',7,'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',1000000, true ,'2006-02-15 04:46:27','2006-02-15 04:46:27'),
+(24,'Lập trình nodejs nâng cao 2','Hiểu biết cơ bản về nodejs','Node.js là một JavaScript runtime được build dựa trên Chrome’s V8 JavaScript engine. Node.js sử dụng mô hình event-driven, non-blocking I/O khiến nó trở nên nhẹ và hiệu quả.', 6, 'https://chandra.harvard.edu/photo/2017/arp299/arp299_4k.jpg',2000000, true ,'2007-02-15 04:46:27','2007-02-15 04:46:27')
 RETURNING *;
 INSERT INTO "courseChapters" (id, name, description, preview, "courseId", "createdAt", "updatedAt")
 VALUES 
@@ -272,5 +273,4 @@ VALUES
 (25, 'Giảm 10 % tháng 1', 'Giảm sốc 10% nhanh tay lên', 10, 23, '2020-12-15 04:34:33', '2020-12-15 04:34:33')
 
 RETURNING *;
-
 

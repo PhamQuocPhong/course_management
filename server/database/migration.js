@@ -12,6 +12,9 @@ const Rate = require('../models/rate')
 const Role = require('../models/role')
 const User = require('../models/user')
 const WatchList = require('../models/watch_list')
+const ActiveMail = require('../models/active_mail');
+const RateTotal = require('../models/rate_total');
+
 
 Category.hasMany(Course, {onDelete: 'cascade', hooks:true})
 Course.belongsTo(Category, {onDelete: 'cascade', hooks:true})
@@ -31,6 +34,9 @@ CourseStudent.belongsTo(Course, {onDelete: 'cascade', hooks:true})
 
 User.hasMany(Rate, {onDelete: 'cascade', hooks:true})
 Rate.belongsTo(User, {onDelete: 'cascade', hooks:true})
+
+Course.hasOne(RateTotal, {onDelete: 'cascade', hooks:true})
+RateTotal.belongsTo(Course, {onDelete: 'cascade', hooks:true})
 
 Course.hasMany(CourseChapter, {onDelete: 'cascade', hooks:true})
 CourseChapter.belongsTo(Course, {onDelete: 'cascade', hooks:true})
@@ -54,6 +60,10 @@ WatchList.belongsTo(User, {onDelete: 'cascade', hooks:true})
 
 
 Category.hasMany(Category, {foreignKey: 'parentId', as: 'subCategory'})
+
+
+User.hasMany(ActiveMail, {onDelete: 'cascade', hooks:true})
+ActiveMail.belongsTo(User, {onDelete: 'cascade', hooks:true})
 
 //Category.belongsTo(Category, {foreignKey: 'parentId', onDelete: 'cascade', hooks:true})
 

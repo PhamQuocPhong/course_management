@@ -41,9 +41,13 @@ server.listen(port)
 
 var categoryRouter = require('./routes/category')
 var courseRouter = require('./routes/course')
+var authRouter = require('./routes/auth')
+
 
 app.use('/api/category/', categoryRouter)
 app.use('/api/course/', courseRouter)
+app.use('/api/auth/', authRouter)
+
 
 //Connect database
 db.sync().then(function() {

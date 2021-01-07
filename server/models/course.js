@@ -3,11 +3,6 @@ const db = require('../database/db')
 
 const Course = db.define('course', {
   // attributes
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
   title:{
     type: Sequelize.STRING,
     allowNull: false,
@@ -27,6 +22,10 @@ const Course = db.define('course', {
   price: {
     type: Sequelize.BIGINT,
     allowNull: false,
+  },
+  priceFinal: {
+    type: Sequelize.BIGINT,
+    allowNull: true,
   },
   active: {
     type: Sequelize.BOOLEAN,
