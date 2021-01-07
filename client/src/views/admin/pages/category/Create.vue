@@ -89,7 +89,7 @@
 import IsMobile from "@/mixins/is_mobile";
 import BackToList from "@/mixins/back_list";
 
-import HobbyServices from "@/services/hobby";
+import CateogoryService from "@/services/category";
 
 export default {
 
@@ -113,7 +113,7 @@ export default {
         var conf = confirm(this.$lang.SAVE_CONFIRM);
         if(conf){
 
-          const res = await HobbyServices.store(this.newHobby);
+          const res = await CateogoryService.store(this.newHobby);
           
           if(!res){
             toastr.error(this.$lang.CREATE_FAIL, this.$lang.ERROR, { timeOut: 1000 });

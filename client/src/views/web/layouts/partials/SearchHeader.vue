@@ -1,17 +1,16 @@
 <template>
 	<v-text-field
-    placeholder="Tìm nhà trọ..."
-    item-text="name"
-    return-object
-    v-model="getInputSearch"
-    :label="label"
-    append-icon="mdi-search-web"
-    outlined
-  dense
-  @keydown="emitEvent"
-  @paste="emitEvent"
-  hide-details
-
+	    placeholder="Tìm kiếm khóa học..."
+	    item-text="name"
+	    return-object
+	    v-model="getInputSearch"
+	    :label="label"
+	    outlined
+	  dense
+	  @keydown="emitEvent"
+	  @paste="emitEvent"
+	  hide-details
+	  style="border-radius: 30px 0 0 30px;"
 	>            
 	</v-text-field>
 </template>

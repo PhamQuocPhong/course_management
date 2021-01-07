@@ -8,6 +8,7 @@
         </div>
       </div>
     </v-main>
+    <m-footer></m-footer>
   </div>
 </template>
 <script>
