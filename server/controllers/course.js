@@ -12,6 +12,34 @@ const rateTotalModel = require('../models/rate_total');
 
 const slugify = require('slugify');
 
+let getCoursePaging = async(req, res) => {
+
+        var categoryData = await categoryModel.findAll({
+            where:{ parentId: {
+                [Op.eq]: 1
+              }},
+            include:[{model: categoryModel, as: 'subCategory'}]});
+
+        var categories = [];
+        categoryData.map(item => {
+            return categories.push(item.id)
+        })
+
+        console.log(categories);
+
+      const data = await courseModel.findAll({
+        where: {
+            categoryId: {
+              [Sequelize.Op.in]: categories
+            }
+        },
+
+        offset: 5, limit: 10,
+      })
+
+      res.json(data);
+}
+
 let getDeatailCourse = async (req, res) => {
     const courseId = req.params.course_id;
     console.log("test");
@@ -173,5 +201,6 @@ let getNewCourse = async (req, res) => {
 module.exports = {
     getDeatailCourse,
     searchCourse,
-    getNewCourse
+    getNewCourse,
+    getCoursePaging,
 }

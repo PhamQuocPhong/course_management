@@ -7,7 +7,7 @@
 					
 					<v-img v-if="course.image"  :src="course.image"></v-img>
 
-					<v-img v-else src="@/assets/img/default.png"></v-img>
+					<v-img v-else src="@/assets/img/default.jpg"></v-img>
 	
 					<v-tabs
 				      v-model="tab"
@@ -43,11 +43,11 @@
 				            </v-row>
 
 				            <div class="my-4 subtitle-1 red--text font-weight-bold">
-				              {{ course.price }} triệu VNĐ
+				              {{ course.price | toCurrency }} VNĐ
 				            </div>
 
 				            <div>
-				              <code>{{course.area}}m<sup>2</sup></code>
+				              <code>Giảm tới:<sup> {{ course.promotion_price | toCurrency }}</sup></code>
 				            </div>
 
 				        </v-card-text>
@@ -69,7 +69,7 @@
 				        >
 				        	<v-card-text>
 				        	 <v-rating
-				                :value="course.rating"
+				                :value="course.rates_avg"
 				                color="amber"
 				                dense
 				                half-increments
@@ -80,7 +80,7 @@
 
 				            <v-card-text>
 				              <h3>Lượt đánh giá: </h3>
-				              <m-rating :ratings="course.ratings">
+				              <m-rating :ratings="course.rates">
 				              </m-rating>
 							</v-card-text>
 				      
@@ -115,8 +115,8 @@
 <script type="text/javascript">
 
 // components	
-import Carousel from "./components/detail/Carousel"
-import Rating from "./components/detail/Rating"
+import Rating from "./components/detail/ListRating";
+import CourseService from "@/services/course";
 
 //mixin
 import IsMobile from "@/mixins/is_mobile";
@@ -125,7 +125,6 @@ export default {
 	mixins: [IsMobile],
 
     components: {
-    	'm-carousel': Carousel,
     	'm-rating': Rating
 	},
 
@@ -148,20 +147,13 @@ export default {
 	computed: {
 		course: {
 			get(){
-				return this.$store.getters["motels/course"];
+				return this.$store.getters["courses/detail"];
 			},
 
 			set(){
 
 			}
 		}, 
-
-		getImages: {
-			get(){
-				return this.$helper.convertStringToArrayImage(this.course.images)
-			}
-		},
-
 	},
 
 	watch: {
@@ -178,7 +170,9 @@ export default {
 	      this.$store.dispatch("components/actionProgressHeader", { option: "show" })
 
 	      setTimeout(async () => {
-	        this.$store.dispatch("motels/fetch", payload);
+	      	var res = await CourseService.fetch($id);
+	      	console.log(res);
+	        // this.$store.dispatch("courses/fetch", payload);
 	      }, 200);
 	    },
 
@@ -186,7 +180,7 @@ export default {
 	},
 
 	beforeDestroy(){
-		this.$store.commit("motels/DESTROY_MOTEL")
+		this.$store.commit("courses/DESTROY_MOTEL")
 	}
 }	
 

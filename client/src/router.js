@@ -18,9 +18,14 @@ import ForbiddenPage from "@/views/web/pages/errors/403.vue";
 // pages
 import Home from "@/views/web/pages/home/Index.vue";
 
+import Course from "@/views/web/pages/course/Course.vue";
+import CourseIndex from "@/views/web/pages/course/Index.vue";
+import CourseDetail from "@/views/web/pages/course/Detail.vue";
 
 
-// ADMIN 
+
+
+/* ---- ADMIN --- */
 import AuthAdminLayout from "@/views/admin/layouts/AuthLayout";
 import MainAdminLayout from "@/views/admin/layouts/MainLayout";
 
@@ -84,7 +89,23 @@ const routes = [
     path: "/",
     component: MainLayout,
     children: [
-  
+      {
+        path: "courses",
+        component: Course,
+
+        children: [
+          {
+            path: "/",
+            component: CourseIndex,
+            name: "courseIndex",
+          },
+          {
+            path: ":id",
+            component: CourseDetail,
+            name: "courseDetail"
+          }
+        ]
+      }
     ]
   },
 
