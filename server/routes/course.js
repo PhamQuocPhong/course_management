@@ -7,4 +7,6 @@ router.post('/search', courseController.searchCourse);
 //Top 10 mới
 router.get('/new_course', courseController.getNewCourse);
 
+router.get('/', courseController.getCoursePaging);
+
 module.exports = router

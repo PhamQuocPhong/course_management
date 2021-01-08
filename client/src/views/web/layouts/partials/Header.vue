@@ -12,6 +12,12 @@
       </v-list-item>
     </div>
 
+      <div style="width: 60px;">
+        <v-btn icon @click="switchMode()">
+          <v-icon>{{ modeIcon }}</v-icon>
+        </v-btn>
+      </div>
+
       <v-spacer></v-spacer>
 
 
@@ -21,18 +27,13 @@
 
         >
         </search-header>
-        <v-btn small class="primary"  style="border-radius: 0 30px 30px 0;">
+        <v-btn small class="primary"  style="border-radius: 0 30px 30px 0; height: auto;">
           <v-icon>
             mdi-search-web
           </v-icon>
         </v-btn>
       </v-col>
 
-<!--       <div style="width: 60px;">
-        <v-btn icon @click="switchMode()">
-          <v-icon>{{ modeIcon }}</v-icon>
-        </v-btn>
-      </div> -->
 
       <div>
         <v-btn outlined small color="primary">
@@ -59,6 +60,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
+
     </v-app-bar>
   </nav>
 </template>

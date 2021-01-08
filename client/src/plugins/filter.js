@@ -7,10 +7,12 @@ Vue.filter("toCurrency", function(value) {
   	value = 0
   }
  
-  var formatter = new Intl.NumberFormat("en-US", {
+  var formatter = new Intl.NumberFormat("vi-VN", {
     style: "currency",
-    currency: "USD",
+    currency: "VND",
     minimumFractionDigits: 0
   });
   return formatter.format(value);
+
 });
+
