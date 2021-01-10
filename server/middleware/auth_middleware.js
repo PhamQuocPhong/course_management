@@ -1,28 +1,19 @@
-const jwtHelper = require("../helpers/jwt.helper");
-const debug = console.log.bind(console);
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-/**
- * Middleware: Authorization user by Token
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- */
-let isAuth = async (req, res, next) => {
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "access-token-secret-ptudw";
+const jwt = require('jsonwebtoken');
 
-  const tokenFromClient = req.header('Authorization') && req.header('Authorization').replace('Bearer ', '')
-
-  if (tokenFromClient) {
-
+module.exports = function (req, res, next) {
+  const accessToken = req.headers['x-access-token'];
+  if (accessToken) {
     try {
-      const decoded = await jwtHelper.verifyToken(tokenFromClient, accessTokenSecret);
 
+      const decoded = jwt.verify(accessToken, accessTokenSecret);
       req.decoded = decoded;
 
       next();
-    } catch (error) {
-
-      return res.status(401).send({
-        message: 'Unauthorized.',
+    } catch (err) {
+      // console.log(err);
+      return res.status(401).json({
+        message: 'Invalid access token.'
       });
     }
   } else {
@@ -30,10 +21,8 @@ let isAuth = async (req, res, next) => {
     return res.status(403).send({
       message: 'No token provided.',
     });
+    return res.status(400).json({
+      message: 'access token not found.'
+    })
   }
 }
-
-
-module.exports = {
-  isAuth: isAuth,
-};

@@ -576,42 +576,6 @@ let searchCourse = async (req, res) => {
 	}
 }
 
-let getNewCourse = async (req, res) => {
-    try
-    {
-        courseData = await courseModel.findAll({
-            order: [
-                ['createdAt', 'DESC']
-            ],
-                include: [
-                    {
-                        model: courseTeacherModel, 
-                        include: [
-                        {
-                            model: userModel
-                        }]
-                    },
-                    {
-                        model: rateModel
-                    },
-
-                    {
-                        model: promotionModel
-                    },
-                    {
-                        model: rateTotalModel
-                    }
-                ],
-        });
-
-        return res.status(200).json({message: 'Success!', data: courseData})
-    
-    }
-    catch(error) {
-		return res.status(500).json(error)
-	}
-}
-
 
 let addCourseWatchList = async (req, res) => {
     const courseId = req.params.course_id;
@@ -635,7 +599,6 @@ let addCourseWatchList = async (req, res) => {
 module.exports = {
     getDeatailCourse,
     searchCourse,
-    getNewCourse,
     getCoursePaging,
     addCourseWatchList
 }

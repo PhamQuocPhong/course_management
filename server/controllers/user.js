@@ -1,6 +1,7 @@
 const userModel = require('../models/user');
 var jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const watchListModel = require('../models/watch_list');
 
 let changeInfo = async (req, res) => {
     const {name} = req.body;
@@ -56,9 +57,57 @@ let changePassword = async (req, res) => {
 	}
 }
 
+let removeElementWatchList = async (req, res) => {
+    const courseId = req.params.course_id;
+    var decoded = req.decoded;
+    var userId = decoded.userId;
+
+    try
+    {
+        watchList = await watchListModel.findOne({
+            where:{
+                userId,
+                courseId
+            }
+        })
+        if(watchList != null)
+        {
+            await watchList.destroy();
+        }
+
+        return res.status(200).json({message: 'Success!'})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+   
+}
+
+let getWatchList = async (req, res) => {
+    var decoded = req.decoded;
+    var userId = decoded.userId;
+
+    try
+    {
+        watchList = await watchListModel.findAll({
+            where:{
+                userId
+            }
+        })
+
+        return res.status(200).json({message: 'Success!', data: watchList})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+   
+}
+
 
 
 module.exports = {
     changePassword,
-    changeInfo
+    changeInfo,
+    removeElementWatchList,
+    getWatchList
 }

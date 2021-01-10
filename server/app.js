@@ -12,7 +12,6 @@ require('./database/migration')
 
 
 
-
 // app.use(express.static(__dirname  + '/public'))
 app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.urlencoded({
@@ -42,11 +41,13 @@ server.listen(port)
 var categoryRouter = require('./routes/category')
 var courseRouter = require('./routes/course')
 var authRouter = require('./routes/auth')
+var userRouter = require('./routes/user')
 
 
-app.use('/api/category/', categoryRouter)
-app.use('/api/course/', courseRouter)
+app.use('/api/categorys/', categoryRouter)
+app.use('/api/courses/', courseRouter)
 app.use('/api/auth/', authRouter)
+app.use('/api/users/', auth, userRouter)
 
 
 //Connect database
