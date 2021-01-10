@@ -9,6 +9,7 @@ const promotionModel = require('../models/promotion');
 const courseChapter = require('../models/course_chapter');
 const courseDocument = require('../models/course_document');
 const rateTotalModel = require('../models/rate_total');
+const watchListModel = require('../models/watch_list');
 
 const slugify = require('slugify');
 
@@ -611,9 +612,30 @@ let getNewCourse = async (req, res) => {
 	}
 }
 
+
+let addCourseWatchList = async (req, res) => {
+    const courseId = req.params.course_id;
+    var decoded = req.decoded;
+    var userId = decoded.userId;
+
+    try
+    {
+        await watchListModel.create({
+           userId,
+           courseId
+        })
+        return res.status(200).json({message: 'Success!'})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+   
+}
+
 module.exports = {
     getDeatailCourse,
     searchCourse,
     getNewCourse,
     getCoursePaging,
+    addCourseWatchList
 }
