@@ -27,6 +27,14 @@ const Course = db.define('course', {
     type: Sequelize.BIGINT,
     allowNull: true,
   },
+  studentTotal: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  },
+  watchTotal: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  },
   active: {
     type: Sequelize.BOOLEAN,
     allowNull: false,

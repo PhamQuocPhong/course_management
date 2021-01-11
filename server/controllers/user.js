@@ -2,6 +2,7 @@ const userModel = require('../models/user');
 var jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const watchListModel = require('../models/watch_list');
+const courseModel = require('../models/course');
 
 let changeInfo = async (req, res) => {
     const {name} = req.body;
@@ -73,6 +74,8 @@ let removeElementWatchList = async (req, res) => {
         if(watchList != null)
         {
             await watchList.destroy();
+            var course = await courseModel.findOne({where:{id :courseId}})
+            course.watchTotal -= 1;
         }
 
         return res.status(200).json({message: 'Success!'})
@@ -102,7 +105,6 @@ let getWatchList = async (req, res) => {
 	}
    
 }
-
 
 
 module.exports = {

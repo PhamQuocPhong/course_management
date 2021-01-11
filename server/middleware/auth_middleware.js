@@ -21,8 +21,5 @@ module.exports = function (req, res, next) {
     return res.status(403).send({
       message: 'No token provided.',
     });
-    return res.status(400).json({
-      message: 'access token not found.'
-    })
   }
 }
