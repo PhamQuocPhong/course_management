@@ -259,7 +259,8 @@ let pagingCourseWithCategory = async (req, res) => {
 }
 
 let searchCategory = async (req, res) => {
-    const keyword = slugify(req.body.keyword, {
+    var keyword = req.query.keyword;
+    keyword = slugify(keyword, {
         replacement: ' ',  
         remove: undefined, 
         lower: true,     

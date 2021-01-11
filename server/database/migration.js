@@ -67,10 +67,10 @@ User.hasMany(ActiveMail, {onDelete: 'cascade', hooks:true})
 ActiveMail.belongsTo(User, {onDelete: 'cascade', hooks:true})
 
 
-Course.hasMany(StateDocument, {onDelete: 'cascade', hooks:true})
+/*Course.hasMany(StateDocument, {onDelete: 'cascade', hooks:true})
 User.hasMany(StateDocument, {onDelete: 'cascade', hooks:true})
 StateDocument.belongsTo(Course, {onDelete: 'cascade', hooks:true})
-StateDocument.belongsTo(User, {onDelete: 'cascade', hooks:true})
+StateDocument.belongsTo(User, {onDelete: 'cascade', hooks:true})*/
 
 //Category.belongsTo(Category, {foreignKey: 'parentId', onDelete: 'cascade', hooks:true})
 

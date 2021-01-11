@@ -42,12 +42,15 @@ var categoryRouter = require('./routes/category')
 var courseRouter = require('./routes/course')
 var authRouter = require('./routes/auth')
 var userRouter = require('./routes/user')
+var homeRouter = require('./routes/home')
 
 
-app.use('/api/categorys/', categoryRouter)
+
+app.use('/api/categories/', categoryRouter)
 app.use('/api/courses/', courseRouter)
 app.use('/api/auth/', authRouter)
 app.use('/api/users/', auth, userRouter)
+app.use('/api/home/', homeRouter)
 
 
 //Connect database

@@ -15,14 +15,14 @@ const courseStudentModel = require('../models/course_student');
 const slugify = require('slugify');
 
 let getCoursePaging = async (req, res) => {
-    const categoryId = req.params.category_id;
+    const categoryId = req.query.categoryId;
     var itemPerPage = req.query.itemPerPage;
+    var page = req.query.page
+
     //filter true hoặc false
-    var filterPriceASC = req.query.filterPriceASC;
-    var filterRateDESC = req.query.filterRateDESC;
-    
-    
-	var page = req.params.page
+    var orderPrice = req.query.orderPrice;
+    var orderRating = req.query.orderRating;
+	
 	var offset = 0
 	if(page == 1){
 		offset = 0
@@ -43,7 +43,7 @@ let getCoursePaging = async (req, res) => {
         //Trường hợp chọn subCategory
         if(categoryCheck.length == 0)
         {
-            if(filterRateDESC && filterPriceASC)
+            if(orderRating && orderPrice)
             {
                 courseData = await courseModel.findAll({
                     offset: offset, 
@@ -79,7 +79,7 @@ let getCoursePaging = async (req, res) => {
                         
                 });
             }
-            else if(filterPriceASC&&!filterRateDESC)
+            else if(orderPrice&&!orderRating)
             {
                 courseData = await courseModel.findAll({
                     offset: offset, 
@@ -114,7 +114,7 @@ let getCoursePaging = async (req, res) => {
                         
                 });
             }
-            else if(!filterPriceASC&&filterRateDESC)
+            else if(!orderPrice&&orderRating)
             {
                 courseData = await courseModel.findAll({
                     offset: offset, 
@@ -200,7 +200,7 @@ let getCoursePaging = async (req, res) => {
                 return categories.push(item.id)
             })
 
-            if(filterRateDESC && filterPriceASC)
+            if(orderRating && orderPrice)
             {
                 courseData = await courseModel.findAll({
                     offset: offset, 
@@ -235,7 +235,7 @@ let getCoursePaging = async (req, res) => {
                     ]
                 })
             }
-            else if(filterRateDESC && !filterPriceASC)
+            else if(orderRating && !orderPrice)
             {
                 courseData = await courseModel.findAll({
                     offset: offset, 
@@ -269,7 +269,7 @@ let getCoursePaging = async (req, res) => {
                     ]
                 })
             }
-            else if(!filterRateDESC && filterPriceASC)
+            else if(!orderRating && orderPrice)
             {
                 courseData = await courseModel.findAll({
                     offset: offset, 
@@ -356,7 +356,7 @@ let getCoursePaging = async (req, res) => {
 
 
 let getDeatailCourse = async (req, res) => {
-    const courseId = req.params.course_id;
+    const courseId = req.params.id;
     console.log("test");
 
     try
@@ -406,13 +406,14 @@ let getDeatailCourse = async (req, res) => {
 }
 
 let searchCourse = async (req, res) => {
+    //console.log("checkkkkkkkkk")
     var itemPerPage = req.query.itemPerPage;
     //filter true hoặc false
-    var filterPriceASC = req.query.filterPriceASC;
-    var filterRateDESC = req.query.filterRateDESC;
+    var orderPrice = req.query.orderPrice;
+    var orderRating = req.query.orderRating;
     var keyword = req.query.keyword;
     
-	var page = req.params.page
+	var page = req.query.page
 	var offset = 0
 	if(page == 1){
 		offset = 0
@@ -431,7 +432,7 @@ let searchCourse = async (req, res) => {
     try
     {
         var courseData  = []
-        if(filterRateDESC && filterPriceASC)
+        if(orderRating && orderPrice)
         {
             console.log("1");
             courseData = await courseModel.findAll({
@@ -466,7 +467,7 @@ let searchCourse = async (req, res) => {
             });
             console.log("?")
         }
-        else if(filterRateDESC && !filterPriceASC)
+        else if(orderRating && !orderPrice)
         {
             console.log("2");
             courseData = await courseModel.findAll({
@@ -500,9 +501,8 @@ let searchCourse = async (req, res) => {
             });
 
         }
-        else if(!filterRateDESC && filterPriceASC)
+        else if(!orderRating && orderPrice)
         {
-            console.log("3");
             courseData = await courseModel.findAll({
                 offset: offset, 
                 limit: itemPerPage, 
@@ -666,7 +666,7 @@ let checkJoin = async (req, res) => {
             check = true;
         else
             check = false;
-            
+
         return res.status(200).json({message: 'Success!', data: check})
     }
     catch(error) {
