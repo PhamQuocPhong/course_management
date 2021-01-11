@@ -8,6 +8,14 @@ var randomstring = require("randomstring");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
+const jwtHelper = require('../helpers/jwt.helper');
+
+const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "1h"
+const refreshTokenLife = process.env.REFRESH_TOKEN_LIFE || "365d"
+// Mã secretKey này phải được bảo mật tuyệt đối, các bạn có thể lưu vào biến môi trường hoặc file
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "access-token-secret-ptudw"
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || "refresh-token-secret-ptudw"
+
 
 let register = async (req, res) => {
   try {
@@ -154,7 +162,47 @@ let verifyOTP = async (req, res) => {
   }
 }
 
+let login = async (req, res) => {
+
+  
+	const { email, password } = req.body
+
+	try {
+    const findUser = await userModel.findOne({
+      attributes: ['id','name', 'email', 'password', 'roleId'],
+      where: {
+        email: email,
+        active: true
+      }
+    })
+    console.log("test")
+
+    if(findUser && bcrypt.compareSync(password, findUser.password)){
+      console.log("testdn")
+      delete findUser.dataValues.password
+      const accessToken = await jwtHelper.generateToken(findUser.id, accessTokenSecret, accessTokenLife)
+      const refreshToken = await jwtHelper.generateToken(findUser.id, refreshTokenSecret, refreshTokenLife)
+
+      console.log("testdn1")
+      await userModel.update(
+        
+        {rfToken: refreshToken},
+        {where: {id: 1}},
+      );
+
+      return res.status(200).json({accessToken, refreshToken, findUser})
+    }else{
+      return res.status(401).send({message: "Email or Password is not exactly or account is not active!" })
+    }
+
+	}catch (error) {
+	    return res.status(500).json(error)
+	}
+}
+
+
 module.exports = {
     register,
-    verifyOTP
+    verifyOTP,
+    login
 }
