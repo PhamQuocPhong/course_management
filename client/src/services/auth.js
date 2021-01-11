@@ -15,7 +15,7 @@ export default {
 
   async register(data) {
     try {
-      const result = await axios.post(this.rootURL + `register`);
+      const result = await axios.post(this.rootURL + `register`, data);
       return result;
     } catch (error) {
        return helperCommon.getError(error) || false; 

@@ -3,8 +3,8 @@
     <v-row>
       <v-flex :class="{ 'pa-4': !isMobile }">
         <v-card flat>
-          <v-row no-gutter >
-            
+          <v-row no-gutter>
+            <h2>HHEHE</h2>
           </v-row>
 
           <v-layout
@@ -12,10 +12,10 @@
             column
             class="table"
             :class="{ 'mt-4': isMobile }"
-            v-if="motels.length"
+            v-if="courses.length"
           >
             <v-row>
-              <v-col v-for="(item, index) in motels" cols="12" lg="9" :key="item.id">
+              <v-col v-for="(item, index) in courses" cols="12" lg="9" :key="item.id">
                 <m-item 
                 :item="item" 
                 v-on:action="viewDetail(item)"
@@ -50,7 +50,6 @@
 <script>
 
 // components
-import Filter from "./components/index/Filter";
 import MItem from "./components/index/Item";
 
 // store
@@ -61,33 +60,35 @@ import ComponentStore from "@/store/modules/component";
 import IsMobile from "@/mixins/is_mobile";
 
 // service
-import MotelService from "@/services/motel";
+import CourseService from "@/services/course";
 
 export default {
 
 	mixins: [IsMobile],
 
     components: {
-    	'filter-form': Filter,
     	'm-item': MItem,
 	},
 
 	data(){
 		return {
+		currentPage: 1,	
+		pageCounts: 1,	
+		courses: [],
 
 	    itemsPerPage: this.$constant.pagination.ITEMS_PER_PAGE,
 	    isLoading: false,
-      isVisiblePriceModal: false,
+	    isVisiblePriceModal: false,
 
-      sort: [
-        {
-          key: "price_asc",
-          name: "Giá thấp nhất"
-        },
-         {
-          key: "price_desc",
-          name: "Giá cao nhất"
-        }
+	      sort: [
+	        {
+	          key: "price_asc",
+	          name: "Giá thấp nhất"
+	        },
+	         {
+	          key: "price_desc",
+	          name: "Giá cao nhất"
+	        }
       ]
 		}
 	},
@@ -98,31 +99,10 @@ export default {
     this.retrieveData(this.$route.query);
   },
 
-  computed: {
-    currentPage: {
-      get(){
-         return this.$store.getters["motels/currentPage"]
-      },
-      set(page){
-        this.$store.commit('motels/UPDATE_CURRENT_PAGE', page)
-      }
-    },
-    pageCounts(){
-      return this.$store.getters["motels/pageCounts"]
-    },
-
-    motels: {
-      get(){
-        return this.$store.getters["motels/motels"];
-      }
-    },
-
-
-  },
 
 
   watch: {
-    motels(data){
+    courses(data){
       if(data.length)
          this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
     },
@@ -147,7 +127,7 @@ export default {
       query.page = this.currentPage;
 
       this.$router.push({
-            query: query
+           query: query
       });
 
       this.retrieveData(query);
@@ -155,11 +135,12 @@ export default {
 
     async retrieveData(query){
 
-      var payLoad = query;
-      payLoad.page = this.currentPage;
+      var payload = query;
+      payload.page = this.currentPage;
       this.$store.dispatch("components/actionProgressHeader", { option: "show" })
       setTimeout(async () => {
-        this.$store.dispatch("motels/fetchPaging", payLoad);
+        	const res = await CourseService.fetchPaging(payload);
+        	console.log(res);
       }, 200);
 
     }
