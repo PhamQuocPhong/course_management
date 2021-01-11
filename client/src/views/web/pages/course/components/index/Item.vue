@@ -1,18 +1,19 @@
 <template>
-	<v-card
+  <v-card
     :loading="loading"
   >
     <v-row>
       <v-col cols="5">
         <v-img 
+          v-if="getItem.image"
           height="270"
           :src="getItem.image"
-        ></v-img>
+        >
+        </v-img>
 
         <v-img
-
-        height="270"
-        src="@/assets/img/default.jpg"
+          height="270"
+          src="@/assets/img/default.jpg"
         >
         </v-img>
       </v-col>

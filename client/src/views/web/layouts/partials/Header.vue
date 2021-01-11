@@ -36,7 +36,7 @@
 
 
       <div>
-        <v-btn outlined small color="primary">
+        <v-btn outlined small color="primary"  @click="redirectLogin()">
           Đăng nhập
         </v-btn>
       </div>
@@ -118,6 +118,11 @@ export default {
   },
 
   methods: {
+
+    redirectLogin(){
+      this.$router.push('/login');
+    },
+
     isMobile() {
       if (screen.width <= 768) {
         return true;

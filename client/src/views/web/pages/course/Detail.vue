@@ -91,13 +91,13 @@
 			</v-col> 
 
 			<v-col cols="12" sm="4" md="4" lg="4">
-				<v-card v-if="motel.user">
-					<v-card-title>{{ motel.user.name }}</v-card-title>
-					<v-card-text><b>Họ tên:</b> {{ motel.user.phone }}</v-card-text>
-					<v-card-text><b>Địa chỉ:</b> {{ motel.user.address }}</v-card-text>
+				<v-card v-if="course.user">
+					<v-card-title>{{ course.user.name }}</v-card-title>
+					<v-card-text><b>Họ tên:</b> {{ course.user.phone }}</v-card-text>
+					<v-card-text><b>Địa chỉ:</b> {{ course.user.address }}</v-card-text>
 					
 					<v-card-text>
-						<v-btn small outlined @click="openWindowChat(motel.user)">
+						<v-btn small outlined @click="openWindowChat(course.user)">
 							Chat với người bán
 							<v-icon>mdi-account</v-icon>
 						</v-btn>
@@ -137,6 +137,7 @@ export default {
 	          'Thông tin chi tiết', 'Lượt đánh giá', 
 	        ],
 	         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+	        course: {},
 		}
 	},
 
@@ -144,20 +145,9 @@ export default {
 		this.retrieveData();
 	},
 
-	computed: {
-		course: {
-			get(){
-				return this.$store.getters["courses/detail"];
-			},
-
-			set(){
-
-			}
-		}, 
-	},
-
 	watch: {
 	    course(data){
+	    	console.log(data);
 	    if(data)
 	        this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
 	    	this.show = true;
@@ -166,22 +156,18 @@ export default {
 
 	methods: {
 		retrieveData(){
-	      var payload = { id: this.$route.params.id }
+	      var id = this.$route.params.id;
 	      this.$store.dispatch("components/actionProgressHeader", { option: "show" })
 
 	      setTimeout(async () => {
-	      	var res = await CourseService.fetch($id);
+	      	var res = await CourseService.fetch(id);
 	      	console.log(res);
-	        // this.$store.dispatch("courses/fetch", payload);
 	      }, 200);
 	    },
 
 
 	},
 
-	beforeDestroy(){
-		this.$store.commit("courses/DESTROY_MOTEL")
-	}
 }	
 
 </script>

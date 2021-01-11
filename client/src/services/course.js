@@ -2,7 +2,7 @@ import helperCommon from '@/helpers/common';
 
 export default {
 
-  rootURL: '/course/',
+  rootURL: '/courses/',
 
   async fetchAll() {
     try {
@@ -16,10 +16,18 @@ export default {
     try {
       return await axios.get(this.rootURL, {
         params: {
-          orderBy: "DESC",
+          orderPrice: "DESC",
           page: currentPage
         }
       });
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
+   async fetch(id) {
+    try {
+      return await axios.get(this.rootURL + `${id}`);
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }

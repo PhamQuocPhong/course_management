@@ -133,7 +133,6 @@ export default {
   methods: {
   
     onSelectedFile() {
-
       this.$refs.inputAvatar.click()
     },
 

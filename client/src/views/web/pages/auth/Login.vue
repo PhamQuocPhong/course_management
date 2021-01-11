@@ -16,7 +16,7 @@
                   name="email"
                   prepend-icon="mdi-email"
                   type="email"
-                  v-model="userInfo.email"
+                  v-model="userLogin.email"
                   :rules="emailRules"
                 ></v-text-field>
 
@@ -27,7 +27,7 @@
                   prepend-icon="mdi-lock"
                   type="password"
                   :rules="passwordRules"
-                  v-model="userInfo.password"
+                  v-model="userLogin.password"
                 ></v-text-field>
 
                 <div class="pb-4 caption d-flex">
@@ -106,7 +106,7 @@ export default {
     if (!tokenUser) {
       return next();
     }
-    return next({ path: "/dashboard" });
+    return next({ path: "/profile/info" });
   },
 
   data() {
@@ -116,7 +116,7 @@ export default {
       emailRules: [v => !!v || "Email is required!"],
       passwordRules: [v => !!v || "Password is required!"],
 
-      userInfo: {
+      userLogin: {
         email: "",
         password: "",
       },
@@ -158,35 +158,42 @@ export default {
     },
 
     redirectRegister() {
-      this.$router.push("/auth/register");
+      this.$router.push("/register");
     },
 
     async login() {
       if (this.$refs.form.validate()) {
-        var loader = this.$loading.show();
+        this.$store.dispatch("components/progressLoading", { option: "show" })
+
+
         const { email, password } = this.userLogin;
-        const res = await AuthServices.login(email, password);
 
-        // case success
-        if(res.data){
-          CookieServices.set("userToken", res.data.adminLogin.token);
-          CookieServices.set("userInfo", res.data.adminLogin.info);
+        setTimeout(async () => {
+          const res = await AuthServices.login(email, password);
 
-          this.$router.push('/users');
-          loader.hide();
+           // case success
+          if(res.data){
+            CookieServices.set("userToken", res.data.adminLogin.token);
+            CookieServices.set("userInfo", res.data.adminLogin.info);
 
-        // case error
-        }else{
-          toastr.error(res.message, this.$lang.ERROR, { timeOut: 1000 });
-          loader.hide();
 
-          // login fail -> reset input password
-          this.userLogin.password = "";
+            this.$router.push('/users');
+            this.$store.dispatch("components/progressLoading", { option: "hide" })
 
-          // update component & reset validation
-          this.$forceUpdate();
-          this.$refs.form.resetValidation();
-        }
+          // case error
+          }else{
+            toastr.error(res.message, this.$lang.ERROR, { timeOut: 1000 });
+            this.$store.dispatch("components/progressLoading", { option: "hide" })
+
+            // login fail -> reset input password
+            this.userLogin.password = "";
+
+            // update component & reset validation
+            this.$forceUpdate();
+            this.$refs.form.resetValidation();
+          }
+
+        }, 1000);
       }
     },
 
