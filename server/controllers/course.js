@@ -577,22 +577,24 @@ let searchCourse = async (req, res) => {
 	}
 }
 
-
+//student
 let addCourseWatchList = async (req, res) => {
-    const courseId = req.params.course_id;
+    const courseId = req.params.id;
     var decoded = req.decoded;
     var userId = decoded.userId;
 
     try
     {
-        await watchListModel.create({
-           userId,
-           courseId
-        })
-        var course = await courseModel.findOne({where:{id: courseId}});
-        course.watchTotal += 1;
-        await course.save();
-        
+        if(!await watchListModel.findOne({where:{userId,
+            courseId}}))
+            
+        {
+            await watchListModel.create({
+                userId,
+                courseId
+             })
+        }
+    
         return res.status(200).json({message: 'Success!'})
     }
     catch(error) {
@@ -602,22 +604,30 @@ let addCourseWatchList = async (req, res) => {
 }
 
 let ratingCourse = async (req, res) => {
-    const courseId = req.params.course_id;
+    const {point, comment} = req.body;
+    const courseId = req.params.id;
     var decoded = req.decoded;
     var userId = decoded.userId;
 
     try
     {
-        if(await courseStudentModel.findOne({where:{userId}}))
+        if(await courseStudentModel.findOne({where:{userId}} ))
         {
-            var rating = await rateModel.create({
-                userId,
-                courseId
-             })
-            var rateTotal = await rateTotalModel.findOne({where: {courseId}});
-            rateTotal.total =  (rateTotal.total * rateTotal.turn + rating.point)/(rateTotal.turn + 1);
-            rateTotal.turn += 1;
-            await rateTotal.save();
+            if(!await rateModel.findOne({
+                where: {
+                    userId,
+                    courseId
+                }
+             }))
+             {
+                var rating = await rateModel.create({
+                    userId,
+                    courseId,
+                    point,
+                    comment
+                 })
+             }
+            
         }
         return res.status(200).json({message: 'Success!'})
     }
@@ -627,20 +637,25 @@ let ratingCourse = async (req, res) => {
 }
 
 let joinCourse = async (req, res) => {
-    const courseId = req.params.course_id;
+    const courseId = req.params.id;
     var decoded = req.decoded;
     var userId = decoded.userId;
 
     try
     {
-        await courseStudentModel.create({
-            userId,
-            courseId
-         })
-        var course = await courseModel.findOne({where:{id: courseId}});
-        course.studentTotal += 1;
-        await course.save();
-       
+        if(!await courseStudentModel.findOne({
+            where:{
+                userId,
+                courseId
+            }
+         }))
+         {
+            await courseStudentModel.create({
+                userId,
+                courseId
+             })
+         }
+   
         return res.status(200).json({message: 'Success!'})
     }
     catch(error) {
@@ -649,7 +664,7 @@ let joinCourse = async (req, res) => {
 }
 
 let checkJoin = async (req, res) => {
-    const courseId = req.params.course_id;
+    const courseId = req.params.id;
     var decoded = req.decoded;
     var userId = decoded.userId;
 
@@ -664,8 +679,6 @@ let checkJoin = async (req, res) => {
         })
         if(courseStudent)
             check = true;
-        else
-            check = false;
 
         return res.status(200).json({message: 'Success!', data: check})
     }
@@ -678,6 +691,10 @@ module.exports = {
     getDeatailCourse,
     searchCourse,
     getCoursePaging,
-    addCourseWatchList,
-    ratingCourse
+   
+    //Student
+    checkJoin,
+    joinCourse,
+    ratingCourse,
+    addCourseWatchList
 }

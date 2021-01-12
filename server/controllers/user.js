@@ -3,16 +3,18 @@ var jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const watchListModel = require('../models/watch_list');
 const courseModel = require('../models/course');
+const courseStudentModel = require('../models/course_student');
+
 
 let changeInfo = async (req, res) => {
-    const {name} = req.body;
+    const {name, email} = req.body;
     var decoded = req.decoded;
     var userId = decoded.userId;
 
     try
     {
         await userModel.update(
-            {name},
+            {name, email},
             {where: {id: userId}}
         );
         return res.status(200).json({message: 'Success!'});
@@ -62,20 +64,26 @@ let removeElementWatchList = async (req, res) => {
     const courseId = req.params.course_id;
     var decoded = req.decoded;
     var userId = decoded.userId;
-
+  
     try
     {
-        watchList = await watchListModel.findOne({
+        var watchList = await watchListModel.findOne({
             where:{
                 userId,
                 courseId
             }
         })
-        if(watchList != null)
+        console.log(watchList)
+        if(watchList)
+        
         {
-            await watchList.destroy();
-            var course = await courseModel.findOne({where:{id :courseId}})
-            course.watchTotal -= 1;
+            console.log("yesy")
+            await watchListModel.destroy({
+                where: {
+                    userId,
+                    courseId
+                }
+            })
         }
 
         return res.status(200).json({message: 'Success!'})
@@ -89,7 +97,7 @@ let removeElementWatchList = async (req, res) => {
 let getWatchList = async (req, res) => {
     var decoded = req.decoded;
     var userId = decoded.userId;
-
+    console.log("?")
     try
     {
         watchList = await watchListModel.findAll({
@@ -106,10 +114,34 @@ let getWatchList = async (req, res) => {
    
 }
 
+let getCourseJoin = async (req, res) => {
+    var decoded = req.decoded;
+    var userId = decoded.userId;
+    console.log("tetssss")
+    
+    try
+    {
+        var listCourseJoin = await courseStudentModel.findAll({
+            where:{
+                userId
+            }
+        })
+
+        return res.status(200).json({message: 'Success!', data: listCourseJoin})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+   
+}
+
+//(15) api/profile/my-courses
+
 
 module.exports = {
     changePassword,
     changeInfo,
     removeElementWatchList,
-    getWatchList
+    getWatchList,
+    getCourseJoin
 }

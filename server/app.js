@@ -10,8 +10,6 @@ const auth = require('./middleware/auth_middleware')
 const socketModules = require('./socket')
 require('./database/migration')
 
-
-
 // app.use(express.static(__dirname  + '/public'))
 app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.urlencoded({
@@ -41,15 +39,16 @@ server.listen(port)
 var categoryRouter = require('./routes/category')
 var courseRouter = require('./routes/course')
 var authRouter = require('./routes/auth')
-var userRouter = require('./routes/user')
+var profileRouter = require('./routes/profile')
 var homeRouter = require('./routes/home')
-
 
 
 app.use('/api/categories/', categoryRouter)
 app.use('/api/courses/', courseRouter)
+app.use('/api/student/courses/', auth, courseRouter)
 app.use('/api/auth/', authRouter)
-app.use('/api/users/', auth, userRouter)
+app.use('/api/profile/', auth, profileRouter)
+app.use('/api/student/profile/', auth, profileRouter)
 app.use('/api/home/', homeRouter)
 
 

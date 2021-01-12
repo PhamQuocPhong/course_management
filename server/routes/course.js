@@ -9,7 +9,11 @@ router.get('/:id', courseController.getDeatailCourse);
 
 //Đăng nhập
 router.get('/:id/like', courseController.addCourseWatchList);
+router.get('/:id/join', courseController.joinCourse);
+
 router.get('/:id/rating', courseController.ratingCourse);
+router.get('/:id/check_joined', courseController.checkJoin);
+
 
 
 module.exports = router
