@@ -2,7 +2,7 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "access-token-secre
 const jwt = require('jsonwebtoken');
 
 module.exports = function (req, res, next) {
-  const accessToken = req.headers['x-access-token'];
+  const accessToken = req.headers['x-access-token'] || req.body.token || req.query.token;
   if (accessToken) {
     try {
 
