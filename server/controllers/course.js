@@ -405,6 +405,53 @@ let getDeatailCourse = async (req, res) => {
    
 }
 
+let learnCourse = async (req, res) => {
+    const courseId = req.params.id;
+
+    try
+    {
+        const courseData = await courseModel.findOne({
+            where: {id: courseId},
+            include: [
+                {
+                    model: courseTeacherModel, 
+                    include: [
+                    {
+                        model: userModel
+                    }]
+                },
+                {
+                    model: rateModel
+                },
+
+                {
+                    model: promotionModel
+                },
+                {
+                    model: rateTotalModel
+                }
+                ,
+                {
+                    model: courseChapter,
+                    required: false,
+                    include: [
+                    {
+                        model: courseDocument,
+                        required: false
+                    }]
+
+                }
+            ]
+        });
+    
+        return res.status(200).json({message: 'Success!', data: courseData})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+   
+}
+
 let searchCourse = async (req, res) => {
     //console.log("checkkkkkkkkk")
     var itemPerPage = req.query.itemPerPage;
@@ -696,5 +743,6 @@ module.exports = {
     checkJoin,
     joinCourse,
     ratingCourse,
-    addCourseWatchList
+    addCourseWatchList,
+    learnCourse
 }

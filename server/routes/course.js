@@ -13,7 +13,7 @@ router.get('/:id/join', courseController.joinCourse);
 
 router.get('/:id/rating', courseController.ratingCourse);
 router.get('/:id/check_joined', courseController.checkJoin);
-
+router.get('/:id/learn', courseController.learnCourse);
 
 
 module.exports = router
