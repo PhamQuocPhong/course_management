@@ -1,16 +1,19 @@
 <template>
 	<v-card
+  class="item"
     :loading="loading"
   >
     <v-row>
-      <v-col cols="5">
+      <v-col cols="5" class="d-flex">
         <v-img 
           height="270"
-          :src="getItem.image"
+          
+          :aspect-ratio="16/9"
+          :src="getItem.avatar"
         ></v-img>
 
         <v-img
-
+        v-if="!getItem.avatar"
         height="270"
         src="@/assets/img/default.jpg"
         >
@@ -31,17 +34,43 @@
                 readonly
                 size="14"
               ></v-rating>
-
             </v-row>
 
+             <div class="my-4 subtitle-1 red--text font-weight-bold ">
+              {{ getItem.price | toCurrency }}
+            </div>
+
+            <div>
+              <p> Số học viên: <code>{{ getItem.studentTotal }}</code> </p>
+            </div>
+
+            <div class="teachers" v-if="getItem.courseTeachers.length">
+              <p>Giảng viên: 
+                <span v-for="(item, index) in getItem.courseTeachers" class="font-weight-bold">
+                  {{ item.user.name }} <span v-if="index > getItem.courseTeachers.length">, </span>
+                </span>
+              </p>
+            </div>
+          </v-card-text>
+          <v-card-actions class="bottom">
             <div class="text-right">
               <v-btn color="primary"  outlined small @click="viewDetail()">  Xem chi tiết</v-btn>
             </div>
-          </v-card-text>
+          </v-card-actions>
       </v-col>
     </v-row>
   </v-card>
 </template>
+
+<style lang="scss">
+.item {
+  .bottom{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+}
+</style>
 
 <script>
   export default {
