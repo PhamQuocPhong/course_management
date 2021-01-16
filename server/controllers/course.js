@@ -401,8 +401,38 @@ let getDeatailCourse = async (req, res) => {
                 }
             ]
         });
+
+        var courseList = await courseModel.findAll({
+            limit: 5, 
+            where: {categoryId: courseData.categoryId},
+                include: [
+                    {
+                        model: courseTeacherModel, 
+                        include: [
+                        {
+                            model: userModel
+                        }]
+                    },
+                    {
+                        model: rateModel,
+                        
+                    },
+        
+                    {
+                        model: promotionModel
+                    },
+                    {
+                        model: rateTotalModel
+                        
+                    }
+                ],
+                order: [
+                  ['studentTotal', 'DESC'], 
+                ]
+                
+        });
     
-        return res.status(200).json({message: 'Success!', data: courseData})
+        return res.status(200).json({message: 'Success!', data: courseData, courseList: courseList})
     }
     catch(error) {
 		return res.status(500).json(error)
