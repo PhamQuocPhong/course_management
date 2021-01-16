@@ -372,7 +372,12 @@ let getDeatailCourse = async (req, res) => {
                     }]
                 },
                 {
-                    model: rateModel
+                    model: rateModel,
+                    
+                    include: [
+                    {
+                        model: userModel
+                    }]
                 },
 
                 {
