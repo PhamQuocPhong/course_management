@@ -17,44 +17,49 @@
 		</v-row>
 
 		<v-row>
-			<v-col cols="12" sm="6" md="6" lg="3" v-for="item in labels">
-				<v-card>
-					<v-card-title absolute>{{ item.title }}</v-card-title>
-					<v-img :src="item.image" height="200" ></v-img>
-				</v-card>
-			</v-col>
-		</v-row>
-
-		<v-row>
-			<h2>Quan tâm nhất</h2>
-
-			<v-row v-if="mostJoinCourses.length">
-				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in mostJoinCourses">
-					<m-item :item="item" :key="item.id"></m-item>
-				</v-col>
-			</v-row>
-		</v-row>
-
-		<v-row>
-			<h2>Xem nhiều nhất</h2>
-
-			<v-row v-if="mostWatchingCourses.length">
-				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in mostWatchingCourses">
-					<m-item :item="item" :key="item.id"></m-item>
-				</v-col>
-			</v-row>
-		</v-row>
-
-		<v-row>
-			<h2>Mới nhất</h2>
+			<div class="title">
+				<h2> 
+					<span>Mới nhất </span>
+				</h2>
+			</div>
 
 			<v-row v-if="newestCourses.length">
-				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in newestCourses">
+				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in newestCourses" :key="item.id">
 					<m-item :item="item" :key="item.id"></m-item>
 				</v-col>
 			</v-row>
 		</v-row>
 	
+
+		<v-row>
+			<div class="title">
+				<h2> 
+					<span>Quan tâm nhất </span>
+				</h2>
+			</div>
+
+			<v-row v-if="mostJoinCourses.length">
+				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in mostJoinCourses" :key="item.id">
+					<m-item :item="item" :key="item.id"></m-item>
+				</v-col>
+			</v-row>
+		</v-row>
+
+		<v-row>
+			<div class="title">
+				<h2> 
+					<span>Xem nhiều nhất </span>
+				</h2>
+			</div>
+
+			<v-row v-if="mostWatchingCourses.length">
+				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in mostWatchingCourses" :key="item.id">
+					<m-item :item="item" :key="item.id"></m-item>
+				</v-col>
+			</v-row>
+		</v-row>
+
+
 	</v-container>
 	<v-main>
 				
@@ -62,6 +67,11 @@
 	<m-footer></m-footer>
 </div>
 </template>
+
+<style lang="scss">
+
+
+</style>
 
 <script type="text/javascript">
 // components
@@ -88,38 +98,20 @@ export default {
 	data(){
 		return {
 			sliders: [
-				{
-	            src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+			  {
+	            src: 'node.jpg',
 	          },
 	          {
-	            src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+	           src: 'php.jpg',
 	          },
 	          {
-	            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+	            src: 'vue.jpg',
 	          },
 	          {
-	            src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+	            src: 'flutter.jpg',
 	          },
 			],
 
-			labels: [
-				{
-					title: "Rẻ nhất",
-					image: "https://avatars2.githubusercontent.com/u/45070636?s=460&u=198666aa3eb37f3e7b6fd8e745d53385ffa6ee8f&v=4",
-				},
-				{
-					title: "Hay nhất",
-					image: "https://avatars2.githubusercontent.com/u/45070636?s=460&u=198666aa3eb37f3e7b6fd8e745d53385ffa6ee8f&v=4",
-				},
-				{
-					title: "Quan tâm nhiều nhất",
-					image: "https://avatars2.githubusercontent.com/u/45070636?s=460&u=198666aa3eb37f3e7b6fd8e745d53385ffa6ee8f&v=4",
-				},
-				{
-					title: "Rẻ nhất",
-					image: "https://avatars2.githubusercontent.com/u/45070636?s=460&u=198666aa3eb37f3e7b6fd8e745d53385ffa6ee8f&v=4",
-				}
-			],
 			mostJoinCourses: [],	
 			mostWatchingCourses: [],
 			newestCourses: [],
@@ -136,7 +128,7 @@ export default {
 			const newestCoursesResponse = await HomeService.getNewestCourses();
 			if(newestCoursesResponse.status === 200){
 				this.newestCourses = newestCoursesResponse.data.data;
-				
+			
 			}
 
 			const mostWatchingCoursesResponse = await HomeService.getMostJoinCourses();

@@ -1,6 +1,6 @@
 <template>
-	<v-container>
-		<v-row v-show="show">
+	<v-container  v-show="show">
+		<v-row>
 			<v-col cols="12" sm="8" md="8" lg="8">
 
 				<v-card >
@@ -39,20 +39,22 @@
 				              align="center"
 				              class="mx-0"
 				            >
-
 				            </v-row>
+
+				            <p>{{ course.description }}</p>
 
 				            <div class="my-4 subtitle-1 red--text font-weight-bold">
 				              {{ course.price | toCurrency }} VNĐ
 				            </div>
 
-				            <div>
-				              <code>Giảm tới:<sup> {{ course.promotion_price | toCurrency }}</sup></code>
+				             <div>
+				              <p> Số học viên: <code>{{ course.studentTotal }}</code> </p>
 				            </div>
+
 
 				        </v-card-text>
 
-					        <v-col cols="12" v-html="course.description">
+					        <v-col cols="12" v-html="course.fullDescription">
 
 					        </v-col>
 				        </v-card>
@@ -69,7 +71,7 @@
 				        >
 				        	<v-card-text>
 				        	 <v-rating
-				                :value="course.rates_avg"
+				                :value=" course.hasOwnProperty('rateTotal') ? course.rateTotal.total : 0"
 				                color="amber"
 				                dense
 				                half-increments
@@ -91,23 +93,33 @@
 			</v-col> 
 
 			<v-col cols="12" sm="4" md="4" lg="4">
-				<v-card v-if="course.user">
-					<v-card-title>{{ course.user.name }}</v-card-title>
-					<v-card-text><b>Họ tên:</b> {{ course.user.phone }}</v-card-text>
-					<v-card-text><b>Địa chỉ:</b> {{ course.user.address }}</v-card-text>
-					
-					<v-card-text>
-						<v-btn small outlined @click="openWindowChat(course.user)">
-							Chat với người bán
-							<v-icon>mdi-account</v-icon>
-						</v-btn>
-					</v-card-text>
+				<v-card>
+					<v-subheader>Giảng viên: </v-subheader>
 
-					<v-divider></v-divider>
+					<div v-for="(item, index) in course.courseTeachers">
+						<v-divider></v-divider>
+						<v-card-title>Họ tên: <router-link class="pl-2" :to="`/users/${item.user.id}`" >{{ item.user.name }}</router-link></v-card-title>
+						<v-card-text><b>Email:</b> {{ item.user.email }}</v-card-text>
+					</div>
 
+		
 					<v-card-text>AAAAAAAAA</v-card-text>
 				</v-card>
 			</v-col> 
+		</v-row>
+
+		<v-row>
+			<div class="title">
+				<h2> 
+					<span>Khóa học liên quan</span>
+				</h2>
+			</div>
+
+			<!-- <v-row v-if="newestCourses.length">
+				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in newestCourses" :key="item.id">
+					<m-item :item="item" :key="item.id"></m-item>
+				</v-col>
+			</v-row> -->
 		</v-row>
 	</v-container>
 </template>
@@ -161,7 +173,7 @@ export default {
 
 	      setTimeout(async () => {
 	      	var res = await CourseService.fetch(id);
-	      	console.log(res);
+	      	this.course = res.data.data
 	      }, 200);
 	    },
 

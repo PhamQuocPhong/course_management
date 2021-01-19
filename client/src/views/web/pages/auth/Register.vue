@@ -4,16 +4,20 @@
       <v-row>
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
-            <v-card class="elevation-12">
+            <v-card 
+            class="elevation-12"
+            v-if="!showVerifyForm"
+            >
               <v-toolbar color="primary" dark flat>
                 <v-toolbar-title class="text-center">
-                  Sign Up
+                  Đăng kí
                 </v-toolbar-title>
               </v-toolbar>
               <v-card-text>
-                <v-form ref="form" v-model="valid" :lazy-validation="lazy">
-
-
+                <v-form 
+                ref="form" 
+                v-model="valid" :lazy-validation="lazy"
+                >
                    <v-text-field
                     label="Họ tên"
                     prepend-icon="mdi-account-plus"
@@ -52,7 +56,7 @@
                     link
                     @click="redirectLogin"
                   >
-                    Back to Login
+                    Về đăng nhập
                     <v-icon>mdi-login-variant</v-icon>
                   </v-btn>
                 </v-form>
@@ -60,9 +64,11 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="register">Sign up</v-btn>
+                <v-btn  block color="primary" @click="register" v-if="!showVerifyForm">Submit</v-btn>
               </v-card-actions>
             </v-card>
+            <m-form-otp :email="form.email" v-else>
+            </m-form-otp>
           </v-flex>
         </v-layout>
       </v-row>
@@ -71,8 +77,17 @@
 </template>
 
 <script>
+// service 
 import Auth from "@/services/auth";
+
+// component
+import FormOTP from "./components/FormOTP";
+
 export default {
+
+  components: {
+    'm-form-otp': FormOTP
+  },
 
   data() {
     return {
@@ -83,7 +98,9 @@ export default {
         password: "",
         name: "",
         email: "",
-      }
+      },
+
+      showVerifyForm: false,
     };
   },
 
@@ -99,20 +116,19 @@ export default {
           Auth.register(this.form).then(res => {
 
             if (res.status === 201) {
+              this.showVerifyForm = true;
+              this.$store.dispatch("components/progressLoading", { option: "hide" });
+
               toastr.success(
-                "<p> Đăng kí thành công <p>",
+                "<p> Kiểm tra email của bạn để hoàn tất đăng kí. <p>",
                 "Success",
-                { timeOut: false }
+                { timeOut: 1000 }
               );
 
-              this.$store.dispatch("components/progressLoading", { option: "hide" })
-
-              this.$refs.form.reset();
             } else if (res.status === 401) {
 
               toastr.error(res.data.message, "Error", { timeOut: 1000 });
               this.$store.dispatch("components/progressLoading", { option: "hide" })
-
             } else {
 
               toastr.error("Internal Server Error", "Error", {
@@ -127,7 +143,7 @@ export default {
     },
 
     redirectLogin() {
-      this.$router.push("/auth/login");
+      this.$router.push("/login");
     }
   },
 
