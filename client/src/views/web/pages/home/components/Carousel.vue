@@ -5,7 +5,7 @@
     <v-carousel-item 
       v-for="(item,i) in items"
       :key="i"
-      :src="item"
+      :src="getImage(item.src)"
       reverse-transition="fade-transition"
       transition="fade-transition"
     ></v-carousel-item>
@@ -20,8 +20,10 @@
   		items: Array
   	},
 
-    mounted(){
-
+    methods: {
+      getImage(image) {
+        return require(`@/assets/img/slider/${image}`);
+      }
     }
   }
 </script>

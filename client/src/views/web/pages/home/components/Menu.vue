@@ -1,8 +1,8 @@
 <template>
 <v-list class="pt-0">
       <v-list-group
-        v-for="item in items"
-        :key="item.title"
+        v-for="item in categories"
+        :key="item.id"
         v-model="item.active"
         :prepend-icon="item.action"
         no-action
@@ -10,17 +10,17 @@
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title   v-text="item.title"></v-list-item-title>
+            <v-list-item-title   v-text="item.name"></v-list-item-title>
           </v-list-item-content>
         </template>
 
         <v-list-item
          
-          v-for="child in item.items"
-          :key="child.title"
+          v-for="child in item.subCategory"
+          :key="child.id"
         >
           <v-list-item-content class="pointer">
-            <v-list-item-title   v-text="child.title"></v-list-item-title>
+            <v-list-item-title   v-text="child.name"></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-group>
@@ -37,10 +37,13 @@
 </style>
 
 <script type="text/javascript">
+
+import CategoryService from "@/services/category";
+
 export default {
 	data(){
 		return {
-			items: [
+			categories: [
 		        {
 		          action: 'mdi-ticket',
 		          items: [{ title: 'List Item' }],
@@ -81,6 +84,20 @@ export default {
 		          title: 'Promotions',
 		        },
 		      ],
+		}
+	},
+
+	created(){
+		this.retrieveData();
+	},
+
+
+	methods: {
+		async retrieveData(){
+			const res = await CategoryService.fetchAll();
+			if(res.status === 200){
+				this.categories = res.data.data
+			}
 		}
 	}
 }

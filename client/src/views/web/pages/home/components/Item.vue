@@ -47,14 +47,17 @@
             <div class="teachers" v-if="getItem.courseTeachers.length">
               <p>Giảng viên: 
                 <span v-for="(item, index) in getItem.courseTeachers" class="font-weight-bold">
-                  {{ item.user.name }} <span v-if="index > getItem.courseTeachers.length">, </span>
+                  {{ item.user.name }}<span v-if="index < getItem.courseTeachers.length - 1">, </span>
                 </span>
               </p>
             </div>
           </v-card-text>
           <v-card-actions class="bottom">
             <div class="text-right">
-              <v-btn color="primary"  outlined small @click="viewDetail()">  Xem chi tiết</v-btn>
+<!--               <v-btn color="pink" class="mr-2"  outlined small @click="favorite(getItem)"> 
+                Yêu thích
+              </v-btn> -->
+              <v-btn color="primary"  outlined small @click="viewDetail(getItem)">  Xem chi tiết</v-btn>
             </div>
           </v-card-actions>
       </v-col>
@@ -73,31 +76,39 @@
 </style>
 
 <script>
-  export default {
+// services 
+import CookieService from "@/services/cookie";
 
-    props: {
-      item: Object
-    },
+export default {
 
-    data: () => ({
-      loading: false,
-      selection: 1,
-    }),
+  props: {
+    item: Object
+  },
 
-    computed: {
-      getItem: {
-        get(){
-          return this.item
-        }
-      },
-    },
+  data: () => ({
+    loading: false,
+    selection: 1,
+  }),
 
-    methods: {
-      viewDetail(){
- 
+  computed: {
+    getItem: {
+      get(){
+        return this.item
       }
     },
+  },
+
+  methods: {
+    viewDetail(course){
+      this.$router.push({
+        name: "courseDetail",
+        params: {
+          id: course.id
+        }
+      })
+    }
+  },
 
 
-  }
+}
 </script>

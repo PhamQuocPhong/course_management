@@ -22,6 +22,15 @@ export default {
     }
   },
 
+  async verify(data) {
+    try {
+      const result = await axios.post(this.rootURL + `verify`, data);
+      return result;
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
   async socialLogin(social, data)
   {
     try {
