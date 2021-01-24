@@ -95,7 +95,7 @@ const routes = [
 
         children: [
           {
-            path: "/",
+            path: "category/:categoryId",
             component: CourseIndex,
             name: "courseIndex",
           },

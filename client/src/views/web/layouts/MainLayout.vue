@@ -1,7 +1,7 @@
 <template>
   <div id="layout-basic">
     <toolbar-header></toolbar-header>
-    <v-main>
+    <v-main class="pt-0">
       <div id="page-wrapper">
         <div class="main-content">
           <router-view></router-view>

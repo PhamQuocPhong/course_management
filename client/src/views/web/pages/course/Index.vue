@@ -1,12 +1,11 @@
 <template>
 	<v-container>
+    <v-row class=" menu-header">
+        <menu-header :class="`d-flex`"></menu-header>
+    </v-row>
     <v-row>
       <v-flex :class="{ 'pa-4': !isMobile }">
         <v-card flat>
-          <v-row no-gutter>
-            <h2>HHEHE</h2>
-          </v-row>
-
           <v-layout
             v-resize="onResize"
             column
@@ -15,7 +14,7 @@
             v-if="courses.length"
           >
             <v-row>
-              <v-col v-for="(item, index) in courses" cols="12" lg="9" :key="item.id">
+              <v-col v-for="(item, index) in courses" cols="12" sm="12" md="6" lg="6" :key="item.id">
                 <m-item 
                 :item="item" 
                 v-on:action="viewDetail(item)"
@@ -139,8 +138,12 @@ export default {
       payload.page = this.currentPage;
       this.$store.dispatch("components/actionProgressHeader", { option: "show" })
       setTimeout(async () => {
-        	const res = await CourseService.fetchPaging(payload);
-        	console.log(res);
+        	const res = await CourseService.fetchPaging(payload.page, this.$route.params.categoryId);
+        	if(res.status === 200)
+          {
+            this.courses = res.data.data
+            console.log(this.courses)
+          }
       }, 200);
 
     }

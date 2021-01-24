@@ -1,19 +1,21 @@
 <template>
   <v-card
+  class="item"
     :loading="loading"
   >
     <v-row>
-      <v-col cols="5">
+      <v-col cols="5" class="d-flex">
         <v-img 
-          v-if="getItem.image"
           height="270"
-          :src="getItem.image"
-        >
-        </v-img>
+          
+          :aspect-ratio="16/9"
+          :src="getItem.avatar"
+        ></v-img>
 
         <v-img
-          height="270"
-          src="@/assets/img/default.jpg"
+        v-if="!getItem.avatar"
+        height="270"
+        src="@/assets/img/default.jpg"
         >
         </v-img>
       </v-col>
@@ -32,44 +34,81 @@
                 readonly
                 size="14"
               ></v-rating>
-
             </v-row>
 
-            <div class="text-right">
-              <v-btn color="primary"  outlined small @click="viewDetail()">  Xem chi tiết</v-btn>
+             <div class="my-4 subtitle-1 red--text font-weight-bold ">
+              {{ getItem.price | toCurrency }}
+            </div>
+
+            <div>
+              <p> Số học viên: <code>{{ getItem.studentTotal }}</code> </p>
+            </div>
+
+            <div class="teachers" v-if="getItem.courseTeachers.length">
+              <p>Giảng viên: 
+                <span v-for="(item, index) in getItem.courseTeachers" class="font-weight-bold">
+                  {{ item.user.name }}<span v-if="index < getItem.courseTeachers.length - 1">, </span>
+                </span>
+              </p>
             </div>
           </v-card-text>
+          <v-card-actions class="bottom">
+            <div class="text-right">
+<!--               <v-btn color="pink" class="mr-2"  outlined small @click="favorite(getItem)"> 
+                Yêu thích
+              </v-btn> -->
+              <v-btn color="primary"  outlined small @click="viewDetail(getItem)">  Xem chi tiết</v-btn>
+            </div>
+          </v-card-actions>
       </v-col>
     </v-row>
   </v-card>
 </template>
 
+<style lang="scss">
+.item {
+  .bottom{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+}
+</style>
+
 <script>
-  export default {
+// services 
+import CookieService from "@/services/cookie";
 
-    props: {
-      item: Object
-    },
+export default {
 
-    data: () => ({
-      loading: false,
-      selection: 1,
-    }),
+  props: {
+    item: Object
+  },
 
-    computed: {
-      getItem: {
-        get(){
-          return this.item
-        }
-      },
-    },
+  data: () => ({
+    loading: false,
+    selection: 1,
+  }),
 
-    methods: {
-      viewDetail(){
- 
+  computed: {
+    getItem: {
+      get(){
+        return this.item
       }
     },
+  },
+
+  methods: {
+    viewDetail(course){
+      this.$router.push({
+        name: "courseDetail",
+        params: {
+          id: course.id
+        }
+      })
+    }
+  },
 
 
-  }
+}
 </script>

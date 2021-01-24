@@ -12,12 +12,13 @@ export default {
     }
   },
 
-  async fetchPaging(condition, currentPage) {
+  async fetchPaging(currentPage, categoryId) {
     try {
       return await axios.get(this.rootURL, {
         params: {
-          orderPrice: "DESC",
-          page: currentPage
+          categoryId: categoryId,
+          page: currentPage,
+          
         }
       });
     } catch (error) {

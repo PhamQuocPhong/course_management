@@ -14,6 +14,9 @@ import BreadCrumbs from "@/components/BreadCrumbs";
 import Pagination from '@/components/Pagination.vue';
 import ProgressHeader from "@/components/progress/ProgressHeader.vue";
 import ProgressLoading from "@/components/progress/ProgressLoading.vue";
+
+import MenuHeader from "@/components/MenuHeader.vue";
+
 // config
 import constant from '@/config/constant';
 import lang from '@/config/lang';
@@ -62,5 +65,6 @@ Vue.component('pagination-custom', Pagination);
 
 Vue.component('progress-header', ProgressHeader);
 Vue.component('progress-loading', ProgressLoading);
+Vue.component('menu-header', MenuHeader);
 
 Vue.use(VueCookies);
