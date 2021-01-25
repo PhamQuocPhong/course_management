@@ -25,15 +25,15 @@ import lang from '@/config/lang';
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
-// //handle error component
-// Vue.config.errorHandler = function(err, vm, info) {
-//   console.log(`Error: ${err.toString()}\nInfo: ${info}`);
-// }
+//handle error component
+Vue.config.errorHandler = function(err, vm, info) {
+  console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+}
 
-// // handle warning component
-// Vue.config.warnHandler = function(msg, vm, trace) {
-//   console.log(`Warn: ${msg}\nTrace at ${vm.title}: ${trace}` );
-// }
+// handle warning component
+Vue.config.warnHandler = function(msg, vm, trace) {
+
+}
 
 
 global.axios = require("axios");

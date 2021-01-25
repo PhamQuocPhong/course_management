@@ -44,13 +44,21 @@
 				            <p>{{ course.description }}</p>
 
 				            <div class="my-4 subtitle-1 red--text font-weight-bold">
-				              {{ course.price | toCurrency }} VNĐ
+				              {{ course.price | toCurrency }} 
 				            </div>
 
 				             <div>
 				              <p> Số học viên: <code>{{ course.studentTotal }}</code> </p>
 				            </div>
 
+				            <div class="my-4 subtitle-1">
+				              <h2 class="font-weight-bold mb-2">Ưu đãi: </h2>
+
+				              <div v-for="(promotion, index) in course.promotions">
+				              	<span class=" red--text ">{{ promotion.name }}</span>
+				              	<p>{{ promotion.description }}</p>
+				              </div>
+				            </div>
 
 				        </v-card-text>
 
@@ -82,7 +90,7 @@
 
 				            <v-card-text>
 				              <h3>Lượt đánh giá: </h3>
-				              <m-rating :ratings="course.rates">
+				              <m-rating :ratings.sync="course.rates" >
 				              </m-rating>
 							</v-card-text>
 				      
@@ -102,8 +110,7 @@
 						<v-card-text><b>Email:</b> {{ item.user.email }}</v-card-text>
 					</div>
 
-		
-					<v-card-text>AAAAAAAAA</v-card-text>
+	
 				</v-card>
 			</v-col> 
 		</v-row>
@@ -114,21 +121,21 @@
 					<span>Khóa học liên quan</span>
 				</h2>
 			</div>
-
-			<!-- <v-row v-if="newestCourses.length">
-				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in newestCourses" :key="item.id">
+		</v-row>
+					<v-row v-if="relatedCourses.length">
+				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in relatedCourses" :key="item.id">
 					<m-item :item="item" :key="item.id"></m-item>
 				</v-col>
-			</v-row> -->
-		</v-row>
+			</v-row>
 	</v-container>
 </template>
 
 <script type="text/javascript">
 
 // components	
-import Rating from "./components/detail/ListRating";
+import Rating from "./components/detail/ListRating.vue";
 import CourseService from "@/services/course";
+import MItem from "./components/index/Item";
 
 //mixin
 import IsMobile from "@/mixins/is_mobile";
@@ -137,7 +144,8 @@ export default {
 	mixins: [IsMobile],
 
     components: {
-    	'm-rating': Rating
+    	'm-rating': Rating,
+    	'm-item': MItem
 	},
 
 	data(){
@@ -150,6 +158,7 @@ export default {
 	        ],
 	         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
 	        course: {},
+	        relatedCourses: [],
 		}
 	},
 
@@ -174,6 +183,7 @@ export default {
 	      setTimeout(async () => {
 	      	var res = await CourseService.fetch(id);
 	      	this.course = res.data.data
+	      	this.relatedCourses = res.data.courseList;
 	      }, 200);
 	    },
 

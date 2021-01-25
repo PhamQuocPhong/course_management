@@ -8,16 +8,14 @@
           <v-list-item :key="item.id">
             <template v-slot:default="{ active }">
               <v-list-item-content>
-                <v-list-item-title v-text="item.Users[0].name"></v-list-item-title>
+                <v-list-item-title v-text="item.user.name"></v-list-item-title>
 
                 <v-list-item-subtitle v-text="item.comment"></v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action>
-                <v-list-item-action-text v-text="item.action"></v-list-item-action-text>
-
                     <v-rating
-                        :value="item.rating"
+                        :value="item.point"
                         color="amber"
                         dense
                         half-increments
@@ -49,9 +47,5 @@ export default {
 
     }
   },
-
-  mounted(){
-    console.log(this.ratings)
-  }
 }
 </script>
