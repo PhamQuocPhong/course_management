@@ -39,7 +39,7 @@
                         height="auto"
                         contain
                         :aspect-ratio="16/9"
-                        src="@/assets/img/default.png"
+                        src="@/assets/img/default_course.png"
                         >
 
                         </v-img>

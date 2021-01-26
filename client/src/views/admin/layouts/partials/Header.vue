@@ -2,26 +2,14 @@
   <nav id="header-top">
     <v-app-bar app>
 
-    <div style="width: 10%;">
-      <v-list-item class="logo" :to="'/'">
-          <v-img
-            width="50"
-            src="@/assets/img/logo.png"
-          ></v-img>
-        <v-list-item-title>MFIND</v-list-item-title>
-      </v-list-item>
-    </div>
-
-      <v-spacer></v-spacer>
-
-
-      <v-col cols="6" lg="4" md="4">
-        <search-header
-        :data.sync="inputSearch"
-
-        >
-        </search-header>
-      </v-col>
+    <div v-if="!isMobile()">
+        <v-app-bar-nav-icon @click.stop="mini = !mini"></v-app-bar-nav-icon>
+      </div>
+      <div v-else>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      </div>
+    <v-spacer></v-spacer>
+  
 
 <!--       <div style="width: 60px;">
         <v-btn icon @click="switchMode()">
@@ -29,15 +17,20 @@
         </v-btn>
       </div> -->
 
-      <div>
-        <v-btn outlined small color="primary">
+      <div v-if="!userInfo">
+        <v-btn outlined small color="primary" @click="login()">
           Đăng nhập
         </v-btn>
       </div>
 
-      <v-menu transition="slide-y-transition">
+      <v-menu 
+      v-else
+      transition="slide-y-transition"
+      >
         <template v-slot:activator="{ on: activeMenu }">
-         
+          <v-avatar v-on="activeMenu">
+             <img src="@/assets/img/avatar_default.png" alt="Avatar" />
+          </v-avatar>
         </template>
         <v-list>
           <v-list-item
@@ -55,6 +48,7 @@
         </v-list>
       </v-menu>
     </v-app-bar>
+    <navigation v-bind:mini="mini" v-bind:drawer="drawer"></navigation>
   </nav>
 </template>
 
@@ -74,10 +68,12 @@
 <script>
 
 import SearchHeader from "./SearchHeader";
-
+import CookieService from "@/services/cookie";
+import NavigationDrawer from "./Sidebar.vue";
 export default {
   components: {
-    'search-header': SearchHeader
+    'search-header': SearchHeader,
+    'navigation': NavigationDrawer
   },
 
   data() {
@@ -85,7 +81,9 @@ export default {
       mini: false,
       drawer: false,
       menuInfo: [
-        { title: "Profile", icon: "mdi-account-circle", link: "/user/profile" },
+        { title: "Thông tin", icon: "mdi-account-circle", link: "/profile/info" },
+        { title: "Đăng bài", icon: "mdi-plus-box-outline", link: "/profile/create_post" },
+        { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/profile/list_motel" },
         { title: "Logout", icon: "mdi-login-variant", link: "/auth/logout" }
       ],
       theme: this.getTheme(),
@@ -105,6 +103,11 @@ export default {
   },
 
   methods: {
+
+    login(){
+      this.$router.push('/auth/login');
+    },
+
     isMobile() {
       if (screen.width <= 768) {
         return true;
@@ -135,6 +138,10 @@ export default {
       return this.theme ? "mdi-brightness-4" : "mdi-brightness-5";
     },
 
+    userInfo()
+    {
+      return CookieService.get('userInfo');
+    }
   }
 };
 </script>

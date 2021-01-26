@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <v-card class="mb-3">
       <breadcrumbs></breadcrumbs>
     </v-card>
