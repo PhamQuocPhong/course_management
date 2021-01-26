@@ -22,6 +22,13 @@ import Course from "@/views/web/pages/course/Course.vue";
 import CourseIndex from "@/views/web/pages/course/Index.vue";
 import CourseDetail from "@/views/web/pages/course/Detail.vue";
 
+import StudentProfile from "@/views/web/pages/student/Profile.vue";
+import StudentProfileInfo from "@/views/web/pages/student/Info.vue";
+import StudentProfileCourse from "@/views/web/pages/student/Course.vue";
+
+import TeacherProfile from "@/views/web/pages/teacher/Profile.vue";
+import TeacherProfileInfo from "@/views/web/pages/teacher/Info.vue";
+import TeacherProfileCourse from "@/views/web/pages/teacher/Course.vue";
 
 
 
@@ -51,6 +58,31 @@ const routes = [
         path: "login",
         component: AdminLogin,
         name: "adminLogin",
+      },
+
+      {
+        path: "categories",
+        component: Category,
+        name: "adminCategory",
+        children: [
+          {
+            path: "/",
+            component: CategoryIndex,
+            name: "adminCategoryIndex"
+          },
+
+          {
+            path: ":id",
+            component: CategoryEdit,
+            name: "adminCategoryEdit"
+          },
+
+          {
+            path: "create",
+            component: CategoryCreate,
+            name: "adminCategoryCreate"
+          },
+        ]
       },
 
     ]
@@ -105,7 +137,45 @@ const routes = [
             name: "courseDetail"
           }
         ]
+      },
+
+      {
+        path: "student/profile",
+        component: StudentProfile,
+
+        children: [
+          {
+            path: "info",
+            component: StudentProfileInfo,
+            name: "studentProfile",
+          },
+          {
+            path: "courses",
+            component: StudentProfileCourse,
+            name: "studentCourse"
+          }
+        ]
+      },
+
+      {
+        path: "teacher/profile",
+        component: StudentProfile,
+
+        children: [
+          {
+            path: "info",
+            component: TeacherProfile,
+            name: "teacherProfile",
+          },
+          {
+            path: "courses",
+            component: TeacherProfileCourse,
+            name: "teacherCourse"
+          }
+        ]
       }
+
+
     ]
   },
 
