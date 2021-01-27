@@ -3,10 +3,6 @@
     <v-layout v-resize="onResize">
       <v-container>
         <v-row>
-          <label-table title="Profile"> </label-table>
-        </v-row>
-
-        <v-row>
           <v-col cols="12" md="4" :class="{ 'pa-0': isMobile }">
             <m-menu></m-menu>
           </v-col>
@@ -126,12 +122,7 @@ export default {
 
   data() {
     return {
-      menuInfo: [
-        { title: "Thông tin", icon: "mdi-account-circle", link: "/profile/info" },
-        { title: "Khóa học yêu thích", icon: "mdi-plus-box-outline", link: "/profile/create_post" },
-        { title: "Khóa học đã đăng ký", icon: "mdi-playlist-edit", link: "/profile/list_motel" },
-        { title: "Logout", icon: "mdi-login-variant", link: "/auth/login" }
-      ],
+
       edit: false,
       isMobile: false,
       showAvatarDialog: false,

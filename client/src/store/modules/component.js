@@ -5,7 +5,7 @@ export  const getters = {
     progressSelect: state => state.progressSelect,
 
     currentPageUser: state => state.pagination.currentPageUser,
-    currentPagePost: state => state.pagination.currentPagePost
+    currentPagePost: state => state.pagination.currentPagePost,
   };
 
 

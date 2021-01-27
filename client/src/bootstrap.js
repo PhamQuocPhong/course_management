@@ -14,8 +14,16 @@ import BreadCrumbs from "@/components/BreadCrumbs";
 import Pagination from '@/components/Pagination.vue';
 import ProgressHeader from "@/components/progress/ProgressHeader.vue";
 import ProgressLoading from "@/components/progress/ProgressLoading.vue";
+import DropZone from "@/components/DropZone.vue";
 
+import LabelTable from '@/components/label/LabelTable';	
 import MenuHeader from "@/components/MenuHeader.vue";
+
+import ButtonCreate from '@/components/button/ButtonCreate';
+import ButtonDetail from '@/components/button/ButtonDetail';
+import ButtonSave from '@/components/button/ButtonSave';
+import ButtonCancel from '@/components/button/ButtonCancel';
+import ButtonBackList from '@/components/button/ButtonBackList';
 
 // config
 import constant from '@/config/constant';
@@ -26,14 +34,14 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 //handle error component
-Vue.config.errorHandler = function(err, vm, info) {
-  console.log(`Error: ${err.toString()}\nInfo: ${info}`);
-}
+// Vue.config.errorHandler = function(err, vm, info) {
+//   console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+// }
 
-// handle warning component
-Vue.config.warnHandler = function(msg, vm, trace) {
+// // handle warning component
+// Vue.config.warnHandler = function(msg, vm, trace) {
 
-}
+// }
 
 
 global.axios = require("axios");
@@ -45,6 +53,7 @@ global.toastr.options.closeButton = true;
 global.toastr.options.closeMethod = "fadeOut";
 global.toastr.options.closeDuration = 500;
 global.toastr.options.closeEasing = "swing";
+
 
 
 const gauthOption = {
@@ -59,12 +68,20 @@ Vue.prototype.$validation = helperValidation;
 Vue.prototype.$constant = constant;
 Vue.prototype.$lang = lang;
 
+Vue.component('btn-create', ButtonCreate);
+Vue.component('btn-detail', ButtonDetail);
+Vue.component('btn-save', ButtonSave);
+Vue.component('btn-cancel', ButtonCancel);
+Vue.component('btn-back-list', ButtonBackList);
 
 Vue.component('breadcrumbs', BreadCrumbs);
 Vue.component('pagination-custom', Pagination);
+Vue.component('label-table', LabelTable);
 
 Vue.component('progress-header', ProgressHeader);
 Vue.component('progress-loading', ProgressLoading);
 Vue.component('menu-header', MenuHeader);
+Vue.component('m-dropzone', DropZone);
+
 
 Vue.use(VueCookies);

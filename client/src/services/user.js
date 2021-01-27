@@ -12,12 +12,11 @@ export default {
     }
   },
 
-  async fetchPaging(condition, currentPage) {
+  async fetchPaging(query) {
     try {
       return await axios.get(this.rootURL, {
         params: {
-          orderBy: "DESC",
-          page: currentPage
+          page: query.urrentPage
         }
       });
     } catch (error) {

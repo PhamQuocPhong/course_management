@@ -1,6 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import componentModules from '@/store/modules/component';
+import userModules from '@/store/modules/user';
+import categoryModules from '@/store/modules/category';
+
 import CookieService from '@/services/cookie';
 Vue.use(Vuex);
 
@@ -8,6 +11,8 @@ const store = new Vuex.Store({
 
 	modules: {
 		components: componentModules,
+    users: userModules,
+    categories: categoryModules
 	}
 
 });

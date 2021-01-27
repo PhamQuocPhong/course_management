@@ -35,15 +35,21 @@
       </v-col>
 
 
-      <div>
+      <div v-if="!userInfo">
         <v-btn outlined small color="primary"  @click="redirectLogin()">
           Đăng nhập
         </v-btn>
       </div>
 
-      <v-menu transition="slide-y-transition">
+      
+      <v-menu 
+      v-else
+      transition="slide-y-transition"
+      >
         <template v-slot:activator="{ on: activeMenu }">
-         
+          <v-avatar v-on="activeMenu">
+            <img src="@/assets/img/avatar_default.png" alt="Avatar" />
+          </v-avatar>
         </template>
         <v-list>
           <v-list-item
@@ -85,8 +91,11 @@
 </style>
 
 <script>
-
+// component
 import SearchHeader from "./SearchHeader";
+
+// services
+import CookieService from "@/services/cookie";
 
 export default {
   components: {
@@ -97,14 +106,46 @@ export default {
     return {
       mini: false,
       drawer: false,
-      menuInfo: [
-        { title: "Profile", icon: "mdi-account-circle", link: "/user/profile" },
-        { title: "Logout", icon: "mdi-login-variant", link: "/auth/logout" }
+       menuInfo: [
       ],
       theme: this.getTheme(),
 
       inputSearch: "",
     };
+  },
+
+  created(){
+    if(this.userInfo)
+    {
+      if(this.userInfo.roleId === 2)
+      {
+        this.menuInfo = [
+          { title: "Thông tin", icon: "mdi-account-circle", link: "/teacher/profile/info" },
+          { title: "Đăng khóa học", icon: "mdi-plus-box-outline", link: "/teacher/profile/create_post" },
+          { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/teacher/profile/course" },
+          { title: "Logout", icon: "mdi-login-variant", link: "/logout" }
+        ];
+      }else{
+        this.menuInfo = [
+          { title: "Thông tin", icon: "mdi-account-circle", link: "/student/profile/info" },
+          { title: "Đăng bài", icon: "mdi-plus-box-outline", link: "/student/profile/create_post" },
+          { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/student/profile/list_motel" },
+          { title: "Logout", icon: "mdi-login-variant", link: "/logout" }
+        ];
+      }
+    }
+  },
+
+  computed: {
+    modeIcon() {
+      return this.theme ? "mdi-brightness-4" : "mdi-brightness-5";
+    },
+    userInfo: {
+      get(){
+        return this.$store.getters["users/currentUser"];
+      }
+    },
+
   },
 
   mounted() {
@@ -148,11 +189,6 @@ export default {
     }
   },
 
-  computed: {
-    modeIcon() {
-      return this.theme ? "mdi-brightness-4" : "mdi-brightness-5";
-    },
 
-  }
 };
 </script>

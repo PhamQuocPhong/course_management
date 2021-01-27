@@ -1,5 +1,5 @@
 <template>
-<v-layout> 
+<div> 
   <div class="overlay" v-show="isLoading"></div>
   <div>
     <v-progress-circular
@@ -9,7 +9,7 @@
 
     ></v-progress-circular>
   </div>
-</v-layout>
+</div>
 </template>
 
 <style scoped>

@@ -1,7 +1,7 @@
 <template>
 	<v-btn
 		outlined
-		:color="color"
+		color="orange darken-1"
 		:class="classProp"
 		@click="emitClick()"
 	>	
@@ -22,20 +22,24 @@ export default {
 				type: String,
 				default: ""
 			},
-
+			small: {
+				type: Boolean,
+				default: true
+			},
 
 			classProp: {
 				type: String,
 			},
 			color: {
 				type: String,
-				default: "blue darken-1"
+				default: "orange darken-1"
 			},
+		},
 
-			outlined: {
-				type: Boolean,
-				default: false
-			},
+		data() {
+			return {
+				roles: this.$constant.roles,
+			}
 		},
 		methods: {
 			emitClick(){
