@@ -1,7 +1,7 @@
 <template>
   <v-container>
         <v-row>
-      <label-table :title="$lang.HOBBY"> </label-table>
+      <label-table :title="$lang.CATEOGORY"> </label-table>
     </v-row>
     <v-row class="justify-center">
       <v-col cols="12" sm="8" md="6" lg="6">
@@ -23,36 +23,33 @@
                       <v-col cols="12">
                         <v-text-field
                           placeholder=" "
-                          v-model="newHobby.value"
+                          v-model="form.name"
                           :rules="[
-                            $validation.required(newHobby.value, 'タイトル')
+                            $validation.required(form.name, 'Tiêu đề')
                           ]"
                           >
                           <template v-slot:label>
                             <div>
-                              <b> タイトル <span class="red--text"> * </span> </b>
+                              <b> Tiêu đề <span class="red--text"> * </span> </b>
                             </div>
                           </template>
                         </v-text-field>
                       </v-col>
 
                       <v-col cols="12">
-                        <div class="label">
-                         <b> ステータス </b>
-                        </div>
-                        <v-radio-group
-                            row
-                            v-model="newHobby.isValid"
+                        <v-textarea
+                          placeholder=" "
+                          v-model="form.description"
+                          :rules="[
+                            $validation.required(form.description, 'Mô tả')
+                          ]"
                           >
-                            <v-radio
-                              label="表示"
-                              :value="true"
-                            ></v-radio>
-                            <v-radio
-                              label="非表示"
-                              :value="false"
-                            ></v-radio>
-                        </v-radio-group>
+                          <template v-slot:label>
+                            <div>
+                              <b> Tiêu đề <span class="red--text"> * </span> </b>
+                            </div>
+                          </template>
+                        </v-textarea>
                       </v-col>
 
                     </v-row>
@@ -89,7 +86,7 @@
 import IsMobile from "@/mixins/is_mobile";
 import BackToList from "@/mixins/back_list";
 
-import CateogoryService from "@/services/category";
+import CategoryService from "@/services/category";
 
 export default {
 
@@ -99,9 +96,9 @@ export default {
     return {
       valid: true,
       lazy: false,
-      newHobby: {
-        value: "",
-        isValid: true,
+      form: {
+        name: "",
+        description: "",
       }
     }
   },
@@ -113,14 +110,14 @@ export default {
         var conf = confirm(this.$lang.SAVE_CONFIRM);
         if(conf){
 
-          const res = await CateogoryService.store(this.newHobby);
+          const res = await CategoryService.store(this.form);
           
           if(!res){
             toastr.error(this.$lang.CREATE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
           }else{
            toastr.success(this.$lang.CREATE_SUCCESS, this.$lang.SUCCESS, { timeOut: 1000 });
             this.backToList();
-            this.newHobby.value = "";
+            this.form.name = "";
             this.$refs.form.resetValidation();
             this.$forceUpdate();
           }

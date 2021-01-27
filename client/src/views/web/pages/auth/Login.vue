@@ -16,8 +16,10 @@
                   name="email"
                   prepend-icon="mdi-email"
                   type="email"
-                  v-model="userLogin.email"
-                  :rules="emailRules"
+                  v-model="form.email"
+                  :rules="[
+                      $validation.required(form.email, `Email`)
+                  ]"
                 ></v-text-field>
 
                 <v-text-field
@@ -26,8 +28,10 @@
                   name="password"
                   prepend-icon="mdi-lock"
                   type="password"
-                  :rules="passwordRules"
-                  v-model="userLogin.password"
+                  :rules="[
+                      $validation.required(form.password, `Mật khẩu`)
+                  ]"
+                  v-model="form.password"
                 ></v-text-field>
 
                 <div class="pb-4 caption d-flex">
@@ -38,7 +42,14 @@
                   </v-flex>
                 </div>
 
-                <v-btn block color="primary" @click="login">Login</v-btn>
+                <v-btn 
+                block 
+                color="primary" 
+                @click="login()"
+                @keyup.enter="login()"
+                >
+                  Login
+                </v-btn>
 
                 <v-card-text class="text-center horizontal-line">
                   OR Continue
@@ -101,22 +112,20 @@ import CookieServices from "@/services/cookie";
 export default {
   mixins: [IsMobile],
 
-  beforeRouteEnter(to, from, next) {
-    const tokenUser = $cookies.get("accessToken");
-    if (!tokenUser) {
-      return next();
-    }
-    return next({ path: "/profile/info" });
-  },
+  // beforeRouteEnter(to, from, next) {
+  //   const tokenUser = $cookies.get("accessToken");
+  //   if (!tokenUser) {
+  //     return next();
+  //   }
+  //   return next({ path: "/profile/info" });
+  // },
 
   data() {
     return {
       valid: true,
       lazy: false,
-      emailRules: [v => !!v || "Email is required!"],
-      passwordRules: [v => !!v || "Password is required!"],
 
-      userLogin: {
+      form: {
         email: "",
         password: "",
       },
@@ -165,19 +174,17 @@ export default {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("components/progressLoading", { option: "show" })
 
-
-        const { email, password } = this.userLogin;
-
         setTimeout(async () => {
-          const res = await AuthServices.login(email, password);
+          const res = await AuthServices.login(this.form);
 
            // case success
           if(res.data){
-            CookieServices.set("userToken", res.data.adminLogin.token);
-            CookieServices.set("userInfo", res.data.adminLogin.info);
+
+            CookieServices.set("accessToken", res.data.accessToken);
+            this.$store.commit("users/UPDATE_CURRENT_USER", res.data.findUser);
 
 
-            this.$router.push('/users');
+            this.$router.push('/');
             this.$store.dispatch("components/progressLoading", { option: "hide" })
 
           // case error
@@ -186,14 +193,14 @@ export default {
             this.$store.dispatch("components/progressLoading", { option: "hide" })
 
             // login fail -> reset input password
-            this.userLogin.password = "";
+            this.form.password = "";
 
             // update component & reset validation
             this.$forceUpdate();
             this.$refs.form.resetValidation();
           }
 
-        }, 1000);
+        }, 200);
       }
     },
 

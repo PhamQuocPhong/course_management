@@ -9,7 +9,9 @@ export default {
 	DETAIL: "Chi tiết",
 	CLOSE: "Đóng",
 	CANCEL: "Hủy",
+	BACK: "Trở về",
 
+	CATEOGORY: "Danh mục",
 
 
 	YEAR: "Năm",

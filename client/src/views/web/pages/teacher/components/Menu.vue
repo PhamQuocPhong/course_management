@@ -56,13 +56,28 @@
 
 <script type="text/javascript">
 export default {
+
+  created(){
+    if(this.userInfo.roleId === 2)
+      {
+        this.menuInfo = [
+          { title: "Thông tin", icon: "mdi-account-circle", link: "/teacher/profile/info" },
+          { title: "Đăng khóa học", icon: "mdi-plus-box-outline", link: "/teacher/profile/create_course" },
+          { title: "Khóa học của tôi", icon: "mdi-playlist-edit", link: "/teacher/profile/my_courses" },
+        ];
+      }else{
+        this.menuInfo = [
+          { title: "Thông tin", icon: "mdi-account-circle", link: "/student/profile/info" },
+          { title: "Khóa học yêu thích", icon: "mdi-playlist-star", link: "/student/profile/favorite_courses" },
+          { title: "Khóa học của tôi", icon: "mdi-playlist-edit", link: "/student/profile/my_courses" },
+        ];
+      }
+  },
+
 	data(){
 		return {
-			menuInfo: [
-	        { title: "Thông tin", icon: "mdi-account-circle", link: "/profile/info" },
-	        { title: "Đăng bài", icon: "mdi-plus-box-outline", link: "/profile/create_post" },
-	        { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/profile/list_motel" },
-		    ],
+      menuInfo: [],
+      userInfo: this.$store.getters["users/currentUser"],
 		}
 	},
 }

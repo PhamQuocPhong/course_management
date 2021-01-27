@@ -6,7 +6,7 @@ export default {
 
   async login(data) {
     try {
-      const result = await axios.post(this.rootURL + `login`);
+      const result = await axios.post(this.rootURL + `login`, data);
       return result;
     } catch (error) {
        return helperCommon.getError(error) || false; 

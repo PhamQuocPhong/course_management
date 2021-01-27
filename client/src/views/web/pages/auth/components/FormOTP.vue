@@ -1,5 +1,5 @@
 <template>
-   <v-card class="elevation-12">
+   <v-card class="elevation-12 pb-6">
       <v-toolbar color="primary" dark flat>
         <v-toolbar-title class="text-center">
           Verify OTP

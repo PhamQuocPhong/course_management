@@ -5,7 +5,7 @@
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
             <v-card 
-            class="elevation-12"
+            class="elevation-12 pb-6"
             v-if="!showVerifyForm"
             >
               <v-toolbar color="primary" dark flat>

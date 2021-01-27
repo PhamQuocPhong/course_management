@@ -3,15 +3,11 @@
     <v-layout v-resize="onResize">
       <v-container>
         <v-row>
-          <label-table title="Profile"> </label-table>
-        </v-row>
-
-        <v-row>
           <v-col cols="12" md="4" :class="{ 'pa-0': isMobile }">
             <m-menu></m-menu>
           </v-col>
 
-          <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }" v-if="!isLoading">
+          <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }" >
             <v-card tile  style="height: 100%;">
               <v-form ref="form">
                 <v-container>
@@ -25,7 +21,7 @@
                       <v-text-field
                         :disabled="!edit"
                         class="font-weight-bold"
-                        v-model="getUser.name"
+                        v-model="userInfo.name"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -40,24 +36,8 @@
                       <v-text-field
                         :disabled="!edit"
                         class="font-weight-bold"
-                        v-model="getUser.phone"
+                        v-model="userInfo.email"
                       ></v-text-field>
-                    </v-col>
-                  </v-row>
-
-                  <v-row>
-                    <v-col cols="4">
-                      <v-subheader class="font-weight-bold"
-                        >Address</v-subheader
-                      >
-                    </v-col>
-                    <v-col cols="8">
-                      <v-text-field
-                        v-model="getUser.address"
-                        :disabled="!edit"
-                        class="font-weight-bold"
-                      >
-                      </v-text-field>
                     </v-col>
                   </v-row>
 
@@ -120,23 +100,13 @@ export default {
 
   mixins: [IsMobile],
 
-  created(){
-    this.retrieveData();
-  },
 
   data() {
     return {
-      menuInfo: [
-        { title: "Thông tin", icon: "mdi-account-circle", link: "/profile/info" },
-        { title: "Đăng khóa học", icon: "mdi-plus-box-outline", link: "/profile/create_course" },
-        { title: "Danh sách khóa học", icon: "mdi-playlist-edit", link: "/profile/list_course" },
-        { title: "Logout", icon: "mdi-login-variant", link: "/auth/login" }
-      ],
+
       edit: false,
-      isMobile: false,
       showAvatarDialog: false,
       image: null,
-      isSelecting: false,
       isLoading: true,
     };
   },
@@ -177,18 +147,6 @@ export default {
           });
       }
     },
-
-    async retrieveData()
-    {
-      var userId = this.userInfo._id;
-      const res = await UserService.fetch(userId);
-
-      if(res.status === 200){
-        this.getUser = res.data[0];
-        this.isLoading = false;
-      }
-    }
-
   },
 
   computed: {

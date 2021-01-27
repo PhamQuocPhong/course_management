@@ -28,6 +28,7 @@ import StudentProfileCourse from "@/views/web/pages/student/Course.vue";
 
 import TeacherProfile from "@/views/web/pages/teacher/Profile.vue";
 import TeacherProfileInfo from "@/views/web/pages/teacher/Info.vue";
+import TeacherProfileCreateCourse  from "@/views/web/pages/teacher/CreateCourse.vue";
 import TeacherProfileCourse from "@/views/web/pages/teacher/Course.vue";
 
 
@@ -59,7 +60,14 @@ const routes = [
         component: AdminLogin,
         name: "adminLogin",
       },
+    ]
+  },
 
+
+  {
+    path: "/admin",
+    component: MainAdminLayout,
+    children: [
       {
         path: "categories",
         component: Category,
@@ -71,21 +79,21 @@ const routes = [
             name: "adminCategoryIndex"
           },
 
-          {
-            path: ":id",
-            component: CategoryEdit,
-            name: "adminCategoryEdit"
-          },
-
+          
           {
             path: "create",
             component: CategoryCreate,
             name: "adminCategoryCreate"
           },
+
+          {
+            path: ":id",
+            component: CategoryEdit,
+            name: "adminCategoryEdit"
+          },
         ]
       },
-
-    ]
+    ],
   },
 
   {
@@ -150,27 +158,37 @@ const routes = [
             name: "studentProfile",
           },
           {
-            path: "courses",
+            path: "my_courses",
             component: StudentProfileCourse,
             name: "studentCourse"
+          },
+          {
+            path: "favorite_courses",
+            component: StudentProfileCourse,
+            name: "studentFavoriteCourse"
           }
         ]
       },
 
       {
         path: "teacher/profile",
-        component: StudentProfile,
+        component: TeacherProfile,
 
         children: [
           {
             path: "info",
-            component: TeacherProfile,
-            name: "teacherProfile",
+            component: TeacherProfileInfo,
+            name: "teacherProfileInfo",
           },
           {
-            path: "courses",
+            path: "create_course",
+            component: TeacherProfileCreateCourse,
+            name: "teacherProfileCreateCourse",
+          },
+          {
+            path: "my_courses",
             component: TeacherProfileCourse,
-            name: "teacherCourse"
+            name: "teacherProfileCourse"
           }
         ]
       }

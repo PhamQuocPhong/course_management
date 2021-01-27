@@ -12,13 +12,26 @@ export default {
     }
   },
 
-  async fetchPaging(currentPage, categoryId) {
+  async fetchPagingByCategoryId(currentPage, categoryId) {
     try {
       return await axios.get(this.rootURL, {
         params: {
           categoryId: categoryId,
           page: currentPage,
-          
+        }
+      });
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
+  async fetchPaging(query) {
+    try {
+      return await axios.get(this.rootURL, {
+        params: {
+          categoryId: query.categoryId,
+          page: query.currentPage,
+          search: query.search
         }
       });
     } catch (error) {

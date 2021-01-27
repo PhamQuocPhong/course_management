@@ -3,10 +3,6 @@
     <v-layout v-resize="onResize">
       <v-container>
         <v-row>
-          <label-table title="Thông tin giảng viên"> </label-table>
-        </v-row>
-
-        <v-row>
           <v-col cols="12" md="4" :class="{ 'pa-0': isMobile }">
             <m-menu></m-menu>
           </v-col>
