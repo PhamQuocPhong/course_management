@@ -16,15 +16,30 @@ let getAllCategory = async (req, res) => {
     try
     {
         const categoryData = await categoryModel.findAll({
- 
-            include:[{model: categoryModel, as: 'subCategory'}]
-        });
+            include:[{model: categoryModel, as: 'subCategory'}]});
     
         return res.status(200).json({message: 'Success!', data: categoryData})
     }
     catch(error) {
 		return res.status(500).json(error)
 	}
+}
+
+let getMenu = async (req, res) => {
+
+    try
+    {
+        const categoryData = await categoryModel.findAll({
+            where:{ parentId: {
+                [Op.eq]: null
+            }},
+            include:[{model: categoryModel, as: 'subCategory'}]});
+    
+        return res.status(200).json({message: 'Success!', data: categoryData})
+    }
+    catch(error) {
+        return res.status(500).json(error)
+    }
 }
 
 let getCategoryPaging = async (req, res) => {
@@ -37,6 +52,24 @@ let getCategoryPaging = async (req, res) => {
         const data = await categoryModel.findAll({
             offset: offset, 
             limit: itemPerPage, 
+        });
+
+        const counts  = Math.ceil(await categoryModel.count() / itemPerPage ) 
+        return res.status(200).json({message: 'Success', data: data, pageCounts: counts })
+    }
+    catch(error)
+    {
+        return res.status(500).json(error)
+    }
+}
+
+let getByCondition = async (req, res) => {
+
+    var condition = req.query;
+    console.log(condition);
+    try{
+        const data = await categoryModel.findAll({
+            where: condition
         });
 
         const counts  = Math.ceil(await categoryModel.count() / itemPerPage ) 
@@ -93,12 +126,13 @@ let update = async (req, res) => {
 let remove = async (req, res) => {
     var id = req.params.id;
     try{
-        return await categoryModel.destroy({
+        const data = await categoryModel.destroy({
             where: {
                 id: id
             },
         });
 
+        return res.status(200).json({message: 'Success', data: data})
     }catch(error){
         return res.status(500).json({message: error})
     }
@@ -435,6 +469,7 @@ module.exports = {
     remove,
     getCategoryPaging,
 
+    getMenu,
     getAllCategory,
     getCourseWithCategory,
     pagingCourseWithCategory,

@@ -10,14 +10,36 @@ export default {
     }
    },
 
+   async fetchMenu()
+   {
+      try {
+        return  await axios.get(this.rootURL + 'menu');
+        return result;
+      } catch (error) {
+         return helperCommon.getError(error) || false; 
+      }
+   },
+
+   async fetchByCondition(condition)
+   {
+      try {
+        return  await axios.get(this.rootURL, {
+          params: condition
+        });
+        return result;
+      } catch (error) {
+         return helperCommon.getError(error) || false; 
+      }
+   },
+
    async fetchAll()
    {
-     try {
-      return  await axios.get(this.rootURL);
-      return result;
-    } catch (error) {
-       return helperCommon.getError(error) || false; 
-    }
+      try {
+        return  await axios.get(this.rootURL);
+        return result;
+      } catch (error) {
+         return helperCommon.getError(error) || false; 
+      }
    },
 
    async fetchPaging(query) {

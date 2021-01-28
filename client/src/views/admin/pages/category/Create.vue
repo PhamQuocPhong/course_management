@@ -140,7 +140,6 @@ export default {
         if(conf){
 
           const res = await CategoryService.store(this.form);
-          console.log(res);
           
           if(res.status === 200){
             toastr.success(this.$lang.CREATE_SUCCESS, this.$lang.SUCCESS, { timeOut: 1000 });
