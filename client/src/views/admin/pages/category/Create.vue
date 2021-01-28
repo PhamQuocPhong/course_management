@@ -21,6 +21,15 @@
                   <v-form class="form__custom" ref="form" v-model="valid" :lazy-validation="lazy">
                     <v-row>
                       <v-col cols="12">
+                        <m-select 
+                          label="Danh mục cha" 
+                          :items="categories"  
+                          :data.sync="form.parentId"
+                        >
+                        </m-select>
+                      </v-col>
+
+                      <v-col cols="12">
                         <v-text-field
                           placeholder=" "
                           v-model="form.name"
@@ -40,13 +49,11 @@
                         <v-textarea
                           placeholder=" "
                           v-model="form.description"
-                          :rules="[
-                            $validation.required(form.description, 'Mô tả')
-                          ]"
+                          class="no-resize"
                           >
                           <template v-slot:label>
                             <div>
-                              <b> Tiêu đề <span class="red--text"> * </span> </b>
+                              <b> Mô tả  </b>
                             </div>
                           </template>
                         </v-textarea>
@@ -86,11 +93,22 @@
 import IsMobile from "@/mixins/is_mobile";
 import BackToList from "@/mixins/back_list";
 
+// services
 import CategoryService from "@/services/category";
 
+// components
+import Select from "./components/create/Select";
 export default {
 
+  components: {
+    'm-select': Select
+  },
+
   mixins: [IsMobile, BackToList],
+
+  created(){
+    this.$store.dispatch("categories/fetchAll");
+  },
 
   data(){
     return {
@@ -99,32 +117,44 @@ export default {
       form: {
         name: "",
         description: "",
+        parentId: ""
+      }
+    }
+  },
+
+
+  computed: {
+    categories: {
+      get(){
+        return this.$store.getters["categories/categories"];
       }
     }
   },
 
   methods: {
     async save(){
+
        if(this.$refs.form.validate()){
 
         var conf = confirm(this.$lang.SAVE_CONFIRM);
         if(conf){
 
           const res = await CategoryService.store(this.form);
+          console.log(res);
           
-          if(!res){
-            toastr.error(this.$lang.CREATE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
-          }else{
-           toastr.success(this.$lang.CREATE_SUCCESS, this.$lang.SUCCESS, { timeOut: 1000 });
+          if(res.status === 200){
+            toastr.success(this.$lang.CREATE_SUCCESS, this.$lang.SUCCESS, { timeOut: 1000 });
             this.backToList();
-            this.form.name = "";
             this.$refs.form.resetValidation();
-            this.$forceUpdate();
+            
+          }else{
+           toastr.error(this.$lang.CREATE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
           }
         }
       }
     },
   },
+
 
 
 };

@@ -114,9 +114,22 @@ let subtractNotifyDateTime = (date1, date2) => {
 	}	
 }
 
+let calcPaginate = (currentPage, itemPerPage) => {
+	var offset = 0
+	if(currentPage == 1){
+		offset = 0
+	}
+	else{
+		offset = ((currentPage - 1) * itemPerPage) 
+	}
+
+	return offset;
+}
+
 
 
 module.exports = {
+	calcPaginate: calcPaginate,
 	defaultValue: defaultValue,
 	formatCurrency: formatCurrency,
 	convertDate: convertDate,

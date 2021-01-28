@@ -8,12 +8,22 @@ export default {
     } catch (error) {
       return error.response;
     }
-  },
+   },
+
+   async fetchAll()
+   {
+     try {
+      return  await axios.get(this.rootURL);
+      return result;
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+   },
 
    async fetchPaging(query) {
 
     try {
-      return  await axios.get(this.rootURL, {
+      return  await axios.get(this.rootURL + `paging`, {
         params: {
           page: query.currentPage,
           searchkey: query.searchkey,
@@ -25,7 +35,7 @@ export default {
     }
   },
 
-  async store(id, data){
+  async store(data){
     try {
       return await axios.post(this.rootURL + 'store', data);
     } catch (error) {

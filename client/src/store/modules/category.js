@@ -1,5 +1,7 @@
 import CategoryService from '@/services/category'
 
+import ComponentStore from './component';
+
 export  const getters = {
     categories: state => state.categories,
     category: state => state.category,
@@ -22,13 +24,20 @@ const state = getDefaultState()
 
 export  const actions = {
 
+    async fetchAll({ commit }, payload) {
+      var query = payload;
+      const res = await CategoryService.fetchAll();
+      if(res.status === 200){
+        var data = res.data;
+        commit("FETCH_ALL", data);
+      }
+    },
+
     async fetchPaging({ commit }, payload) {
 
       const currentPage = payload.page;
       const searchkey = payload.searchkey || null;
-
-       var query = payload;
-
+      var query = payload;
       const res = await CategoryService.fetchPaging(query);
       if(res.data){
         var data = res.data;
@@ -38,10 +47,9 @@ export  const actions = {
 
     async fetch({ commit }, payload)
     {
-      const category = payload;
-      const res = await CategoryService.fetch(category.id);
+      const res = await CategoryService.fetch(payload.id);
       if(res.data){
-        commit("FETCH", res.data);
+        commit("FETCH", res.data.data);
       }
     },
 
@@ -50,7 +58,7 @@ export  const actions = {
       const category = payload;
       const res = await CategoryService.fetch(category.id);
       if(res.status === 200){
-        commit("REMOVE", category);
+        commit("REMOVE", res);
       }
     },
 
@@ -65,6 +73,10 @@ export  const actions = {
  }
 
 export  const mutations = {
+
+    FETCH_ALL(state, data){
+      state.categories = data.data;
+    },
 
     FETCH_PAGING(state, data){
       state.categories = data.data;

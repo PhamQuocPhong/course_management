@@ -9,23 +9,99 @@ const promotionModel = require('../models/promotion');
 const rateTotalModel = require('../models/rate_total');
 
 const slugify = require('slugify');
+const helper = require('../helpers/helper');
 
 let getAllCategory = async (req, res) => {
 
     try
     {
         const categoryData = await categoryModel.findAll({
-            where:{ parentId: {
-                [Op.eq]: null
-              }},
-            include:[{model: categoryModel, as: 'subCategory'}]});
+ 
+            include:[{model: categoryModel, as: 'subCategory'}]
+        });
     
         return res.status(200).json({message: 'Success!', data: categoryData})
     }
     catch(error) {
 		return res.status(500).json(error)
 	}
-   
+}
+
+let getCategoryPaging = async (req, res) => {
+
+    var page = req.query.page || 1;
+    var itemPerPage = req.query.itemPerPage || 20;
+    var offset = helper.calcPaginate(page, itemPerPage);
+
+    try{
+        const data = await categoryModel.findAll({
+            offset: offset, 
+            limit: itemPerPage, 
+        });
+
+        const counts  = Math.ceil(await categoryModel.count() / itemPerPage ) 
+        return res.status(200).json({message: 'Success', data: data, pageCounts: counts })
+    }
+    catch(error)
+    {
+        return res.status(500).json(error)
+    }
+}
+
+let show = async (req, res) => {
+
+    var id = req.params.id;
+    const data = await categoryModel.findOne({where: {
+        id: id
+    }});
+
+    return res.status(200).json({message: 'Success', data: data})
+}
+
+let store = async (req, res) => {
+
+    var form = req.body
+
+    try{
+        var data = await categoryModel.create(form);
+        return res.status(200).json({message: 'Success', data: data})
+ 
+    }catch(error){
+        return res.status(500).json({message: error})
+    }
+}
+
+let update = async (req, res) => {
+
+    var form = req.body;
+    var id = req.params.id;
+    try{
+        var data = await categoryModel.update(form, {
+            where: {
+                id: id
+            },
+            returning: true,
+            plain: true
+        });
+        return res.status(200).json({message: 'Success', data: data[1]})
+ 
+    }catch(error){
+        return res.status(500).json({message: error})
+    }
+}
+
+let remove = async (req, res) => {
+    var id = req.params.id;
+    try{
+        return await categoryModel.destroy({
+            where: {
+                id: id
+            },
+        });
+
+    }catch(error){
+        return res.status(500).json({message: error})
+    }
 }
 
 let getCourseWithCategory = async (req, res) => {
@@ -352,6 +428,13 @@ let test = async (req, res) => {
 
 
 module.exports = {
+    // resfult
+    store,
+    show,
+    update,
+    remove,
+    getCategoryPaging,
+
     getAllCategory,
     getCourseWithCategory,
     pagingCourseWithCategory,

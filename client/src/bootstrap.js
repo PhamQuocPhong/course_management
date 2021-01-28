@@ -24,6 +24,7 @@ import ButtonDetail from '@/components/button/ButtonDetail';
 import ButtonSave from '@/components/button/ButtonSave';
 import ButtonCancel from '@/components/button/ButtonCancel';
 import ButtonBackList from '@/components/button/ButtonBackList';
+import ButtonRemove from '@/components/button/ButtonRemove';
 
 // config
 import constant from '@/config/constant';
@@ -73,6 +74,7 @@ Vue.component('btn-detail', ButtonDetail);
 Vue.component('btn-save', ButtonSave);
 Vue.component('btn-cancel', ButtonCancel);
 Vue.component('btn-back-list', ButtonBackList);
+Vue.component('btn-remove', ButtonRemove);
 
 Vue.component('breadcrumbs', BreadCrumbs);
 Vue.component('pagination-custom', Pagination);
