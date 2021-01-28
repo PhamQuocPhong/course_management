@@ -42,7 +42,7 @@ export  const actions = {
       if(res.data){
         commit("FETCH", res.data);
       }
-    }
+    },
 
     updateCurrentPage({commit}, payload)
     {

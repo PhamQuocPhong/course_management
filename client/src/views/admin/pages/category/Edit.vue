@@ -93,11 +93,7 @@ export default {
   mixins: [IsMobile, BackToList],
 
   async created(){
-
-     const res = await CategoryService.fetch(this.id);
-      if(res.data){
-        this.getCategory = res.data.category;
-      }
+      this.retrieveData();
   },
 
   data(){
@@ -105,13 +101,42 @@ export default {
       valid: true,
       lazy: false,
       
-      getCategory: {},
       id: this.$route.params.id // String!
     }
   },
 
+  computed: {
+    getCategory: {
+      get(){
+        return this.$store.getters["categories/category"]
+      },
+    }
+  },
+
+   watch: {
+    getCategory(data){
+      if(data.length){
+         this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+         this.isLoading = false
+      }else{
+        this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+        this.isLoading = false
+      }
+    },
+  },
+
+
   methods: {
     
+    async retrieveData()
+    {
+      var payload = {
+        id: this.id
+      }
+      this.$store.dispatch("components/actionProgressHeader", { option: "show" })
+      this.$store.dispatch("categories/fetch", payload);
+    },
+
     async save(){
         if(this.$refs.form.validate()){
           var conf = confirm(this.$lang.SAVE_CONFIRM);
@@ -127,6 +152,11 @@ export default {
           }
         }
     },
+  },
+
+  beforeDestroy()
+  {
+    this.$store.dispatch("categories/reset");
   }
 
 }

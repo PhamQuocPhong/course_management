@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import componentModules from '@/store/modules/component';
 import userModules from '@/store/modules/user';
 import categoryModules from '@/store/modules/category';
+import courseModules from '@/store/modules/course';
 
 import CookieService from '@/services/cookie';
 Vue.use(Vuex);
@@ -12,7 +13,8 @@ const store = new Vuex.Store({
 	modules: {
 		components: componentModules,
     users: userModules,
-    categories: categoryModules
+    categories: categoryModules,
+    courses: courseModules,
 	}
 
 });
