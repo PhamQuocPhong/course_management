@@ -2,6 +2,7 @@ const express = require('express');
 const categoryController = require('../controllers/category.js')
 var router = express.Router()
 
+router.get('/menu', categoryController.getMenu);
 router.get('/', categoryController.getAllCategory);
 router.get('/paging', categoryController.getCategoryPaging);
 router.get('/:id', categoryController.show);

@@ -26,8 +26,14 @@ export default {
 	ERROR: "Lỗi",
 	SUCCESS: "Thành công",
 
+	CREATE_SUCCESS: "Thêm thành công",
+	CREATE_FAIL: "Thêm thất bại",
+
 	UPDATE_SUCCESS: "Cập nhật thành công",
 	UPDATE_FAIL: "Cập nhật thất bại",
+
+	REMOVE_SUCCESS: "Xóa thành công",
+	REMOVE_FAIL: "XÓa thất bại",
 
 	CATEGORY: "Danh mục",
 }

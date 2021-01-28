@@ -197,14 +197,14 @@ export default {
 
     async remove(item){
       var conf = confirm(this.$lang.REMOVE_CONFIRM);
+      const findChild = await CategoryService.fetchByCondition(item.parentId)
 
       if(conf){
         const res = await CategoryService.delete(item.id);
-        if(!res){
-          
-          toastr.error(this.$lang.REMOVE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
-        }else{
+        if(res.status === 200){
           toastr.success(this.$lang.REMOVE_SUCCESS, this.$lang.SUCCESS, { timeOut: 1000 });
+        }else{
+          toastr.error(this.$lang.REMOVE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
         }
       }
     }
