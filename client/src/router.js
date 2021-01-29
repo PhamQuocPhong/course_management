@@ -40,10 +40,15 @@ import MainAdminLayout from "@/views/admin/layouts/MainLayout";
 import AdminLogin from "@/views/admin/pages/auth/Login";
 
 
-import Category from "@/views/admin/pages/category/Category";
-import CategoryIndex from "@/views/admin/pages/category/Index";
-import CategoryCreate from "@/views/admin/pages/category/Create";
-import CategoryEdit from "@/views/admin/pages/category/Edit";
+import AdminCategory from "@/views/admin/pages/category/Category";
+import AdminCategoryIndex from "@/views/admin/pages/category/Index";
+import AdminCategoryCreate from "@/views/admin/pages/category/Create";
+import AdminCategoryEdit from "@/views/admin/pages/category/Edit";
+
+import AdminCourse from "@/views/admin/pages/course/Course";
+import AdminCourseIndex from "@/views/admin/pages/course/Index";
+import AdminCourseCreate from "@/views/admin/pages/course/Create";
+import AdminCourseEdit from "@/views/admin/pages/course/Edit";
 
 import store from "./store/index";
 
@@ -70,26 +75,52 @@ const routes = [
     children: [
       {
         path: "categories",
-        component: Category,
+        component: AdminCategory,
         name: "adminCategory",
         children: [
           {
             path: "/",
-            component: CategoryIndex,
+            component: AdminCategoryIndex,
             name: "adminCategoryIndex"
           },
 
           
           {
             path: "create",
-            component: CategoryCreate,
+            component: AdminCategoryCreate,
             name: "adminCategoryCreate"
           },
 
           {
             path: ":id",
-            component: CategoryEdit,
+            component: AdminCategoryEdit,
             name: "adminCategoryEdit"
+          },
+        ]
+      },
+
+      {
+        path: "courses",
+        component: CourseCategory,
+        name: "adminCourse",
+        children: [
+          {
+            path: "/",
+            component: AdminCourseIndex,
+            name: "adminCourseIndex"
+          },
+
+          
+          {
+            path: "create",
+            component: AdminCourseCreate,
+            name: "adminCourseCreate"
+          },
+
+          {
+            path: ":id",
+            component: AdminCourseEdit,
+            name: "adminCourseEdit"
           },
         ]
       },

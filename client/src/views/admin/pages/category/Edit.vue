@@ -12,7 +12,7 @@
               class="table"
               :class="{ 'mt-4': isMobile }"
             >
-              <v-card>
+              <v-card v-show="!isLoading">
                 <v-card-title class="border-bottom">
                   {{ $lang.DETAIL }}
                 </v-card-title>
@@ -20,6 +20,15 @@
                 <v-card-text v-if="getCategory">
                   <v-form class="form__custom" ref="form" v-model="valid" :lazy-validation="lazy">
                     <v-row>
+                      <v-col cols="12">
+                        <m-category-list 
+                          label="Danh mục cha" 
+                          :items="categories"  
+                          :data.sync="getCategory.parent"
+                        >
+                        </m-category-list>
+                      </v-col>
+
                       <v-col cols="12">
                         <v-text-field
                           placeholder=" "
@@ -38,6 +47,7 @@
 
                       <v-col cols="12">
                         <v-textarea
+                        class="no-resize"
                           placeholder=" "
                           v-model="getCategory.description"
                           :rules="[
@@ -88,19 +98,21 @@ import BackToList from "@/mixins/back_list";
 
 import CategoryService from "@/services/category";
 
+
 export default {
 
   mixins: [IsMobile, BackToList],
 
   async created(){
-      this.retrieveData();
+    this.$store.dispatch("categories/fetchAll");
+    this.retrieveData();
   },
 
   data(){
     return {
       valid: true,
       lazy: false,
-      
+      isLoading: true,
       id: this.$route.params.id // String!
     }
   },
@@ -110,18 +122,30 @@ export default {
       get(){
         return this.$store.getters["categories/category"]
       },
+    },
+    categories: {
+      get(){
+        var categories = this.$store.getters["categories/categories"]
+        categories.unshift({
+          id: null,
+          name: "Root"
+        });
+        return categories
+      }
     }
   },
 
    watch: {
     getCategory(data){
-      if(data.length){
+      setTimeout(() => {
+         if(data.length){
          this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
          this.isLoading = false
-      }else{
-        this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
-        this.isLoading = false
-      }
+        }else{
+          this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+          this.isLoading = false
+        }
+      }, 200)
     },
   },
 
@@ -133,15 +157,24 @@ export default {
       var payload = {
         id: this.id
       }
+      this.isLoading = true;
       this.$store.dispatch("components/actionProgressHeader", { option: "show" })
       this.$store.dispatch("categories/fetch", payload);
     },
 
     async save(){
+
         if(this.$refs.form.validate()){
           var conf = confirm(this.$lang.SAVE_CONFIRM);
           if(conf){
-
+            if(this.getCategory.parent)
+            {
+              this.getCategory.parentId = this.getCategory.parent.id;
+            }
+            else{
+               this.getCategory.parentId = null;
+            }
+          
             const res = await CategoryService.update(this.id, this.getCategory);
             if(!res){
               toastr.error(this.$lang.UPDATE_FAIL, this.$lang.ERROR, { timeOut: 1000 });

@@ -6,14 +6,12 @@
     <v-row>
       <v-flex :class="{ 'pa-4': !isMobile }">
         <v-card flat>
-          <v-row no-gutters>
+          <v-row no-gutters :class="{ 'mt-4': isMobile }">
             <btn-create 
               :title="$lang.CREATE"
               v-on:action="create()"
               >
             </btn-create>
-
-            <v-spacer></v-spacer>
           </v-row>
 
           <v-layout
@@ -38,28 +36,32 @@
                           <td colspan="100%">
                              <v-skeleton-loader
                               ref="skeleton"
-                              type="table-body"
+                              type="table-tbody"
                               class="mx-auto"
                           ></v-skeleton-loader>
                           </td>
                       </tr>
-                      <tr v-else v-for="(item, index) in categories" :key="item.id">
+                      <tr v-else v-for="(item, index) in courses" :key="item.id">
+
                         <td class="text-center">
                            {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
                         </td>
+
+             
+
                         <td class="text-center">{{ item.name }}</td>
 
                         <td class="text-center">{{ item.description }}</td>
 
                         <td class="text-center">
-                           <btn-edit
+                           <btn-detail
                             
                             :title="$lang.DETAIL"
                             v-on:action="edit(item)"
                             color="blue darken-1"
                             :classProp="`mr-4`"
                             type="edit"
-                          ></btn-edit>
+                          ></btn-detail>
 
                           <btn-remove 
                             :title="$lang.REMOVE"
@@ -73,7 +75,7 @@
                 </template>
 
                 <template v-slot:default v-else>
-                  <tr v-if="!loadData">
+                  <tr v-if="isLoading">
                       <td colspan="100%">
                          <v-skeleton-loader
                             ref="skeleton"
@@ -83,61 +85,36 @@
                       </td>
                   </tr>
                   <tr
-                    v-for="(item, index) in Sales"
+                    v-for="(item, index) in courses"
                     :key="item.id"
                     v-else
                   >
                     <td>
                       <ul class="flex-content">
-                        <li class="flex-item" data-label="No.">
-                          {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
-                        </li>
-                        <li class="flex-item" data-label="Customer name">
-                          {{ item.salesCustomerBuy.customer.name }}
-                        </li>
-                        <li class="flex-item" data-label="Customer phone">
-                          {{ item.salesCustomerBuy.customer.phoneNumber }}
-                        </li>
-                        <li class="flex-item" data-label="Require">
-                          {{ item.salesCustomerBuy.customerRequire }}
-                        </li>
-                        <li class="flex-item" data-label="Contact">
-                          <v-switch
-                            v-model="item.salesCustomerBuy.contactFlg"
-                            @change="contactCustomer(item)"
-                            :disabled="item.salesCustomerBuy.contactFlg === 1"
-                            class="ma-0"
-                          >
-                          </v-switch>
-                        </li>
-                        <li class="flex-item" data-label="Progess">
-                          <v-chip
-                            small
-                            :color="
-                              $helper.colorStatusTransaction(
-                                item.salesCustomerBuy
-                              )
-                            "
-                            dark
-                          >
-                            {{ item.salesCustomerBuy.status }}
-                          </v-chip>
-                        </li>
-                        <li class="flex-item" data-label="Action">
-                          <btn-custom 
-                            icon="mdi-square-edit-outline"
-                            :classProp="`primary mr-4`"
-                            v-on:action="edit(item)"
-                            type="edit"
-                            >
-                          </btn-custom>
 
-                          <btn-custom 
-                            icon="mdi-delete-outline"
-                            :classProp="`warning`"
-                            type="delete"
+                        <li class="flex-item" data-label="No.">
+                           {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
+                        </li>
+                        <li class="flex-item" data-label="Tiêu đề">{{ item.name }}</li>
+
+                        <li class="flex-item" data-label="Mô tả">{{ item.description }}</li>
+
+                        <li class="flex-item" data-label="Thao tác">
+                          <btn-detail
+                            
+                            :title="$lang.DETAIL"
+                            v-on:action="edit(item)"
+                            color="blue darken-1"
+                            :classProp="`mr-4`"
+                            type="edit"
+                          ></btn-detail>
+
+                          <btn-remove 
+                            :title="$lang.REMOVE"
+                            v-on:action="remove(item)"
+                            type="remove"
                           >
-                          </btn-custom>
+                          </btn-remove>
                         </li>
                       </ul>
                     </td>
@@ -160,14 +137,14 @@ import IsMobile from "@/mixins/is_mobile";
 import Filter from "./components/index/Search";
 
 // services
-import CourseService from "@/services/category";
+import CategoryService from "@/services/category";
 export default {
 
   mixins: [IsMobile],
 
   created(){
     if(this.$route.query.hasOwnProperty('page')){
-       this.$store.commit('categories/UPDATE_CURRENT_PAGE', parseInt(this.$route.query.page));
+       this.$store.commit('courses/UPDATE_CURRENT_PAGE', parseInt(this.$route.query.page));
     }
     this.retrieveData(this.$route.query);
   },
@@ -177,59 +154,70 @@ export default {
       currentPage: this.$constant.pagination.CURRENT_PAGE,
       itemsPerPage: this.$constant.pagination.ITEMS_PER_PAGE,
       isLoading: false,
-      categories: [],
     }
   },
 
-watch: {
-  categories(data){
-    console.log(data);
-    if(data.length){
-       this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
-       this.isLoading = false
-    }else{
-      this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
-      this.isLoading = false
-    }
-  },
-},
-
-methods: {
-
-  retrieveData(query)
-  {
-    var payLoad = query;
-    payLoad.page = this.currentPage;
-
-    this.$store.dispatch("components/actionProgressHeader", { option: "show" })
-    setTimeout(async () => {
-      this.$store.dispatch("courses/fetchPaging", payLoad);
-    }, 200);
-  },
-
-
-  edit(item){
-    this.$router.push('/categories/' + item.id);
-  },
-
-  create(){
-    this.$router.push({ name: "adminCategoryCreate" });
-  },
-
-  async remove(item){
-    var conf = confirm(this.$lang.REMOVE_CONFIRM);
-
-    if(conf){
-      const res = await CourseService.delete(item.id);
-      if(!res){
-        
-        toastr.error(this.$lang.REMOVE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
-      }else{
-        toastr.success(this.$lang.REMOVE_SUCCESS, this.$lang.SUCCESS, { timeOut: 1000 });
+  computed: {
+    courses: {
+      get(){
+        return this.$store.getters["courses/courses"];
       }
     }
+  },
+
+  watch: {
+    courses(data){
+      setTimeout(async () => {
+        if(data.length){
+           this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+           this.isLoading = false
+        }else{
+          this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+          this.isLoading = false
+        }
+      }, 200)
+    },
+  },
+
+  methods: {
+
+    retrieveData(query)
+    {
+      var payLoad = query;
+      payLoad.page = this.currentPage;
+
+      this.$store.dispatch("components/actionProgressHeader", { option: "show" })
+      this.isLoading = true;
+      this.$store.dispatch("courses/fetchPaging", payLoad);
+    },
+
+
+    edit(item){
+      this.$router.push({ name: "adminCategoryEdit", params: {id: item.id}});
+    },
+
+    create(){
+      this.$router.push({ name: "adminCategoryCreate" });
+    },
+
+    async remove(item){
+
+      var conf = confirm(this.$lang.REMOVE_CONFIRM);
+      var condition = {
+        parentId: item.id
+      }
+
+      if(conf){
+        this.$store.dispatch("courses/remove", item)
+      }
+    }
+  },
+
+
+  beforeDestroy()
+  {
+    this.$store.dispatch("courses/reset");
   }
-},
 
 
 };

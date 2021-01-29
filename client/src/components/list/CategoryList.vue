@@ -5,8 +5,6 @@
 	item-text="name"
 	v-model="getData"
 	return-object
-	@change="emitChange()"
-	@input="emitChange()"
 	:label="label"
 	outlined
 	dense
@@ -23,21 +21,23 @@ export default{
 		},
     items: Array,
 	    label: String,
-		},
+	},
 
-		data(){
+	data(){
 			return {
-	      getData: this.data,
 	    }
 	},
 
-  	methods: {
-	    emitChange(){
-	      this.$emit("update:data", this.getData.id);
-	      this.$emit('action')
-	    }
-	 },
-
-
+	computed: {
+		getData: {
+			get(){
+				return this.data
+			},
+			set(data)
+			{
+				this.$emit("update:data", data);
+			}
+		}
+	},
 }
 </script>

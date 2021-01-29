@@ -28,7 +28,7 @@ export  const actions = {
 
        var query = payload;
 
-      const res = await CategoryService.fetchPaging(query);
+      const res = await CourseService.fetchPaging(query);
       if(res.data){
         var data = res.data;
         commit("FETCH_PAGING", data);
@@ -44,13 +44,24 @@ export  const actions = {
       }
     },
 
+    async remove({ commit }, payload)
+    {
+      const course = payload;
+      const res = await CourseService.remove(course.id);
+
+      if(res.status === 200)
+      {
+        commit("REMOVE", course);
+        toastr.success(lang.REMOVE_SUCCESS, lang.SUCCESS, { timeOut: 1000 });
+      }else{
+        toastr.error(lang.REMOVE_FAIL, lang.ERROR, { timeOut: 1000 });
+      }
+
+    },
+
     updateCurrentPage({commit}, payload)
     {
       commit("UPDATE_CURRENT_PAGE", payload.currentPage);
-    },
-
-    updateRatings({commit}, payload){
-      commit("UPDATE_RATINGS", payload);
     },
 
     reset({commit}){
@@ -69,6 +80,16 @@ export  const mutations = {
       state.course = course;
     },
 
+
+    REMOVE(state, course)
+    {
+      var courses = state.courses;
+      var index = courses.indexOf(course);
+      if (index !== -1) {
+          courses.splice(index, 1);
+      }
+      state.courses = courses;
+    },
 
     UPDATE_CURRENT_PAGE(state, page){
       state.currentPage = page;

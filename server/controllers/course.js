@@ -14,6 +14,79 @@ const courseStudentModel = require('../models/course_student');
 
 const slugify = require('slugify');
 
+let getAllCategory = async (req, res) => {
+
+    var condition = req.query;
+    try
+    {
+        const data = await courseModel.findAll({
+            where: condition
+        });
+    
+        return res.status(200).json({message: 'Success!', data: data})
+    }
+    catch(error) {
+        return res.status(500).json(error)
+    }
+}
+
+let show = async (req, res) => {
+
+    var id = req.params.id;
+    const data = await courseModel.findOne({where: {
+        id: id
+    }});
+
+    return res.status(200).json({message: 'Success', data: data})
+}
+
+let store = async (req, res) => {
+
+    var form = req.body
+
+    try{
+        var data = await courseModel.create(form);
+        return res.status(200).json({message: 'Success', data: data})
+ 
+    }catch(error){
+        return res.status(500).json({message: error})
+    }
+}
+
+let update = async (req, res) => {
+
+    var form = req.body;
+    var id = req.params.id;
+    try{
+        var data = await courseModel.update(form, {
+            where: {
+                id: id
+            },
+            returning: true,
+            plain: true
+        });
+        return res.status(200).json({message: 'Success', data: data[1]})
+ 
+    }catch(error){
+        return res.status(500).json({message: error})
+    }
+}
+
+let remove = async (req, res) => {
+    var id = req.params.id;
+    try{
+        const data = await courseModel.destroy({
+            where: {
+                id: id
+            },
+        });
+
+        return res.status(200).json({message: 'Success', data: data})
+    }catch(error){
+        return res.status(500).json({message: error})
+    }
+}
+
 let getCoursePaging = async (req, res) => {
     const categoryId = req.query.categoryId;
     var itemPerPage = req.query.itemPerPage;

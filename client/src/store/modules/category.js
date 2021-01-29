@@ -1,6 +1,7 @@
 import CategoryService from '@/services/category'
 
 import ComponentStore from './component';
+import lang from "@/config/lang";
 
 export  const getters = {
     categories: state => state.categories,
@@ -56,10 +57,16 @@ export  const actions = {
     async remove({ commit }, payload)
     {
       const category = payload;
-      const res = await CategoryService.fetch(category.id);
-      if(res.status === 200){
-        commit("REMOVE", res);
+      const res = await CategoryService.remove(category.id);
+
+      if(res.status === 200)
+      {
+        commit("REMOVE", category);
+        toastr.success(lang.REMOVE_SUCCESS, lang.SUCCESS, { timeOut: 1000 });
+      }else{
+        toastr.error(lang.REMOVE_FAIL, lang.ERROR, { timeOut: 1000 });
       }
+
     },
 
     updateCurrentPage({commit}, payload)
@@ -89,7 +96,12 @@ export  const mutations = {
 
     REMOVE(state, category)
     {
-      console.log(category)
+      var categories = state.categories;
+      var index = categories.indexOf(category);
+      if (index !== -1) {
+          categories.splice(index, 1);
+      }
+      state.categories = categories;
     },
 
     UPDATE_CURRENT_PAGE(state, page){
