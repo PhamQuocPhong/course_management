@@ -6,12 +6,22 @@
     <v-row>
       <v-flex :class="{ 'pa-4': !isMobile }">
         <v-card flat>
-          <v-row no-gutters :class="{ 'mt-4': isMobile }">
-            <btn-create 
-              :title="$lang.CREATE"
-              v-on:action="create()"
+          <v-row  :class="{ 'mt-4': isMobile }">
+            <v-col cols="12" md="3" lg="2" sm="3">
+              <m-category-list
+              label="Danh mục"
+              :data.sync="searchCategory"
+              v-on:action="filter(searchCategory)"
               >
-            </btn-create>
+              </m-category-list>
+            </v-col>
+            <v-col cols="12" md="3" lg="2" sm="3">
+              <btn-create 
+                :title="$lang.CREATE"
+                v-on:action="create()"
+                >
+              </btn-create>
+            </v-col>
           </v-row>
 
           <v-layout
@@ -26,8 +36,12 @@
                    <thead>
                       <tr>
                         <th class="text-center">No.</th>
+                        <th class="text-center">Hình ảnh</th>
                         <th class="text-center">Tiêu đề</th>
-                        <th class="text-center">Mô tả</th>
+                        <th class="text-center">Giá</th>
+                        <th class="text-center">Giá sau khuyến mãi</th>
+                        <th class="text-center">Đánh giá</th>
+                        
                         <th class="text-center">Thao tác</th>
                       </tr>
                     </thead>
@@ -47,11 +61,30 @@
                            {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
                         </td>
 
-             
+                        <td class="text-center">{{ item.title }}</td>
 
-                        <td class="text-center">{{ item.name }}</td>
+                         <td class="text-center">
+                            <img :src="item.avatar" width="120" height="70">
 
-                        <td class="text-center">{{ item.description }}</td>
+                         </td>
+
+                        <td class="text-center">{{ item.price | toCurrency }}</td>
+
+                        <td class="text-center">{{ item.priceFinal | toCurrency}}</td>
+
+                         <td class="text-center">
+                            <v-rating
+                                v-model="item.rateTotal && item.rateTotal.total"
+                                color="yellow darken-3"
+                                background-color="grey darken-1"
+                                empty-icon="$ratingFull"
+                                half-increments
+                                hover
+                                small
+                                readonly
+                              ></v-rating>
+                              <span>( {{ item.rateTotal && item.rateTotal.turn }} )</span>
+                         </td>
 
                         <td class="text-center">
                            <btn-detail
@@ -95,12 +128,36 @@
                         <li class="flex-item" data-label="No.">
                            {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
                         </li>
-                        <li class="flex-item" data-label="Tiêu đề">{{ item.name }}</li>
 
-                        <li class="flex-item" data-label="Mô tả">{{ item.description }}</li>
+                        <li class="flex-item" data-label="Tiêu đề">{{ item.title }}</li>
 
-                        <li class="flex-item" data-label="Thao tác">
-                          <btn-detail
+                         <li class="flex-item" data-label="Hình ảnh">
+                            <img :src="item.avatar" width="120" height="70" >
+                         </li>
+
+                        <li  class="flex-item mt-8" data-label="Giá">{{ item.price | toCurrency }}</li>
+
+                        <li class="flex-item" data-label="Giá sau khuyến mãi">{{ item.priceFinal | toCurrency}}</li>
+
+                      
+                         <li class="flex-item" data-label="Đánh giá">
+                            <v-rating
+                                v-model="item.rateTotal && item.rateTotal.total"
+                                color="yellow darken-3"
+                                background-color="grey darken-1"
+                                empty-icon="$ratingFull"
+                                half-increments
+                                hover
+                                small
+                                readonly
+                              ></v-rating>
+                               <span>( {{ item.rateTotal && item.rateTotal.turn }} )</span>
+                         </li>
+
+                          <li class="flex-item" data-label="Mô tả">{{ item.description }}</li>
+
+                         <li class="flex-item" data-label="Thao tác">
+                           <btn-detail
                             
                             :title="$lang.DETAIL"
                             v-on:action="edit(item)"
@@ -116,6 +173,7 @@
                           >
                           </btn-remove>
                         </li>
+
                       </ul>
                     </td>
                   </tr>
@@ -134,7 +192,7 @@
 
 //mixin
 import IsMobile from "@/mixins/is_mobile";
-import Filter from "./components/index/Search";
+
 
 // services
 import CategoryService from "@/services/category";
@@ -146,14 +204,14 @@ export default {
     if(this.$route.query.hasOwnProperty('page')){
        this.$store.commit('courses/UPDATE_CURRENT_PAGE', parseInt(this.$route.query.page));
     }
+
     this.retrieveData(this.$route.query);
   },
 
   data(){
     return {
-      currentPage: this.$constant.pagination.CURRENT_PAGE,
-      itemsPerPage: this.$constant.pagination.ITEMS_PER_PAGE,
       isLoading: false,
+      searchCategory: {}
     }
   },
 
@@ -162,7 +220,21 @@ export default {
       get(){
         return this.$store.getters["courses/courses"];
       }
-    }
+    },
+    itemsPerPage: {
+      get(){
+        return this.$store.getters["courses/itemsPerPage"];
+      }
+    },
+    currentPage: {
+      get(){
+         return this.$store.getters["courses/currentPage"]
+      },
+      set(page)
+      {
+        this.$store.commit('courses/UPDATE_CURRENT_PAGE', page)
+      }
+    },
   },
 
   watch: {
@@ -180,6 +252,20 @@ export default {
   },
 
   methods: {
+
+    filter(searchCategory)
+    {
+      var query = Object.assign({}, this.$route.query);
+
+      if(!searchCategory.id)
+      {
+        delete query.categoryId;
+      }else{
+        query.categoryId = searchCategory.id;
+      }
+
+      this.retrieveData(query);
+    },
 
     retrieveData(query)
     {

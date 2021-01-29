@@ -101,7 +101,7 @@ const routes = [
 
       {
         path: "courses",
-        component: CourseCategory,
+        component: AdminCourse,
         name: "adminCourse",
         children: [
           {

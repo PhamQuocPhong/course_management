@@ -30,8 +30,7 @@ export  const actions = {
 
       const res = await CourseService.fetchPaging(query);
       if(res.data){
-        var data = res.data;
-        commit("FETCH_PAGING", data);
+        commit("FETCH_PAGING", res.data);
       }
     },
 
@@ -71,8 +70,8 @@ export  const actions = {
 
 export  const mutations = {
 
-    FETCH_PAGING(state, courses){
-      state.courses = courses;
+    FETCH_PAGING(state, data){
+      state.courses = data.data;
       state.pageCounts = data.pageCounts
     },
 

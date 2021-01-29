@@ -1,10 +1,10 @@
 <template>
 	<v-select
-	:items="items"
+	:items="categories"
 	placeholder=" "
 	item-text="name"
-	v-model="getData"
 	return-object
+	v-model="getData"
 	:label="label"
 	outlined
 	dense
@@ -23,19 +23,38 @@ export default{
 	    label: String,
 	},
 
-	data(){
-			return {
-	    }
+	created(){
+		if(!this.items || this.items.length <= 0)
+		{
+			this.$store.dispatch("categories/fetchAll");
+		}
 	},
+
 
 	computed: {
 		getData: {
 			get(){
-				return this.data
+				if(this.$route.query.hasOwnProperty("categoryId"))
+				{
+					return this.data
+				}
 			},
 			set(data)
 			{
 				this.$emit("update:data", data);
+								this.$emit("action");
+			}
+		},
+		categories: {
+			get(){
+				if(!this.items || this.items.length <= 0)
+				{
+					var categories = this.$store.getters["categories/categories"];
+					categories.unshift({id: null, name: "Tất cả"});
+					return categories;
+				}else{
+					return this.items
+				}
 			}
 		}
 	},
