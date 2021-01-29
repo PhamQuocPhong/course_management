@@ -21,12 +21,12 @@
                   <v-form class="form__custom" ref="form" v-model="valid" :lazy-validation="lazy">
                     <v-row>
                       <v-col cols="12">
-                        <m-select 
+                        <m-category-list 
                           label="Danh mục cha" 
                           :items="categories"  
                           :data.sync="form.parentId"
                         >
-                        </m-select>
+                        </m-category-list>
                       </v-col>
 
                       <v-col cols="12">
@@ -96,13 +96,7 @@ import BackToList from "@/mixins/back_list";
 // services
 import CategoryService from "@/services/category";
 
-// components
-import Select from "./components/create/Select";
 export default {
-
-  components: {
-    'm-select': Select
-  },
 
   mixins: [IsMobile, BackToList],
 

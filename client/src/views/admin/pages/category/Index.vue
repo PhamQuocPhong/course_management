@@ -26,6 +26,7 @@
                    <thead>
                       <tr>
                         <th class="text-center">No.</th>
+                        <th class="text-center">Danh mục cha</th>
                         <th class="text-center">Tiêu đề</th>
                         <th class="text-center">Mô tả</th>
                         <th class="text-center">Thao tác</th>
@@ -36,15 +37,19 @@
                           <td colspan="100%">
                              <v-skeleton-loader
                               ref="skeleton"
-                              type="table-body"
+                              type="table-tbody"
                               class="mx-auto"
                           ></v-skeleton-loader>
                           </td>
                       </tr>
                       <tr v-else v-for="(item, index) in categories" :key="item.id">
+
                         <td class="text-center">
                            {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
                         </td>
+
+                        <td class="text-center">{{ item.parent !== null ? item.parent.name : "" }}</td>
+
                         <td class="text-center">{{ item.name }}</td>
 
                         <td class="text-center">{{ item.description }}</td>
@@ -163,13 +168,15 @@ export default {
 
   watch: {
     categories(data){
-      if(data.length){
-         this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
-         this.isLoading = false
-      }else{
-        this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
-        this.isLoading = false
-      }
+      setTimeout(async () => {
+        if(data.length){
+           this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+           this.isLoading = false
+        }else{
+          this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+          this.isLoading = false
+        }
+      }, 200)
     },
   },
 
@@ -181,9 +188,8 @@ export default {
       payLoad.page = this.currentPage;
 
       this.$store.dispatch("components/actionProgressHeader", { option: "show" })
-      setTimeout(async () => {
-        this.$store.dispatch("categories/fetchPaging", payLoad);
-      }, 200);
+      this.isLoading = true;
+      this.$store.dispatch("categories/fetchPaging", payLoad);
     },
 
 
@@ -196,16 +202,23 @@ export default {
     },
 
     async remove(item){
+
       var conf = confirm(this.$lang.REMOVE_CONFIRM);
-      const findChild = await CategoryService.fetchByCondition(item.parentId)
+      var condition = {
+        parentId: item.id
+      }
+      const findChild = await CategoryService.fetchByCondition(condition);
+
+      if(findChild.data.data.length > 0)
+      {
+        toastr.error("Không thể xóa", this.$lang.ERROR, { timeOut: 1000 });
+        return;
+      }
 
       if(conf){
-        const res = await CategoryService.delete(item.id);
-        if(res.status === 200){
-          toastr.success(this.$lang.REMOVE_SUCCESS, this.$lang.SUCCESS, { timeOut: 1000 });
-        }else{
-          toastr.error(this.$lang.REMOVE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
-        }
+
+        this.$store.dispatch("categories/remove", item)
+
       }
     }
   },

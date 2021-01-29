@@ -76,7 +76,7 @@ export default {
 
    async remove(id){
     try {
-      return await axios.delete(this.rootURL + `remove/${id}`);
+      return await axios.delete(this.rootURL + `delete/${id}`);
     } catch (error) {
       return error.response;
     }

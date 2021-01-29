@@ -1,7 +1,7 @@
 <template>
   <v-container>
         <v-row>
-      <label-table :title="$lang.CATEGORY"> </label-table>
+      <label-table :title="$lang.COURSE"> </label-table>
     </v-row>
     <v-row class="justify-center">
       <v-col cols="12" sm="8" md="6" lg="6">
@@ -12,20 +12,29 @@
               class="table"
               :class="{ 'mt-4': isMobile }"
             >
-              <v-card>
+              <v-card v-show="!isLoading">
                 <v-card-title class="border-bottom">
                   {{ $lang.DETAIL }}
                 </v-card-title>
 
-                <v-card-text v-if="getCategory">
+                <v-card-text v-if="getCourse">
                   <v-form class="form__custom" ref="form" v-model="valid" :lazy-validation="lazy">
                     <v-row>
                       <v-col cols="12">
+                        <m-category-list 
+                          label="Danh mục" 
+                          :items="categories"  
+                          :data.sync="getCourse.categoryId"
+                        >
+                        </m-category-list>
+                      </v-col>
+
+                      <v-col cols="12">
                         <v-text-field
                           placeholder=" "
-                          v-model="getCategory.name"
+                          v-model="getCourse.name"
                           :rules="[
-                            $validation.required(getCategory.name, 'Tiêu đề')
+                            $validation.required(getCourse.name, 'Tiêu đề')
                           ]"
                           >
                           <template v-slot:label>
@@ -38,10 +47,11 @@
 
                       <v-col cols="12">
                         <v-textarea
+                        class="no-resize"
                           placeholder=" "
-                          v-model="getCategory.description"
+                          v-model="getCourse.description"
                           :rules="[
-                            $validation.required(getCategory.description, 'Mô tả')
+                            $validation.required(getCourse.description, 'Mô tả')
                           ]"
                           >
                           <template v-slot:label>
@@ -86,38 +96,82 @@
 import IsMobile from "@/mixins/is_mobile";
 import BackToList from "@/mixins/back_list";
 
-import CategoryService from "@/services/category";
+import CourseService from "@/services/category";
+
 
 export default {
 
   mixins: [IsMobile, BackToList],
 
   async created(){
-
-     const res = await CategoryService.fetch(this.id);
-      if(res.data){
-        this.getCategory = res.data.category;
-      }
+    this.$store.dispatch("courses/fetchAll");
+    this.retrieveData();
   },
 
   data(){
     return {
       valid: true,
       lazy: false,
-      
-      getCategory: {},
+      isLoading: true,
       id: this.$route.params.id // String!
     }
   },
 
+  computed: {
+    getCourse: {
+      get(){
+        return this.$store.getters["courses/course"]
+      },
+    },
+    categories: {
+      get(){
+        var categories = this.$store.getters["categories/categories"]
+        return categories
+      }
+    }
+  },
+
+   watch: {
+    getCourse(data){
+      setTimeout(() => {
+         if(data.length){
+         this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+         this.isLoading = false
+        }else{
+          this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+          this.isLoading = false
+        }
+      }, 200)
+    },
+  },
+
+
   methods: {
     
+    async retrieveData()
+    {
+      var payload = {
+        id: this.id
+      }
+      this.isLoading = true;
+      this.$store.dispatch("components/actionProgressHeader", { option: "show" })
+      this.$store.dispatch("courses/fetch", payload);
+    },
+
     async save(){
+
         if(this.$refs.form.validate()){
           var conf = confirm(this.$lang.SAVE_CONFIRM);
           if(conf){
-
-            const res = await CategoryService.update(this.id, this.getCategory);
+            if(this.getCourse.parent)
+            {
+              this.getCourse.parentId = this.getCourse.parent.id;
+            }
+            else{
+               this.getCourse.parentId = null;
+            }
+          
+            const res = await CourseService.update(this.id, this.getCourse);
             if(!res){
               toastr.error(this.$lang.UPDATE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
             }else{
@@ -127,6 +181,11 @@ export default {
           }
         }
     },
+  },
+
+  beforeDestroy()
+  {
+    this.$store.dispatch("courses/reset");
   }
 
 }

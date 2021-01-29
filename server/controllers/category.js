@@ -13,12 +13,14 @@ const helper = require('../helpers/helper');
 
 let getAllCategory = async (req, res) => {
 
+    var condition = req.query;
     try
     {
-        const categoryData = await categoryModel.findAll({
-            include:[{model: categoryModel, as: 'subCategory'}]});
-    
-        return res.status(200).json({message: 'Success!', data: categoryData})
+        const categories = await categoryModel.findAll({
+            where: condition,
+        });
+
+        return res.status(200).json({message: 'Success!', data: categories})
     }
     catch(error) {
 		return res.status(500).json(error)
@@ -49,12 +51,26 @@ let getCategoryPaging = async (req, res) => {
     var offset = helper.calcPaginate(page, itemPerPage);
 
     try{
-        const data = await categoryModel.findAll({
+        const categories = await categoryModel.findAll({
             offset: offset, 
             limit: itemPerPage, 
+             include:[{model: categoryModel, as: 'subCategory'}]
         });
 
-        const counts  = Math.ceil(await categoryModel.count() / itemPerPage ) 
+        var data = [];
+        for(var i = 0; i < categories.length; i++)
+        {
+            const findParent = await categoryModel.findOne({
+                where: {
+                    id: categories[i].parentId
+                },
+            })
+
+            categories[i].setDataValue("parent", findParent);
+            data.push(categories[i]);
+        }
+
+        const counts  = Math.ceil(categoryModel.count() / itemPerPage ) 
         return res.status(200).json({message: 'Success', data: data, pageCounts: counts })
     }
     catch(error)
@@ -63,23 +79,6 @@ let getCategoryPaging = async (req, res) => {
     }
 }
 
-let getByCondition = async (req, res) => {
-
-    var condition = req.query;
-    console.log(condition);
-    try{
-        const data = await categoryModel.findAll({
-            where: condition
-        });
-
-        const counts  = Math.ceil(await categoryModel.count() / itemPerPage ) 
-        return res.status(200).json({message: 'Success', data: data, pageCounts: counts })
-    }
-    catch(error)
-    {
-        return res.status(500).json(error)
-    }
-}
 
 let show = async (req, res) => {
 
@@ -87,7 +86,14 @@ let show = async (req, res) => {
     const data = await categoryModel.findOne({where: {
         id: id
     }});
-
+    const findParent = await categoryModel.findOne({
+        where: {
+            id: data.parentId
+        },
+        raw: true,
+        plain:true
+    })
+    data.setDataValue("parent", findParent);
     return res.status(200).json({message: 'Success', data: data})
 }
 
