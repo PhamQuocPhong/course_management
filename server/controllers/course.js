@@ -13,6 +13,7 @@ const watchListModel = require('../models/watch_list');
 const courseStudentModel = require('../models/course_student');
 
 const slugify = require('slugify');
+const helper = require('../helpers/helper');
 
 let getAllCategory = async (req, res) => {
 
@@ -88,338 +89,67 @@ let remove = async (req, res) => {
 }
 
 let getCoursePaging = async (req, res) => {
-    const categoryId = req.query.categoryId;
+
+    var query = req.query;
     var itemPerPage = req.query.itemPerPage;
     var page = req.query.page
 
-    //filter true hoặc false
-    var orderPrice = req.query.orderPrice;
-    var orderRating = req.query.orderRating;
-	
-	var offset = 0
-	if(page == 1){
-		offset = 0
-	}
-	else{
-		offset = ((page - 1) * itemPerPage) 
-    }
+    var page = req.query.page || 1;
+    var itemPerPage = req.query.itemPerPage || 20;
+    var offset = helper.calcPaginate(page, itemPerPage);
     
     try
     {
         var counts = 0;
-        
-        const categoryCheck = await categoryModel.findAll({
-            where:{id: categoryId,  parentId: {[Op.eq]: null}}});
-    
-        var courseData =[];
-        
-        //Trường hợp chọn subCategory
-        if(categoryCheck.length == 0)
+        var courseData = [];
+        var condition = {};
+        var order = [];
+        if(query.categoryId)
         {
-            if(orderRating && orderPrice)
-            {
-                courseData = await courseModel.findAll({
-                    offset: offset, 
-                    limit: itemPerPage, 
-                    where: {
-                        categoryId
-                    },
-                        include: [
-                            {
-                                model: courseTeacherModel, 
-                                include: [
-                                {
-                                    model: userModel
-                                }]
-                            },
-                            {
-                                model: rateModel,
-                                
-                            },
-        
-                            {
-                                model: promotionModel
-                            },
-                            {
-                                model: rateTotalModel
-                                
-                            }
-                        ],
-                        order: [
-                          [rateTotalModel, 'total', 'DESC'], 
-                          ['priceFinal', 'ASC'] 
-                        ]
-                        
-                });
-            }
-            else if(orderPrice&&!orderRating)
-            {
-                courseData = await courseModel.findAll({
-                    offset: offset, 
-                    limit: itemPerPage, 
-                    where: {
-                        categoryId
-                    },
-                        include: [
-                            {
-                                model: courseTeacherModel, 
-                                include: [
-                                {
-                                    model: userModel
-                                }]
-                            },
-                            {
-                                model: rateModel,
-                                
-                            },
-        
-                            {
-                                model: promotionModel
-                            },
-                            {
-                                model: rateTotalModel
-                                
-                            }
-                        ],
-                        order: [
-                          ['priceFinal', 'ASC'] 
-                        ]
-                        
-                });
-            }
-            else if(!orderPrice&&orderRating)
-            {
-                courseData = await courseModel.findAll({
-                    offset: offset, 
-                    limit: itemPerPage, 
-                    where: {
-                        categoryId
-                    },
-                        include: [
-                            {
-                                model: courseTeacherModel, 
-                                include: [
-                                {
-                                    model: userModel
-                                }]
-                            },
-                            {
-                                model: rateModel,
-                                
-                            },
-        
-                            {
-                                model: promotionModel
-                            },
-                            {
-                                model: rateTotalModel
-                                
-                            }
-                        ],
-                        order: [
-                            [rateTotalModel, 'total', 'DESC'], 
-                        ]
-                        
-                });
-            }
-            else
-            {
-                courseData = await courseModel.findAll({
-                    offset: offset, 
-                    limit: itemPerPage, 
-                    where: {
-                        categoryId
-                    },
-                        include: [
-                            {
-                                model: courseTeacherModel, 
-                                include: [
-                                {
-                                    model: userModel
-                                }]
-                            },
-                            {
-                                model: rateModel,
-                                
-                            },
-        
-                            {
-                                model: promotionModel
-                            },
-                            {
-                                model: rateTotalModel
-                                
-                            }
-                        ]
-                });
-               
-            }
-            counts = await courseModel.count({
-                where: {
-                    categoryId
-                }
-            });
-            
-        }   
-        //Trường hợp chọn category
-        else
-        {
-            var categoryData = await categoryModel.findAll({
-            where:{ parentId: categoryId},
-            include:[{model: categoryModel, as: 'subCategory'}]});
-
-            var categories = [];
-            categoryData.map(item => {
-                return categories.push(item.id)
-            })
-
-            if(orderRating && orderPrice)
-            {
-                courseData = await courseModel.findAll({
-                    offset: offset, 
-                    limit: itemPerPage, 
-                    where: {
-                        categoryId: {
-                        [Sequelize.Op.in]: categories
-                        }
-                    },
-                    include: [
-                        {
-                            model: courseTeacherModel, 
-                            include: [
-                            {
-                                model: userModel
-                            }]
-                        },
-                        {
-                            model: rateModel
-                        },
-    
-                        {
-                            model: promotionModel
-                        },
-                        {
-                            model: rateTotalModel
-                        }
-                    ],
-                    order: [
-                        [rateTotalModel, 'total', 'DESC'], //=> cách thường, cai nay la dc roi
-                        ['priceFinal', 'ASC'] 
-                    ]
-                })
-            }
-            else if(orderRating && !orderPrice)
-            {
-                courseData = await courseModel.findAll({
-                    offset: offset, 
-                    limit: itemPerPage, 
-                    where: {
-                        categoryId: {
-                        [Sequelize.Op.in]: categories
-                        }
-                    },
-                    include: [
-                        {
-                            model: courseTeacherModel, 
-                            include: [
-                            {
-                                model: userModel
-                            }]
-                        },
-                        {
-                            model: rateModel
-                        },
-    
-                        {
-                            model: promotionModel
-                        },
-                        {
-                            model: rateTotalModel
-                        }
-                    ],
-                    order: [
-                        [rateTotalModel, 'total', 'DESC']
-                    ]
-                })
-            }
-            else if(!orderRating && orderPrice)
-            {
-                courseData = await courseModel.findAll({
-                    offset: offset, 
-                    limit: itemPerPage, 
-                    where: {
-                        categoryId: {
-                        [Sequelize.Op.in]: categories
-                        }
-                    },
-                    include: [
-                        {
-                            model: courseTeacherModel, 
-                            include: [
-                            {
-                                model: userModel
-                            }]
-                        },
-                        {
-                            model: rateModel
-                        },
-    
-                        {
-                            model: promotionModel
-                        },
-                        {
-                            model: rateTotalModel
-                        }
-                    ],
-                    order: [
-                        ['priceFinal', 'ASC'] 
-                    ]
-                })
-                
-            }
-            else
-            {
-                courseData = await courseModel.findAll({
-                    offset: offset, 
-                    limit: itemPerPage, 
-                    where: {
-                        categoryId: {
-                        [Sequelize.Op.in]: categories
-                        }
-                    },
-                    include: [
-                        {
-                            model: courseTeacherModel, 
-                            include: [
-                            {
-                                model: userModel
-                            }]
-                        },
-                        {
-                            model: rateModel
-                        },
-    
-                        {
-                            model: promotionModel
-                        },
-                        {
-                            model: rateTotalModel
-                        }
-                    ]
-                })
-            }
-
-            counts = await courseModel.count({
-                where: {
-                    categoryId: {
-                    [Sequelize.Op.in]: categories
-                    }
-                }
-            });
-            //console.log(counts);
+            condition.categoryId = query.categoryId;
         }
-       
-        return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(counts/itemPerPage)})
+
+        if(query.orderPrice)
+        {
+            order.push(['priceFinal', query.orderPrice])
+        }
+
+        if(query.orderRating)
+        {
+           order.push([rateTotalModel, 'total', query.orderRating])
+        }
+
+        console.log(condition);
+
+        courseData = await courseModel.findAll({
+            offset: offset, 
+            limit: itemPerPage, 
+            where: condition,
+            order: order,
+            include: [
+                {
+                    model: courseTeacherModel, 
+                    include: [
+                    {
+                        model: userModel
+                    }]
+                },
+                {
+                    model: rateModel,
+                    
+                },
+
+                {
+                    model: promotionModel
+                },
+                {
+                    model: rateTotalModel
+                    
+                }
+            ],
+        });
+
+        return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(await courseModel.count({ where: condition} ) / itemPerPage ) })
     
     }
     catch(error) {

@@ -133,6 +133,7 @@ export default {
     }
   */
   showIndex(index, page, itemsPerPage) {
+
     index++
     if(page === 1){
       return index

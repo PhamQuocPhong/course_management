@@ -50,11 +50,12 @@ let getCategoryPaging = async (req, res) => {
     var itemPerPage = req.query.itemPerPage || 20;
     var offset = helper.calcPaginate(page, itemPerPage);
 
+
     try{
         const categories = await categoryModel.findAll({
             offset: offset, 
             limit: itemPerPage, 
-             include:[{model: categoryModel, as: 'subCategory'}]
+            include:[{model: categoryModel, as: 'subCategory'}]
         });
 
         var data = [];
