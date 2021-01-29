@@ -4,11 +4,11 @@ require('dotenv').config({path: path.resolve('../.env')})
 const aws  = require('aws-sdk')
 const fs = require('fs')
 
-const bikeBucket = process.env.BIKE_BUCKET
-const avatarBucket = process.env.AVATAR_BUCKET
-const region = process.env.REGION
-const accessKey = process.env.AWS_ACCESS_KEY 
-const secretAccessKey = process.env.AWS_SECRET_KEY 
+const videoBucket = process.env.VIDEO_BUCKET || 'videoacademy68'
+const avatarBucket = process.env.AVATAR_BUCKET || 'imageacademy68'
+const region = process.env.REGION || 'US_EAST_2'
+const accessKey = process.env.AWS_ACCESS_KEY || 'AKIAZY5ORYKVKS7RT4HT'
+const secretAccessKey = process.env.AWS_SECRET_KEY  || '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'
 
 
 aws.config.update({
@@ -43,7 +43,8 @@ let uploadImageBase64 = async (imageBase64, type, callback) => {
 
 	var bucket = null
 	var imageRemoteName = null
-	var buff = Buffer.from(imageBase64.replace(/^data:image\/\w+;base64,/, ""),'base64')
+	var buffImage = Buffer.from(imageBase64.replace(/^data:image\/\w+;base64,/, ""),'base64')
+	var buffVideo = Buffer.from(imageBase64.replace(/^data:video\/\w+;base64,/, ""),'base64')
 	var s3 = new aws.S3()
 	var params = {}
 
@@ -51,15 +52,15 @@ let uploadImageBase64 = async (imageBase64, type, callback) => {
 		return ''
 	}
 
-	if(type === "bikes"){
-		params.Key = `bike_${new Date().getTime()}.jpg`
-		params.Bucket = bikeBucket
-		params.Body = buff
-		params.ACL = "public-read"
-	}else if(type === "avatars"){
+	if(type === "avatar"){
 		params.Key = `avatar_${new Date().getTime()}.jpg`
 		params.Bucket = avatarBucket
-		params.Body = buff
+		params.Body = buffImage
+		params.ACL = "public-read"
+	}else if(type === "video"){
+		params.Key = `video_${new Date().getTime()}.mp4`
+		params.Bucket = videoBucket
+		params.Body = buffVideo
 		params.ACL = "public-read"
 	}
 	

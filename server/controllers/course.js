@@ -842,6 +842,74 @@ let checkJoin = async (req, res) => {
 	}
 }
 
+//Teacher
+let createCourse = async (req, res) => {
+    const {avatar, title, description, fullDescription, price} = req.body;
+
+    var decoded = req.decoded;
+    var userId = decoded.userId;
+
+    try
+    {
+        var course = await courseModel.create({
+            avatar,
+            title,
+            description,
+            fullDescription,
+            price,
+            active: false
+         }).then(async function(course){
+            await courseTeacherModel.create({
+                courseId: course.id,
+                userId
+             })
+         });
+        return res.status(200).json({message: 'Success!', courseId: course.id})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+}
+
+let updateCourse = async (req, res) => {
+    const {avatar, title, description, fullDescription, price, active} = req.body;
+    const courseId = req.params.id;
+
+    try
+    {
+        var course = await courseModel.update({
+            avatar,
+            title,
+            description,
+            fullDescription,
+            price,
+            active
+         },
+         {where: {id: courseId}}
+         );
+        return res.status(200).json({message: 'Success!'})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+}
+
+let deleteCourse = async (req, res) => {
+    const courseId = req.params.id;
+    try
+    {
+        await createDocument.destroy({
+            where: {id: courseDocumentId}
+            
+        })
+        return res.status(200).json({message: 'Success!'})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+}
+
+
 module.exports = {
     getDeatailCourse,
     searchCourse,
@@ -852,5 +920,10 @@ module.exports = {
     joinCourse,
     ratingCourse,
     addCourseWatchList,
-    learnCourse
+    learnCourse,
+
+    //Teacher
+    createCourse,
+    updateCourse,
+    deleteCourse
 }
