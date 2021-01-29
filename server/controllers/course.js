@@ -12,6 +12,7 @@ const rateTotalModel = require('../models/rate_total');
 const watchListModel = require('../models/watch_list');
 const courseStudentModel = require('../models/course_student');
 
+
 const slugify = require('slugify');
 
 let getAllCategory = async (req, res) => {
@@ -842,6 +843,8 @@ let checkJoin = async (req, res) => {
 	}
 }
 
+
+
 //Teacher
 let createCourse = async (req, res) => {
     const {avatar, title, description, fullDescription, price} = req.body;
@@ -921,6 +924,7 @@ module.exports = {
     ratingCourse,
     addCourseWatchList,
     learnCourse,
+    changeStateDocument,
 
     //Teacher
     createCourse,
