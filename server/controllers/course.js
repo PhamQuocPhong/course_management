@@ -847,7 +847,8 @@ let checkJoin = async (req, res) => {
 
 //Teacher
 let createCourse = async (req, res) => {
-    const {avatar, title, description, fullDescription, price} = req.body;
+    const {avatarCourse, titleCourse, descriptionCourse, fullDescriptionCourse, priceCourse, nameChapter, previewChapter
+        , descriptionChapter, descriptionDocument, nameDocument, typeDocument, previewDocument} = req.body;
 
     var decoded = req.decoded;
     var userId = decoded.userId;
@@ -855,19 +856,36 @@ let createCourse = async (req, res) => {
     try
     {
         var course = await courseModel.create({
-            avatar,
-            title,
-            description,
-            fullDescription,
-            price,
-            active: false
+            avatar : avatarCourse,
+            title: titleCourse,
+            description: descriptionCourse,
+            fullDescription: fullDescriptionCourse,
+            price: priceCourse,
+            active: false, //Hoàn thành hay chưa
+            status: true //Ẩn hay mở
          }).then(async function(course){
             await courseTeacherModel.create({
                 courseId: course.id,
                 userId
              })
+            var courseChapter = await courseChapterModel.create({
+                name: nameChapter,
+                description: descriptionChapter,
+                preview: previewChapter,
+                courseId: course.id
+            }).then(async function(chapter){    
+                await courseDocumentModel.create({
+                    name: nameDocument,
+                    description: descriptionDocument,
+                    preview: previewDocument,
+                    courseId: chapter.courseId,
+                    type: typeDocument,
+                    chapterId: chapter.id
+                    
+                 });
+            });
          });
-        return res.status(200).json({message: 'Success!', courseId: course.id})
+        return res.status(200).json({message: 'Success!'})
     }
     catch(error) {
 		return res.status(500).json(error)
