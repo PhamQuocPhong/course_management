@@ -12,6 +12,8 @@ export default {
     }
   },
 
+  
+
   async fetchPagingByCategoryId(currentPage, categoryId) {
     try {
       return await axios.get(this.rootURL, {

@@ -55,16 +55,10 @@ export default {
 		this.retrieveData();
 	},
 
-  watch: {
-    categories(data)
-    {
-      console.log(data);
-    }
-  },
 
 	methods: {
 		async retrieveData(){
-			const res = await CategoryService.fetchAll();
+			const res = await CategoryService.fetchMenu();
 			if(res.status === 200){
 				this.categories = res.data.data
 			}

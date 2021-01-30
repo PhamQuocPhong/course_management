@@ -129,14 +129,6 @@ export default {
 
   methods: {
 
-    edit(item){
-      this.$router.push('/users/' + item.id);
-    },
-
-    create(){
-      this.$router.push('/users/create');
-    },
-
     async remove(item){
       var conf = confirm(this.$lang.REMOVE_CONFIRM);
 

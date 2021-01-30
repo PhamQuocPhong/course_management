@@ -47,8 +47,6 @@ import AdminCategoryEdit from "@/views/admin/pages/category/Edit";
 
 import AdminCourse from "@/views/admin/pages/course/Course";
 import AdminCourseIndex from "@/views/admin/pages/course/Index";
-import AdminCourseCreate from "@/views/admin/pages/course/Create";
-import AdminCourseEdit from "@/views/admin/pages/course/Edit";
 
 import store from "./store/index";
 
@@ -111,17 +109,7 @@ const routes = [
           },
 
           
-          {
-            path: "create",
-            component: AdminCourseCreate,
-            name: "adminCourseCreate"
-          },
-
-          {
-            path: ":id",
-            component: AdminCourseEdit,
-            name: "adminCourseEdit"
-          },
+         
         ]
       },
     ],

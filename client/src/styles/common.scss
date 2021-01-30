@@ -41,9 +41,14 @@
 		    bottom: 0;
 		    margin: auto;
 		    position: absolute;
-		}
-			
+		}	
 	}
+}
+
+.menu-header{
+  .v-list{
+    min-height: auto !important;
+  }
 }
 
 

@@ -16,7 +16,7 @@ const courseStudentModel = require('../models/course_student');
 const slugify = require('slugify');
 const helper = require('../helpers/helper');
 
-let getAllCategory = async (req, res) => {
+let getAllCourse = async (req, res) => {
 
     var condition = req.query;
     try
@@ -44,11 +44,36 @@ let show = async (req, res) => {
 
 let store = async (req, res) => {
 
-    var form = req.body
+    var form = req.body;
+    var promotions = form.promotions;
 
-    try{
-        var data = await courseModel.create(form);
-        return res.status(200).json({message: 'Success', data: data})
+    try
+    {
+        if(promotions.length)
+        {
+            var newCourse = await courseModel.create(form);
+            for(var i = 0; i < promotions.length; i++)
+            {
+                promotion[i].courseId = newCourse.id;
+                promotionModel.create(promotion[i]);
+            }
+        }
+
+        var findCourse = courseModel.findOne({
+            where: {
+                id: newCourse.id,
+            },
+            include: [
+                {
+                    model: promotionModel
+                },
+                {
+                    model: rateTotalModel
+                }
+            ]
+        })
+
+        return res.status(200).json({message: 'Success', data: findCourse})
  
     }catch(error){
         return res.status(500).json({message: error})
@@ -120,7 +145,6 @@ let getCoursePaging = async (req, res) => {
            order.push([rateTotalModel, 'total', query.orderRating])
         }
 
-        console.log(condition);
 
         courseData = await courseModel.findAll({
             offset: offset, 
@@ -145,7 +169,6 @@ let getCoursePaging = async (req, res) => {
                 },
                 {
                     model: rateTotalModel
-                    
                 }
             ],
         });
@@ -644,6 +667,9 @@ let deleteCourse = async (req, res) => {
 
 
 module.exports = {
+
+
+    getAllCourse,
     getDeatailCourse,
     searchCourse,
     getCoursePaging,

@@ -1,7 +1,7 @@
 <template>
   <v-container>
         <v-row>
-      <label-table :title="$lang.CATEOGORY"> </label-table>
+      <label-table :title="$lang.CATEGORY"> </label-table>
     </v-row>
     <v-row class="justify-center">
       <v-col cols="12" sm="8" md="6" lg="6">
