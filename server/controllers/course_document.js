@@ -13,7 +13,6 @@ let createDocument = async (req, res) => {
             name,
             description,
             preview,
-            preview,
             courseId,
             type,
             chapterId
@@ -34,7 +33,6 @@ let updateDocument = async (req, res) => {
         await courseDocumentModel.update({
             name,
             description,
-            preview,
             preview,
             courseId,
             type,
