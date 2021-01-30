@@ -11,8 +11,8 @@ export default {
 	CANCEL: "Hủy",
 	BACK: "Trở về",
 
-	CATEOGORY: "Danh mục",
-
+	CATEGORY: "Danh mục",
+	COURSE: "Khóa học",
 
 	YEAR: "Năm",
 	MONTH: "Tháng",

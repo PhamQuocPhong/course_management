@@ -1,13 +1,13 @@
 <template>
   <v-container>
     <v-row>
-      <label-table :title="$lang.CATEOGORY"> </label-table>
+      <label-table :title="$lang.COURSE"> </label-table>
     </v-row>
     <v-row>
       <v-flex :class="{ 'pa-4': !isMobile }">
         <v-card flat>
           <v-row  :class="{ 'mt-4': isMobile }">
-            <v-col cols="12" md="3" lg="2" sm="3">
+            <v-col cols="12" md="3" lg="3" sm="3">
               <m-category-list
               label="Danh mục"
               :data.sync="searchCategory"
@@ -15,7 +15,7 @@
               >
               </m-category-list>
             </v-col>
-            <v-col cols="12" md="3" lg="2" sm="3">
+            <v-col cols="12" md="3" lg="3" sm="3">
               <btn-create 
                 :title="$lang.CREATE"
                 v-on:action="create()"
@@ -41,8 +41,7 @@
                         <th class="text-center">Giá</th>
                         <th class="text-center">Giá sau khuyến mãi</th>
                         <th class="text-center">Đánh giá</th>
-                        
-                        <th class="text-center">Thao tác</th>
+                        <th class="text-center">Tình trạng</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -85,24 +84,12 @@
                               ></v-rating>
                               <span>( {{ item.rateTotal && item.rateTotal.turn }} )</span>
                          </td>
-
-                        <td class="text-center">
-                           <btn-detail
-                            
-                            :title="$lang.DETAIL"
-                            v-on:action="edit(item)"
-                            color="blue darken-1"
-                            :classProp="`mr-4`"
-                            type="edit"
-                          ></btn-detail>
-
-                          <btn-remove 
-                            :title="$lang.REMOVE"
-                            v-on:action="remove(item)"
-                            type="remove"
-                          >
-                          </btn-remove>
-                        </td>
+                         <td>
+                            <v-switch
+                              @change="handleStatus(item)"
+                            >
+                            </v-switch>
+                         </td>
                       </tr>
                     </tbody>
                 </template>
@@ -155,24 +142,6 @@
                          </li>
 
                           <li class="flex-item" data-label="Mô tả">{{ item.description }}</li>
-
-                         <li class="flex-item" data-label="Thao tác">
-                           <btn-detail
-                            
-                            :title="$lang.DETAIL"
-                            v-on:action="edit(item)"
-                            color="blue darken-1"
-                            :classProp="`mr-4`"
-                            type="edit"
-                          ></btn-detail>
-
-                          <btn-remove 
-                            :title="$lang.REMOVE"
-                            v-on:action="remove(item)"
-                            type="remove"
-                          >
-                          </btn-remove>
-                        </li>
 
                       </ul>
                     </td>
@@ -279,11 +248,11 @@ export default {
 
 
     edit(item){
-      this.$router.push({ name: "adminCategoryEdit", params: {id: item.id}});
+      this.$router.push({ name: "adminCourseEdit", params: {id: item.id}});
     },
 
     create(){
-      this.$router.push({ name: "adminCategoryCreate" });
+      this.$router.push({ name: "adminCourseCreate" });
     },
 
     async remove(item){

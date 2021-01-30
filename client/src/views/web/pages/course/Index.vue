@@ -142,7 +142,6 @@ export default {
         	if(res.status === 200)
           {
             this.courses = res.data.data
-            console.log(this.courses)
           }
       }, 200);
 

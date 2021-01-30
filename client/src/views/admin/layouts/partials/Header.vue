@@ -69,7 +69,7 @@
 
 import SearchHeader from "./SearchHeader";
 import CookieService from "@/services/cookie";
-import NavigationDrawer from "./Sidebar.vue";
+import NavigationDrawer from "./Sidebar";
 export default {
   components: {
     'search-header': SearchHeader,

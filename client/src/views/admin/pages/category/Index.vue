@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <label-table :title="$lang.CATEOGORY"> </label-table>
+      <label-table :title="$lang.CATEGORY"> </label-table>
     </v-row>
     <v-row>
       <v-flex :class="{ 'pa-4': !isMobile }">

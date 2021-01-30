@@ -139,6 +139,12 @@ let remove = async (req, res) => {
             },
         });
 
+        const findCourseByCategory = await courseModel.count({
+            where: {
+                categoryId: id
+            }
+        });
+
         return res.status(200).json({message: 'Success', data: data})
     }catch(error){
         return res.status(500).json({message: error})
