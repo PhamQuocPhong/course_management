@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const watchListModel = require('../models/watch_list');
 const courseModel = require('../models/course');
 const courseStudentModel = require('../models/course_student');
+const courseTeacherModel = require('../models/course_teacher');
 
 
 let changeInfo = async (req, res) => {
@@ -135,13 +136,31 @@ let getCourseJoin = async (req, res) => {
    
 }
 
-//(15) api/profile/my-courses
+//Teacher
+let getTeachList = async (req, res) => {
+    var decoded = req.decoded;
+    var userId = decoded.userId;
+  
+    try
+    {
+        var teachList = await courseTeacherModel.findAll({
+            where:{
+                userId
+            }
+        })
 
+        return res.status(200).json({message: 'Success!', data: teachList})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+}
 
 module.exports = {
     changePassword,
     changeInfo,
     removeElementWatchList,
     getWatchList,
-    getCourseJoin
+    getCourseJoin,
+    getTeachList
 }
