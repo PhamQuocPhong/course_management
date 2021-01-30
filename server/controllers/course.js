@@ -924,8 +924,7 @@ module.exports = {
     ratingCourse,
     addCourseWatchList,
     learnCourse,
-    changeStateDocument,
-
+   
     //Teacher
     createCourse,
     updateCourse,
