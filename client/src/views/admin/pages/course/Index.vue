@@ -86,6 +86,7 @@
                          </td>
                          <td>
                             <v-switch
+                              v-model="item.status"
                               @change="handleStatus(item)"
                             >
                             </v-switch>
@@ -236,14 +237,20 @@ export default {
       this.retrieveData(query);
     },
 
+    handleStatus(item)
+    {
+      var payload = item;
+      this.$store.dispatch("courses/update", payload);
+    },
+
     retrieveData(query)
     {
-      var payLoad = query;
-      payLoad.page = this.currentPage;
+      var payload = query;
+      payload.page = this.currentPage;
 
       this.$store.dispatch("components/actionProgressHeader", { option: "show" })
       this.isLoading = true;
-      this.$store.dispatch("courses/fetchPaging", payLoad);
+      this.$store.dispatch("courses/fetchPaging", payload);
     },
 
 

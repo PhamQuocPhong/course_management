@@ -5,6 +5,7 @@ var router = express.Router()
 
 router.get('/', courseController.getCoursePaging);
 router.get('/search', courseController.searchCourse);
+router.put('/update/:id', courseController.update);
 router.get('/:id', courseController.getDeatailCourse);
 
 //Đăng nhập

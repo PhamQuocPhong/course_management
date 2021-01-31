@@ -1,19 +1,27 @@
 <template>
   <v-container>
     <v-row>
-      <label-table :title="$lang.HOBBY"> </label-table>
+      <label-table :title="$lang.USER"> </label-table>
     </v-row>
     <v-row>
       <v-flex :class="{ 'pa-4': !isMobile }">
         <v-card flat>
-          <v-row no-gutters>
-            <btn-create 
-              :title="$lang.CREATE"
-              v-on:action="create()"
+          <v-row  :class="{ 'mt-4': isMobile }">
+            <v-col cols="12" md="3" lg="3" sm="3">
+              <m-category-list
+              label="Danh mục"
+              :data.sync="searchCategory"
+              v-on:action="filter(searchCategory)"
               >
-            </btn-create>
-
-            <v-spacer></v-spacer>
+              </m-category-list>
+            </v-col>
+            <v-col cols="12" md="3" lg="3" sm="3">
+              <btn-create 
+                :title="$lang.CREATE"
+                v-on:action="create()"
+                >
+              </btn-create>
+            </v-col>
           </v-row>
 
           <v-layout
@@ -27,43 +35,48 @@
                 <template v-slot:default v-if="!isMobile">
                    <thead>
                       <tr>
-                        <th class="text-center">番号</th>
-                        <th class="text-center">タイトル</th>
-                        <th class="text-center">ステータス</th>
-                        <th class="text-center">アクション</th>
+                        <th class="text-center">No.</th>
+                        <th class="text-center">Họ tên</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Tình trạng</th>
+                        <th class="text-center">Phân loại</th>
+                        <th class="text-center">Hành động</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-if="isLoading">
                           <td colspan="100%">
-                             <skeleton-custom></skeleton-custom>
+                             <v-skeleton-loader
+                              ref="skeleton"
+                              type="table-tbody"
+                              class="mx-auto"
+                          ></v-skeleton-loader>
                           </td>
                       </tr>
-                      <tr v-else v-for="(item, index) in users" :key="item.id">
+                      <tr v-else v-for="(item, index) in courses" :key="item.id">
+
                         <td class="text-center">
                            {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
                         </td>
-                        <td class="text-center">{{ item.value }}</td>
 
-                       <td class="text-center">
-                          <v-chip
-                          :color="$helper.showStatusColor(item.isValid)"
-                          dark
-                          small
-                          >
-                            {{item.isValid === true ? "表示" : "非表示"}}
-                          </v-chip>
-                        </td>
+                        <td class="text-center">{{ item.name }}</td>
 
-                        <td class="text-center">
-                           <btn-edit
+                        <td class="text-center">{{ item.email }}</td>
+
+                        <td class="text-center">{{ item.active }}</td>
+
+                         <td class="text-center">
+                             <td class="text-center">{{ item.active }}</td>
+                         </td>
+                         <td class="text-center">
+                           <btn-detail
                             
                             :title="$lang.DETAIL"
                             v-on:action="edit(item)"
                             color="blue darken-1"
                             :classProp="`mr-4`"
                             type="edit"
-                          ></btn-edit>
+                          ></btn-detail>
 
                           <btn-remove 
                             :title="$lang.REMOVE"
@@ -77,7 +90,57 @@
                 </template>
 
                 <template v-slot:default v-else>
+                  <tr v-if="isLoading">
+                      <td colspan="100%">
+                         <v-skeleton-loader
+                            ref="skeleton"
+                            type="table-body"
+                            class="mx-auto"
+                          ></v-skeleton-loader>
+                      </td>
+                  </tr>
+                  <tr
+                    v-for="(item, index) in courses"
+                    :key="item.id"
+                    v-else
+                  >
+                    <td>
+                      <ul class="flex-content">
 
+                        <li class="flex-item" data-label="No.">
+                           {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
+                        </li>
+
+                        <li class="flex-item" data-label="Tiêu đề">{{ item.title }}</li>
+
+                         <li class="flex-item" data-label="Hình ảnh">
+                            <img :src="item.avatar" width="120" height="70" >
+                         </li>
+
+                        <li  class="flex-item mt-8" data-label="Giá">{{ item.price | toCurrency }}</li>
+
+                        <li class="flex-item" data-label="Giá sau khuyến mãi">{{ item.priceFinal | toCurrency}}</li>
+
+                      
+                         <li class="flex-item" data-label="Đánh giá">
+                            <v-rating
+                                v-model="item.rateTotal && item.rateTotal.total"
+                                color="yellow darken-3"
+                                background-color="grey darken-1"
+                                empty-icon="$ratingFull"
+                                half-increments
+                                hover
+                                small
+                                readonly
+                              ></v-rating>
+                               <span>( {{ item.rateTotal && item.rateTotal.turn }} )</span>
+                         </li>
+
+                          <li class="flex-item" data-label="Mô tả">{{ item.description }}</li>
+
+                      </ul>
+                    </td>
+                  </tr>
                 </template>
               </v-simple-table>
             </v-responsive>
@@ -96,53 +159,121 @@ import IsMobile from "@/mixins/is_mobile";
 
 
 // services
-import UserService from "@/services/user";
+import CategoryService from "@/services/category";
 export default {
 
   mixins: [IsMobile],
+
+  created(){
+    if(this.$route.query.hasOwnProperty('page')){
+       this.$store.commit('courses/UPDATE_CURRENT_PAGE', parseInt(this.$route.query.page));
+    }
+
+    this.retrieveData(this.$route.query);
+  },
+
   data(){
     return {
-      currentPage: this.$constant.pagination.CURRENT_PAGE,
-      itemsPerPage: this.$constant.pagination.ITEMS_PER_PAGE,
       isLoading: false,
-      users: [],
+      searchCategory: {}
     }
   },
 
+  computed: {
+    courses: {
+      get(){
+        return this.$store.getters["courses/courses"];
+      }
+    },
+    itemsPerPage: {
+      get(){
+        return this.$store.getters["courses/itemsPerPage"];
+      }
+    },
+    currentPage: {
+      get(){
+         return this.$store.getters["courses/currentPage"]
+      },
+      set(page)
+      {
+        this.$store.commit('courses/UPDATE_CURRENT_PAGE', page)
+      }
+    },
+  },
 
   watch: {
-    users(data){
-      this.isLoading = true
-      this.$store.dispatch("components/actionProgressHeader", {option: "show"});
-      if(data.length > 0 ){
-        setTimeout(() => {
-          this.$store.dispatch('components/actionProgressHeader', {option: "hide"});
+    courses(data){
+      setTimeout(async () => {
+        if(data.length){
+           this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
            this.isLoading = false
-        }, 200)
-      }else{
-        this.$store.dispatch('components/actionProgressHeader', {option: "hide"});
-        this.isLoading = false
-      }
-    }
+        }else{
+          this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
+          this.isLoading = false
+        }
+      }, 200)
+    },
   },
-
 
   methods: {
 
+    filter(searchCategory)
+    {
+      var query = Object.assign({}, this.$route.query);
+
+      if(!searchCategory.id)
+      {
+        delete query.categoryId;
+      }else{
+        query.categoryId = searchCategory.id;
+      }
+
+      this.retrieveData(query);
+    },
+
+    handleStatus(item)
+    {
+      var payload = item;
+      this.$store.dispatch("courses/update", payload);
+    },
+
+    retrieveData(query)
+    {
+      var payload = query;
+      payload.page = this.currentPage;
+
+      this.$store.dispatch("components/actionProgressHeader", { option: "show" })
+      this.isLoading = true;
+      this.$store.dispatch("courses/fetchPaging", payload);
+    },
+
+
+    edit(item){
+      this.$router.push({ name: "adminCourseEdit", params: {id: item.id}});
+    },
+
+    create(){
+      this.$router.push({ name: "adminCourseCreate" });
+    },
+
     async remove(item){
+
       var conf = confirm(this.$lang.REMOVE_CONFIRM);
+      var condition = {
+        parentId: item.id
+      }
 
       if(conf){
-        const res = await UserService.delete(item.id);
-        if(!res){
-          
-          toastr.error(this.$lang.REMOVE_FAIL, this.$lang.ERROR, { timeOut: 1000 });
-        }else{
-          toastr.success(this.$lang.REMOVE_SUCCESS, this.$lang.SUCCESS, { timeOut: 1000 });
-        }
+        this.$store.dispatch("courses/remove", item)
       }
     }
   },
+
+
+  beforeDestroy()
+  {
+    this.$store.dispatch("courses/reset");
+  }
 
 
 };

@@ -1,4 +1,5 @@
 import CourseService from '@/services/course'
+import lang from "@/config/lang";
 
 export  const getters = {
     courses: state => state.courses,
@@ -43,6 +44,21 @@ export  const actions = {
       }
     },
 
+    async update({commit}, payload)
+    {
+      const courseId = payload.id;
+      var course = payload;
+
+      const res = await CourseService.update(courseId, course);
+      if(res.status === 200)
+      {
+        commit("UPDATE", course);
+        toastr.success(lang.UPDATE_SUCCESS, lang.SUCCESS, { timeOut: 1000 });
+      }else{
+        toastr.error(lang.UPDATE_FAIL, lang.ERROR, { timeOut: 1000 });
+      }
+    },
+
     async remove({ commit }, payload)
     {
       const course = payload;
@@ -79,6 +95,13 @@ export  const mutations = {
       state.course = course;
     },
 
+    UPDATE(status, course)
+    {
+      var courses = state.courses;
+      var index = courses.indexOf(course);
+      courses[index] = courses;
+      state.courses = courses;
+    },
 
     REMOVE(state, course)
     {
