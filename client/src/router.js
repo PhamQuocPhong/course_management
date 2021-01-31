@@ -74,7 +74,6 @@ const routes = [
       {
         path: "categories",
         component: AdminCategory,
-        name: "adminCategory",
         children: [
           {
             path: "/",
@@ -100,7 +99,6 @@ const routes = [
       {
         path: "courses",
         component: AdminCourse,
-        name: "adminCourse",
         children: [
           {
             path: "/",
@@ -108,8 +106,6 @@ const routes = [
             name: "adminCourseIndex"
           },
 
-          
-         
         ]
       },
     ],
