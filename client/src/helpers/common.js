@@ -184,5 +184,12 @@ export default {
       return null;
 
     return imageString.split(";")
+  },
+
+  setColorStatusUser(status)
+  { 
+    if(!status)
+      return "red";
+    return "primary";   
   }
 };

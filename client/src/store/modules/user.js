@@ -1,30 +1,44 @@
 import UserService from '@/services/user'
-import CookieService from '@/services/cookie'
+
+import ComponentStore from './component';
+import lang from "@/config/lang";
 
 export  const getters = {
     users: state => state.users,
     user: state => state.user,
-    currentUser: state => state.currentUser
-};
 
+    currentPage: state => state.currentPage,
+    pageCounts: state => state.pageCounts,
+    itemsPerPage: state => state.itemsPerPage
+};
 
 export const getDefaultState = () => ({
     users: [],
     user: {},
-    currentUser: CookieService.get("userInfo"),
+    currentPage: 1,
+    itemsPerPage: 20,
+    pageCounts: 1,
+
 })
 
 const state = getDefaultState()
 
 export  const actions = {
 
+    async fetchAll({ commit }, payload) {
+      var query = payload;
+      const res = await UserService.fetchAll();
+      if(res.status === 200){
+        var data = res.data;
+        commit("FETCH_ALL", data);
+      }
+    },
+
     async fetchPaging({ commit }, payload) {
 
       const currentPage = payload.page;
       const searchkey = payload.searchkey || null;
-
       var query = payload;
-
       const res = await UserService.fetchPaging(query);
       if(res.data){
         var data = res.data;
@@ -34,11 +48,25 @@ export  const actions = {
 
     async fetch({ commit }, payload)
     {
-      const userId = payload.id;
-      const res = await UserService.fetch(userId);
+      const res = await UserService.fetch(payload.id);
       if(res.data){
-        commit("FETCH", res.data);
+        commit("FETCH", res.data.data);
       }
+    },
+
+    async remove({ commit }, payload)
+    {
+      const user = payload;
+      const res = await UserService.remove(user.id);
+
+      if(res.status === 200)
+      {
+        commit("REMOVE", user);
+        toastr.success(lang.REMOVE_SUCCESS, lang.SUCCESS, { timeOut: 1000 });
+      }else{
+        toastr.error(lang.REMOVE_FAIL, lang.ERROR, { timeOut: 1000 });
+      }
+
     },
 
     updateCurrentPage({commit}, payload)
@@ -53,8 +81,12 @@ export  const actions = {
 
 export  const mutations = {
 
-    FETCH_PAGING(state, users){
-      state.users = users;
+    FETCH_ALL(state, data){
+      state.users = data.data;
+    },
+
+    FETCH_PAGING(state, data){
+      state.users = data.data;
       state.pageCounts = data.pageCounts
     },
 
@@ -62,14 +94,16 @@ export  const mutations = {
       state.user = user;
     },
 
-    // array
-    UPDATE_CURRENT_USER(state, user)
+    REMOVE(state, user)
     {
-      CookieService.set("userInfo", user);
-      state.currentUser = user;
+      var users = state.users;
+      var index = users.indexOf(user);
+      if (index !== -1) {
+          users.splice(index, 1);
+      }
+      state.users = users;
     },
 
-    // string
     UPDATE_CURRENT_PAGE(state, page){
       state.currentPage = page;
     },

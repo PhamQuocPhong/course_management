@@ -151,7 +151,20 @@
               </v-simple-table>
             </v-responsive>
           </v-layout>
-
+          <v-row justify="center">
+            <v-col cols="8">
+              <v-container class="max-width">
+                 <pagination-custom
+                  :pageCounts="pageCounts"
+                  :currentPage.sync="currentPage"
+                  :key="currentPage"
+                  @change="nextPage()"
+                 >
+                   
+                 </pagination-custom>
+              </v-container>
+            </v-col>
+          </v-row>
         </v-card>
       </v-flex>
     </v-row>
@@ -205,6 +218,9 @@ export default {
         this.$store.commit('courses/UPDATE_CURRENT_PAGE', page)
       }
     },
+     pageCounts(){
+      return this.$store.getters["courses/pageCounts"]
+    },
   },
 
   watch: {
@@ -233,6 +249,18 @@ export default {
       }else{
         query.categoryId = searchCategory.id;
       }
+
+      this.retrieveData(query);
+    },
+
+     nextPage(){
+
+      var query = Object.assign({}, this.$route.query);
+      query.page = this.currentPage;
+
+      this.$router.push({
+            query: query
+      });
 
       this.retrieveData(query);
     },

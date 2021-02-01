@@ -32,7 +32,7 @@ export default {
       return await axios.get(this.rootURL, {
         params: {
           categoryId: query.categoryId,
-          page: query.currentPage,
+          page: query.page,
           search: query.search
         }
       });

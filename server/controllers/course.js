@@ -42,43 +42,6 @@ let show = async (req, res) => {
     return res.status(200).json({message: 'Success', data: data})
 }
 
-let store = async (req, res) => {
-
-    var form = req.body;
-    var promotions = form.promotions;
-
-    try
-    {
-        if(promotions.length)
-        {
-            var newCourse = await courseModel.create(form);
-            for(var i = 0; i < promotions.length; i++)
-            {
-                promotion[i].courseId = newCourse.id;
-                promotionModel.create(promotion[i]);
-            }
-        }
-
-        var findCourse = courseModel.findOne({
-            where: {
-                id: newCourse.id,
-            },
-            include: [
-                {
-                    model: promotionModel
-                },
-                {
-                    model: rateTotalModel
-                }
-            ]
-        })
-
-        return res.status(200).json({message: 'Success', data: findCourse})
- 
-    }catch(error){
-        return res.status(500).json({message: error})
-    }
-}
 
 let update = async (req, res) => {
 
@@ -686,7 +649,7 @@ let deleteCourse = async (req, res) => {
 
 module.exports = {
 
-
+    update,
     getAllCourse,
     getDeatailCourse,
     searchCourse,
