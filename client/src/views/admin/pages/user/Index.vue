@@ -8,16 +8,16 @@
         <v-card flat>
           <v-row  :class="{ 'mt-4': isMobile }">
             <v-col cols="12" md="3" lg="3" sm="3">
-              <m-category-list
-              label="Danh mục"
-              :data.sync="searchCategory"
-              v-on:action="filter(searchCategory)"
+              <m-filter
+              label="Vai trò"
+              :items="roles"
+              :data.sync="filterRole"
               >
-              </m-category-list>
+              </m-filter>
             </v-col>
             <v-col cols="12" md="3" lg="3" sm="3">
               <btn-create 
-                :title="$lang.CREATE"
+                title="Thêm giáo viên"
                 v-on:action="create()"
                 >
               </btn-create>
@@ -38,9 +38,9 @@
                         <th class="text-center">No.</th>
                         <th class="text-center">Họ tên</th>
                         <th class="text-center">Email</th>
+                        <th class="text-center">Vai trò</th>
                         <th class="text-center">Tình trạng</th>
-                        <th class="text-center">Phân loại</th>
-                        <th class="text-center">Hành động</th>
+              <!--           <th class="text-center">Hành động</th> -->
                       </tr>
                     </thead>
                     <tbody>
@@ -53,7 +53,7 @@
                           ></v-skeleton-loader>
                           </td>
                       </tr>
-                      <tr v-else v-for="(item, index) in courses" :key="item.id">
+                      <tr v-else v-for="(item, index) in users" :key="item.id">
 
                         <td class="text-center">
                            {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
@@ -63,12 +63,17 @@
 
                         <td class="text-center">{{ item.email }}</td>
 
-                        <td class="text-center">{{ item.active }}</td>
+                        <td class="text-center">{{ item.role.name }}</td>
 
-                         <td class="text-center">
-                             <td class="text-center">{{ item.active }}</td>
+                         <td>
+                            <v-switch
+                              v-model="item.active"
+                              @change="handleStatus(item)"
+                            >
+                            </v-switch>
                          </td>
-                         <td class="text-center">
+
+                    <!--      <td class="text-center">
                            <btn-detail
                             
                             :title="$lang.DETAIL"
@@ -84,7 +89,7 @@
                             type="remove"
                           >
                           </btn-remove>
-                        </td>
+                        </td> -->
                       </tr>
                     </tbody>
                 </template>
@@ -100,7 +105,7 @@
                       </td>
                   </tr>
                   <tr
-                    v-for="(item, index) in courses"
+                    v-for="(item, index) in users"
                     :key="item.id"
                     v-else
                   >
@@ -111,32 +116,37 @@
                            {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
                         </li>
 
-                        <li class="flex-item" data-label="Tiêu đề">{{ item.title }}</li>
+                        <li class="flex-item" data-label="Họ tên">{{ item.name }}</li>
 
-                         <li class="flex-item" data-label="Hình ảnh">
-                            <img :src="item.avatar" width="120" height="70" >
+                        <li class="flex-item" data-label="Email">{{ item.email }}</li>
+
+                        <li class="flex-item" data-label="Vai trò">{{ item.role.name }}</li>
+
+                         <li>
+                            <v-switch
+                              v-model="item.active"
+                              @change="handleStatus(item)"
+                            >
+                            </v-switch>
                          </li>
 
-                        <li  class="flex-item mt-8" data-label="Giá">{{ item.price | toCurrency }}</li>
+                 <!--         <li class="flex-item" data-label="No.">
+                           <btn-detail
+                            
+                            :title="$lang.DETAIL"
+                            v-on:action="edit(item)"
+                            color="blue darken-1"
+                            :classProp="`mr-4`"
+                            type="edit"
+                          ></btn-detail>
 
-                        <li class="flex-item" data-label="Giá sau khuyến mãi">{{ item.priceFinal | toCurrency}}</li>
-
-                      
-                         <li class="flex-item" data-label="Đánh giá">
-                            <v-rating
-                                v-model="item.rateTotal && item.rateTotal.total"
-                                color="yellow darken-3"
-                                background-color="grey darken-1"
-                                empty-icon="$ratingFull"
-                                half-increments
-                                hover
-                                small
-                                readonly
-                              ></v-rating>
-                               <span>( {{ item.rateTotal && item.rateTotal.turn }} )</span>
-                         </li>
-
-                          <li class="flex-item" data-label="Mô tả">{{ item.description }}</li>
+                          <btn-remove 
+                            :title="$lang.REMOVE"
+                            v-on:action="remove(item)"
+                            type="remove"
+                          >
+                          </btn-remove>
+                        </li> -->
 
                       </ul>
                     </td>
@@ -146,6 +156,20 @@
             </v-responsive>
           </v-layout>
 
+          <v-row justify="center">
+            <v-col cols="8">
+              <v-container class="max-width">
+                 <pagination-custom
+                  :pageCounts="pageCounts"
+                  :currentPage.sync="currentPage"
+                  :key="currentPage"
+                  @change="nextPage()"
+                 >
+                   
+                 </pagination-custom>
+              </v-container>
+            </v-col>
+          </v-row>
         </v-card>
       </v-flex>
     </v-row>
@@ -157,16 +181,21 @@
 //mixin
 import IsMobile from "@/mixins/is_mobile";
 
+import Filter from "./components/index/Filter";
 
 // services
 import CategoryService from "@/services/category";
 export default {
 
+  components: {
+    'm-filter': Filter
+  },
+
   mixins: [IsMobile],
 
   created(){
     if(this.$route.query.hasOwnProperty('page')){
-       this.$store.commit('courses/UPDATE_CURRENT_PAGE', parseInt(this.$route.query.page));
+       this.$store.commit('users/UPDATE_CURRENT_PAGE', parseInt(this.$route.query.page));
     }
 
     this.retrieveData(this.$route.query);
@@ -175,34 +204,51 @@ export default {
   data(){
     return {
       isLoading: false,
-      searchCategory: {}
+      filterRole: {},
+      roles: [
+        {
+          key: 1,
+          name: "Admin"
+        },
+        {
+          key: 2,
+          name: "Giáo viên"
+        },
+        {
+          key: 3,
+          name: "Sinh viên"
+        }
+      ]
     }
   },
 
   computed: {
-    courses: {
+    users: {
       get(){
-        return this.$store.getters["courses/courses"];
+        return this.$store.getters["users/users"];
       }
     },
     itemsPerPage: {
       get(){
-        return this.$store.getters["courses/itemsPerPage"];
+        return this.$store.getters["users/itemsPerPage"];
       }
     },
     currentPage: {
       get(){
-         return this.$store.getters["courses/currentPage"]
+         return this.$store.getters["users/currentPage"]
       },
       set(page)
       {
-        this.$store.commit('courses/UPDATE_CURRENT_PAGE', page)
+        this.$store.commit('users/UPDATE_CURRENT_PAGE', page)
       }
+    },
+    pageCounts(){
+      return this.$store.getters["users/pageCounts"]
     },
   },
 
   watch: {
-    courses(data){
+    users(data){
       setTimeout(async () => {
         if(data.length){
            this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
@@ -231,10 +277,22 @@ export default {
       this.retrieveData(query);
     },
 
+    nextPage()
+    {
+      var query = Object.assign({}, this.$route.query);
+      query.page = this.currentPage;
+
+      this.$router.push({
+            query: query
+      });
+
+      this.retrieveData(query);
+    },
+
     handleStatus(item)
     {
       var payload = item;
-      this.$store.dispatch("courses/update", payload);
+      this.$store.dispatch("users/update", payload);
     },
 
     retrieveData(query)
@@ -244,7 +302,7 @@ export default {
 
       this.$store.dispatch("components/actionProgressHeader", { option: "show" })
       this.isLoading = true;
-      this.$store.dispatch("courses/fetchPaging", payload);
+      this.$store.dispatch("users/fetchPaging", payload);
     },
 
 
@@ -253,7 +311,7 @@ export default {
     },
 
     create(){
-      this.$router.push({ name: "adminCourseCreate" });
+      this.$router.push({ name: "adminUserCreate" });
     },
 
     async remove(item){
@@ -264,7 +322,7 @@ export default {
       }
 
       if(conf){
-        this.$store.dispatch("courses/remove", item)
+        this.$store.dispatch("users/remove", item)
       }
     }
   },
@@ -272,7 +330,7 @@ export default {
 
   beforeDestroy()
   {
-    this.$store.dispatch("courses/reset");
+    this.$store.dispatch("users/reset");
   }
 
 

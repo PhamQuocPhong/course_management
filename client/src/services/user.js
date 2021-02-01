@@ -2,7 +2,7 @@ import helperCommon from '@/helpers/common';
 
 export default {
 
-  rootURL: '/user/',
+  rootURL: '/users/',
 
   async fetchAll() {
     try {
@@ -15,9 +15,7 @@ export default {
   async fetchPaging(query) {
     try {
       return await axios.get(this.rootURL, {
-        params: {
-          page: query.urrentPage
-        }
+        params: query
       });
     } catch (error) {
        return helperCommon.getError(error) || false; 
