@@ -6,14 +6,14 @@ export  const getters = {
     course: state => state.course,
     currentPage: state => state.currentPage,
     pageCounts: state => state.pageCounts,
-
+     itemsPerPage: state => state.itemsPerPage
 };
 
 export const getDefaultState = () => ({
     courses: [],
     course: {},
     currentPage: 1,
-    itemPerPage: 20,
+    itemsPerPage: 20,
     pageCounts: 1,
 
 })
@@ -22,8 +22,8 @@ const state = getDefaultState()
 
 export  const actions = {
 
-    async fetchPaging({ commit }, payload) {
-
+    async fetchPaging({ commit }, payload) 
+    {
       const currentPage = payload.page;
       const searchkey = payload.searchkey || null;
 

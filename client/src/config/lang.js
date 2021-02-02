@@ -13,6 +13,7 @@ export default {
 
 	CATEGORY: "Danh mục",
 	COURSE: "Khóa học",
+	USER: "Người dùng",
 
 	YEAR: "Năm",
 	MONTH: "Tháng",

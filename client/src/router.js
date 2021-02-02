@@ -45,6 +45,11 @@ import AdminCategoryIndex from "@/views/admin/pages/category/Index";
 import AdminCategoryCreate from "@/views/admin/pages/category/Create";
 import AdminCategoryEdit from "@/views/admin/pages/category/Edit";
 
+import AdminUser from "@/views/admin/pages/user/User";
+import AdminUserIndex from "@/views/admin/pages/user/Index";
+import AdminUserCreate from "@/views/admin/pages/user/Create";
+import AdminUserEdit from "@/views/admin/pages/user/Edit";
+
 import AdminCourse from "@/views/admin/pages/course/Course";
 import AdminCourseIndex from "@/views/admin/pages/course/Index";
 
@@ -108,6 +113,32 @@ const routes = [
 
         ]
       },
+
+      {
+        path: "users",
+        component: AdminUser,
+        children: [
+          {
+            path: "/",
+            component: AdminUserIndex,
+            name: "adminCategoryIndex"
+          },
+
+          
+          {
+            path: "create",
+            component: AdminUserCreate,
+            name: "adminUserCreate"
+          },
+
+          {
+            path: ":id",
+            component: AdminUserEdit,
+            name: "adminUserEdit"
+          },
+        ]
+      },
+
     ],
   },
 
