@@ -14,7 +14,7 @@
                   <v-row>
                     <v-col cols="4">
                       <v-subheader class="font-weight-bold"
-                        >Full name</v-subheader
+                        >Họ tên</v-subheader
                       >
                     </v-col>
                     <v-col cols="8">
@@ -29,31 +29,15 @@
                   <v-row>
                     <v-col cols="4">
                       <v-subheader class="font-weight-bold"
-                        >Phone number</v-subheader
+                        >Email</v-subheader
                       >
                     </v-col>
                     <v-col cols="8">
                       <v-text-field
                         :disabled="!edit"
                         class="font-weight-bold"
-                        v-model="userInfo.phone"
+                        v-model="userInfo.email"
                       ></v-text-field>
-                    </v-col>
-                  </v-row>
-
-                  <v-row>
-                    <v-col cols="4">
-                      <v-subheader class="font-weight-bold"
-                        >Address</v-subheader
-                      >
-                    </v-col>
-                    <v-col cols="8">
-                      <v-text-field
-                        v-model="userInfo.address"
-                        :disabled="!edit"
-                        class="font-weight-bold"
-                      >
-                      </v-text-field>
                     </v-col>
                   </v-row>
 
@@ -61,21 +45,30 @@
                   <v-row>
                     <v-spacer></v-spacer>
 
-                    <v-btn @click="edit = true" color="success" small>
+                    <v-btn 
+                    v-show="!edit"
+                    @click="edit = true" 
+                    color="success" 
+                    small
+                    >
                       Edit
                     </v-btn>
 
-                    <v-divider class="mx-2" vertical> </v-divider>
+                    <v-divider  v-show="!edit" class="mx-2" vertical> </v-divider>
 
-                    <v-btn color="primary" small
-                      v-on:click="handleUpdateUserInfo()"
+                    <v-btn 
+                    v-show="edit"
+                    color="primary" 
+                    small
+                    v-on:click="handleUpdateUserInfo()"
                     >
                       Save
                     </v-btn>
 
-                    <v-divider class="mx-2" vertical> </v-divider>
+                    <v-divider  v-show="edit" class="mx-2" vertical> </v-divider>
 
                     <v-btn
+                     v-show="edit"
                       @click="edit = false"
                       color="warning"
                       class="mr-4"

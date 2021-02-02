@@ -2,11 +2,13 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "access-token-secre
 const jwt = require('jsonwebtoken');
 
 module.exports = function (req, res, next) {
-  const accessToken = req.headers['x-access-token'] || req.body.token || req.query.token;
-  if (accessToken) {
+
+  const tokenFromClient = req.header('Authorization') && req.header('Authorization').replace('Bearer ', '')
+
+  if (tokenFromClient) {
     try {
 
-      const decoded = jwt.verify(accessToken, accessTokenSecret);
+      const decoded = jwt.verify(tokenFromClient, accessTokenSecret);
       req.decoded = decoded;
 
       next();

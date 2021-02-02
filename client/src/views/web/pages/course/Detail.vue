@@ -33,7 +33,22 @@
 				          color="basil"
 				          flat
 				        >
-				        	<v-card-title>{{ course.title }}</v-card-title>
+				        	<v-card-title>
+				        		{{ course.title }}
+				        		<v-btn 
+				        		@click="handleLikeCourse(course)"
+				        		style="position: absolute; right: 10px;"
+				        		class="text-right" 
+				        		outlined 
+				        		small 
+				        		color="pink"
+
+				        		>
+				        			<v-icon>mdi-heart-circle</v-icon>
+				        			Yêu thích
+				        		</v-btn>
+				        	</v-card-title>
+
 				          <v-card-text>
 				            <v-row
 				              align="center"
@@ -77,7 +92,7 @@
 				          color="basil"
 				          flat
 				        >
-				        	<v-card-text>
+				        	<v-card-text class="d-flex">
 				        	 <v-rating
 				                :value=" course.hasOwnProperty('rateTotal') ? course.rateTotal.total : 0"
 				                color="amber"
@@ -86,11 +101,14 @@
 				                readonly
 				                size="20"
 				              ></v-rating>
+				              	<v-spacer></v-spacer>
+				              	<v-btn outlined small color="primary" @click="addRating(course)">Đánh giá</v-btn>
 				            </v-card-text>
 
 				            <v-card-text>
 				              <h3>Lượt đánh giá: </h3>
-				              <m-rating :ratings.sync="course.rates" >
+
+				              <m-rating :ratings.sync="course.rates" v-show="course.rates"  >
 				              </m-rating>
 							</v-card-text>
 				      
@@ -127,6 +145,13 @@
 					<m-item :item="item" :key="item.id"></m-item>
 				</v-col>
 			</v-row>
+		<m-add-rating
+		v-if="isVisibleFormRating"
+		title="Đánh giá"
+		:course="course"
+		:isVisibleFormRating.sync="isVisibleFormRating"
+		>
+		</m-add-rating>
 	</v-container>
 </template>
 
@@ -134,7 +159,12 @@
 
 // components	
 import Rating from "./components/detail/ListRating.vue";
+import AddRating from "./components/detail/AddRating";
+
+
 import CourseService from "@/services/course";
+import UserService from "@/services/user";
+
 import MItem from "./components/index/Item";
 
 //mixin
@@ -145,6 +175,7 @@ export default {
 
     components: {
     	'm-rating': Rating,
+    	'm-add-rating': AddRating,
     	'm-item': MItem
 	},
 
@@ -159,6 +190,7 @@ export default {
 	         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
 	        course: {},
 	        relatedCourses: [],
+	        isVisibleFormRating: false,
 		}
 	},
 
@@ -168,7 +200,6 @@ export default {
 
 	watch: {
 	    course(data){
-	    	console.log(data);
 	    if(data)
 	        this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
 	    	this.show = true;
@@ -176,7 +207,24 @@ export default {
 	},
 
 	methods: {
-		retrieveData(){
+
+		async handleLikeCourse(course)
+		{
+			const res = await UserService.handleFavoriteCourse(course.id)
+			if(res.status === 200)
+			{
+				toastr.success("Bạn vừa thêm vào danh sách yêu thích", this.$lang.SUCCESS, { timeOut: 1000 });
+
+			}
+		},
+
+		addRating(course)
+		{
+			this.isVisibleFormRating = true;
+		},
+
+		retrieveData()
+		{
 	      var id = this.$route.params.id;
 	      this.$store.dispatch("components/actionProgressHeader", { option: "show" })
 

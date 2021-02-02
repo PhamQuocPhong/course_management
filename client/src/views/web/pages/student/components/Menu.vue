@@ -59,9 +59,9 @@ export default {
 	data(){
 		return {
 			menuInfo: [
-	        { title: "Thông tin", icon: "mdi-account-circle", link: "/profile/info" },
-	        { title: "Đăng bài", icon: "mdi-plus-box-outline", link: "/profile/create_post" },
-	        { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/profile/list_motel" },
+	        { title: "Thông tin", icon: "mdi-account-circle", link: "/student/profile/info" },
+	        { title: "Đăng bài", icon: "mdi-plus-box-outline", link: "/student/profile/create_post" },
+	        { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/student/profile/list_motel" },
 		    ],
 		}
 	},
