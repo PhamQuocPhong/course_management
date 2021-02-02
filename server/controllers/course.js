@@ -230,53 +230,6 @@ let getDeatailCourse = async (req, res) => {
    
 }
 
-let learnCourse = async (req, res) => {
-    const courseId = req.params.id;
-
-    try
-    {
-        const courseData = await courseModel.findOne({
-            where: {id: courseId},
-            include: [
-                {
-                    model: courseTeacherModel, 
-                    include: [
-                    {
-                        model: userModel
-                    }]
-                },
-                {
-                    model: rateModel
-                },
-
-                {
-                    model: promotionModel
-                },
-                {
-                    model: rateTotalModel
-                }
-                ,
-                {
-                    model: courseChapter,
-                    required: false,
-                    include: [
-                    {
-                        model: courseDocument,
-                        required: false
-                    }]
-
-                }
-            ]
-        });
-    
-        return res.status(200).json({message: 'Success!', data: courseData})
-    }
-    catch(error) {
-		return res.status(500).json(error)
-	}
-   
-}
-
 let searchCourse = async (req, res) => {
     //console.log("checkkkkkkkkk")
     var itemPerPage = req.query.itemPerPage;
@@ -449,117 +402,6 @@ let searchCourse = async (req, res) => {
 	}
 }
 
-//student
-let addCourseWatchList = async (req, res) => {
-    const courseId = req.params.id;
-    var decoded = req.decoded;
-    var userId = decoded.userId;
-
-    try
-    {
-        if(!await watchListModel.findOne({where:{userId,
-            courseId}}))
-            
-        {
-            await watchListModel.create({
-                userId,
-                courseId
-             })
-        }
-    
-        return res.status(200).json({message: 'Success!'})
-    }
-    catch(error) {
-		return res.status(500).json(error)
-	}
-   
-}
-
-let ratingCourse = async (req, res) => {
-    const {point, comment} = req.body;
-    const courseId = req.params.id;
-    var decoded = req.decoded;
-    var userId = decoded.userId;
-
-    try
-    {
-        if(await courseStudentModel.findOne({where:{userId}} ))
-        {
-            if(!await rateModel.findOne({
-                where: {
-                    userId,
-                    courseId
-                }
-             }))
-             {
-                var rating = await rateModel.create({
-                    userId,
-                    courseId,
-                    point,
-                    comment
-                 })
-             }
-            
-        }
-        return res.status(200).json({message: 'Success!'})
-    }
-    catch(error) {
-		return res.status(500).json(error)
-	}
-}
-
-let joinCourse = async (req, res) => {
-    const courseId = req.params.id;
-    var decoded = req.decoded;
-    var userId = decoded.userId;
-
-    try
-    {
-        if(!await courseStudentModel.findOne({
-            where:{
-                userId,
-                courseId
-            }
-         }))
-         {
-            await courseStudentModel.create({
-                userId,
-                courseId
-             })
-         }
-   
-        return res.status(200).json({message: 'Success!'})
-    }
-    catch(error) {
-		return res.status(500).json(error)
-	}
-}
-
-let checkJoin = async (req, res) => {
-    const courseId = req.params.id;
-    var decoded = req.decoded;
-    var userId = decoded.userId;
-
-    try
-    {
-        var check = false;
-        var courseStudent = await courseStudentModel.findOne({
-            where:{
-                userId,
-                courseId
-            }
-        })
-        if(courseStudent)
-            check = true;
-
-        return res.status(200).json({message: 'Success!', data: check})
-    }
-    catch(error) {
-		return res.status(500).json(error)
-	}
-}
-
-
 
 //Teacher
 let createCourse = async (req, res) => {
@@ -650,17 +492,12 @@ let deleteCourse = async (req, res) => {
 module.exports = {
 
     update,
+
     getAllCourse,
     getDeatailCourse,
     searchCourse,
     getCoursePaging,
-   
-    //Student
-    checkJoin,
-    joinCourse,
-    ratingCourse,
-    addCourseWatchList,
-    learnCourse,
+
    
     //Teacher
     createCourse,
