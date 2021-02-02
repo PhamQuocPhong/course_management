@@ -41,16 +41,20 @@ var courseRouter = require('./routes/course')
 var authRouter = require('./routes/auth')
 var profileRouter = require('./routes/profile')
 var homeRouter = require('./routes/home')
-
+var userRouter = require('./routes/user')
 
 app.use('/api/categories/', categoryRouter)
 app.use('/api/courses/', courseRouter)
-app.use('/api/student/courses/', auth, courseRouter)
 app.use('/api/auth/', authRouter)
 app.use('/api/profile/', auth, profileRouter)
-app.use('/api/student/profile/', auth, profileRouter)
 app.use('/api/home/', homeRouter)
 
+app.use('/api/student/courses/', auth, courseRouter)
+app.use('/api/student/profile/', auth, profileRouter)
+app.use('/api/student/user/', auth, userRouter)
+
+app.use('/api/teacher/courses/', auth, courseRouter)
+app.use('/api/teacher/profile/', auth, profileRouter)
 
 //Connect database
 // db.sync().then(function() {

@@ -2,7 +2,8 @@ const courseChapterModel = require('../models/course_chapter');
 
 //Teacher
 let createChapter = async (req, res) => {
-    const {name, description, preview, courseId} = req.body;
+    const {name, description, preview} = req.body;
+    var courseId = req.params.id;
 
     try
     {
@@ -20,18 +21,19 @@ let createChapter = async (req, res) => {
 }
 
 let updateChapter = async (req, res) => {
-    const {name, description, preview} = req.body;
-    const courseChapterId = req.params.id;
+    const form = req.body;
+    const courseChapterId = req.params.courseChapterId;
 
     try
     {
-        var courseChapter = await courseChapterModel.update({
-            name,
-            description,
-            preview
-         },
-         {where: {id: courseChapterId}});
-        return res.status(200).json({message: 'Success!'})
+        var data = await courseChapterModel.update(form, {
+            where: {
+                id: courseChapterId
+            },
+            returning: true,
+            plain: true
+        });
+        return res.status(200).json({message: 'Success!', data})
     }
     catch(error) {
 		return res.status(500).json(error)
@@ -39,7 +41,7 @@ let updateChapter = async (req, res) => {
 }
 
 let deleteChapter = async (req, res) => {
-    const courseChapterId = req.params.id;
+    const courseChapterId = req.params.courseChapterId;
 
     try
     {
