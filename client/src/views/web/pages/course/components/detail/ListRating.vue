@@ -1,11 +1,11 @@
 <template>
-  <v-list two-line v-if="ratings">
+  <v-list two-line >
       <v-list-item-group
         active-class="pink--text"
         multiple
       >
-        <template v-for="(item, index) in ratings">
-          <v-list-item :key="item.id">
+        <template  v-for="(item, index) in getRatings"> 
+          <v-list-item  :key="index">
             <template v-slot:default="{ active }">
               <v-list-item-content>
                 <v-list-item-title v-text="item.user.name"></v-list-item-title>
@@ -27,25 +27,28 @@
           </v-list-item>
 
           <v-divider
-            v-if="index < ratings.length - 1"
-            :key="index"
+            v-if="index < getRatings.length - 1"
+           
           ></v-divider>
         </template>
       </v-list-item-group>
-</v-list>
+  </v-list>
 </template>
 
 <script type="text/javascript">
 export default {
-
   props: {
     ratings: Array
   },
 
-  data(){
-    return {
 
+  computed: {
+    getRatings: {
+      get()
+      {
+        return this.ratings
+      }
     }
-  },
+  }
 }
 </script>

@@ -12,6 +12,15 @@ export default {
     }
   },
 
+  async updateProfile(id, data)
+  {
+    try {
+      return await axios.put(this.rootURL + `update/${id}`, data);
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
   async fetchPaging(query) {
     try {
       return await axios.get(this.rootURL, {
@@ -23,7 +32,7 @@ export default {
   },
 
   async store(data){
-     try {
+    try {
       return await axios.post(this.rootURL + `store`, data);
     } catch (error) {
        return helperCommon.getError(error) || false; 
@@ -41,8 +50,44 @@ export default {
 
   async delete(id)
   {
-     try {
+    try {
       return await axios.delete(this.rootURL + `update/${id}`);
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
+  async changePassword()
+  {
+    try {
+      return await axios.post(this.rootURL + `like/${courseId}`);
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
+  async handleFavoriteCourse(courseId)
+  {
+    try {
+      return await axios.post(this.rootURL + `like/${courseId}`);
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
+  async joinCourse(courseId)
+  {
+    try {
+      return await axios.post(this.rootURL + `join/${courseId}`);
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
+  async ratingCourse(courseId, data)
+  {
+    try {
+      return await axios.post(this.rootURL + `rating/${courseId}`);
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }

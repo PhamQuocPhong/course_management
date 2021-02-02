@@ -142,7 +142,7 @@ export default {
     },
     userInfo: {
       get(){
-        return this.$store.getters["users/currentUser"];
+        return CookieService.get("userInfo")
       }
     },
 

@@ -181,7 +181,7 @@ export default {
           if(res.data){
 
             CookieServices.set("accessToken", res.data.accessToken);
-            this.$store.commit("users/UPDATE_CURRENT_USER", res.data.findUser);
+            CookieServices.set("userInfo", res.data.findUser);
 
 
             this.$router.push('/');
@@ -251,7 +251,7 @@ export default {
 
                 Auth.loginSocial(data, "facebook").then(res => {
                   if (res.status === 200) {
-                    this.$cookies.set("dataUser", res.data.data.userInfo);
+                    this.$cookies.set("userInfo", res.data.data.userInfo);
                     this.$cookies.set("accessToken", res.data.data.accessToken);
                     this.$cookies.set(
                       "refreshToken",
@@ -259,9 +259,6 @@ export default {
                     );
 
                     this.$socket.emit(this.$socketEvent.ADD_USER, res.data.data.userInfo);
-
-                    // store user vuex 
-                    User.dispatch('updateUser', res.data.data.userInfo);
 
                     this.$router.push("/dashboard");
                   }
