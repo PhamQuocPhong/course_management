@@ -7,21 +7,21 @@
             <m-menu></m-menu>
           </v-col>
 
-          <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }" v-if="!isLoading">
+          <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }">
             <v-card tile  style="height: 100%;">
               <v-form ref="form">
                 <v-container>
                   <v-row>
                     <v-col cols="4">
                       <v-subheader class="font-weight-bold"
-                        >Full name</v-subheader
+                        >Họ tên</v-subheader
                       >
                     </v-col>
                     <v-col cols="8">
                       <v-text-field
                         :disabled="!edit"
                         class="font-weight-bold"
-                        v-model="getUser.name"
+                        v-model="userInfo.name"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -29,31 +29,15 @@
                   <v-row>
                     <v-col cols="4">
                       <v-subheader class="font-weight-bold"
-                        >Phone number</v-subheader
+                        >Email</v-subheader
                       >
                     </v-col>
                     <v-col cols="8">
                       <v-text-field
                         :disabled="!edit"
                         class="font-weight-bold"
-                        v-model="getUser.phone"
+                        v-model="userInfo.email"
                       ></v-text-field>
-                    </v-col>
-                  </v-row>
-
-                  <v-row>
-                    <v-col cols="4">
-                      <v-subheader class="font-weight-bold"
-                        >Address</v-subheader
-                      >
-                    </v-col>
-                    <v-col cols="8">
-                      <v-text-field
-                        v-model="getUser.address"
-                        :disabled="!edit"
-                        class="font-weight-bold"
-                      >
-                      </v-text-field>
                     </v-col>
                   </v-row>
 
@@ -61,24 +45,31 @@
                   <v-row>
                     <v-spacer></v-spacer>
 
-                    <v-btn @click="edit = true" color="success" small v-show="!edit">
+                    <v-btn 
+                    v-show="!edit"
+                    @click="edit = true" 
+                    color="success" 
+                    small
+                    >
                       Edit
                     </v-btn>
 
-                    <v-divider class="mx-2" vertical  v-show="edit"> </v-divider>
+                    <v-divider  v-show="!edit" class="mx-2" vertical> </v-divider>
 
-                    <v-btn color="primary" small
-                      v-show="edit"
-                      v-on:click="handleUpdateUserInfo()"
+                    <v-btn 
+                    v-show="edit"
+                    color="primary" 
+                    small
+                    v-on:click="handleUpdateUserInfo()"
                     >
                       Save
                     </v-btn>
 
-                    <v-divider class="mx-2" vertical> </v-divider>
+                    <v-divider  v-show="edit" class="mx-2" vertical> </v-divider>
 
                     <v-btn
+                     v-show="edit"
                       @click="edit = false"
-                      v-show="edit"
                       color="warning"
                       class="mr-4"
                       small
@@ -116,19 +107,14 @@ export default {
 
   mixins: [IsMobile],
 
-  created(){
-    this.retrieveData();
-  },
-
   data() {
     return {
-
+     
       edit: false,
       isMobile: false,
       showAvatarDialog: false,
       image: null,
       isSelecting: false,
-      isLoading: true,
     };
   },
 
@@ -136,7 +122,6 @@ export default {
   methods: {
   
     onSelectedFile() {
-
       this.$refs.inputAvatar.click()
     },
 
@@ -153,30 +138,16 @@ export default {
     },
 
     async handleUpdateUserInfo(){
-      var userId = this.userInfo._id;
-      const res = await UserService.update(userId, this.getUser)
-      if(res.status === 200){
-        toastr.success(
-          "<p> Cập nhật thành công <p>",
-          "Success",
-          { timeOut: 1000 }
-        );
-                  this.edit = false;
+      var userId = this.userInfo.id
+
+      const res = await UserService.update(userId, this.userInfo);
+      if(res.status === 200)
+      {
+        CookieService.set('userInfo', res.data.data);
+        this.userInfo = res.data.data;
+        this.edit = false;
       }else{
-        toastr.error("Internal Server Error", "Error", {
-              timeOut: 1000
-          });
-      }
-    },
-
-    async retrieveData()
-    {
-      var userId = this.userInfo._id;
-      const res = await UserService.fetch(userId);
-
-      if(res.status === 200){
-        this.getUser = res.data[0];
-        this.isLoading = false;
+        
       }
     }
 

@@ -9,6 +9,8 @@ const roleModel = require('../models/role');
 
 const helper = require('../helpers/helper');
 
+const { Op } = require("sequelize");
+
 let getUserPaging = async (req, res) => {
 
     var page = req.query.page || 1;
@@ -72,10 +74,15 @@ let update = async (req, res) => {
     var form = req.body;
     var id = req.params.id;
 
-    if(userModel.findOne({where: {
+    const findUser = await userModel.findOne({where: {
         email: form.email,
-        id: !id
-    }}))
+        id: {
+            [Op.ne]: id
+        }
+    }});
+
+
+    if(findUser)
     {
         return res.status(422).json({message: "This email existed"});
     }
