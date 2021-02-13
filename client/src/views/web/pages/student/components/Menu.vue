@@ -60,8 +60,9 @@ export default {
 		return {
 			menuInfo: [
 	        { title: "Thông tin", icon: "mdi-account-circle", link: "/student/profile/info" },
-	        { title: "Đăng bài", icon: "mdi-plus-box-outline", link: "/student/profile/create_post" },
-	        { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/student/profile/list_motel" },
+          { title: "Khóa học của tôi", icon: "mdi-plus-box-outline", link: "/student/profile/my_courses" },
+          { title: "Khóa học yêu thích", icon: "mdi-playlist-edit", link: "/student/profile/favorite_courses" },
+          { title: "Logout", icon: "mdi-login-variant", link: "/logout" }
 		    ],
 		}
 	},

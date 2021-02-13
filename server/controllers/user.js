@@ -215,7 +215,12 @@ let getWatchList = async (req, res) => {
         watchList = await watchListModel.findAll({
             where:{
                 userId
-            }
+            },
+            include: [
+                {
+                model: courseModel
+                }
+            ]
         })
 
         return res.status(200).json({message: 'Success!', data: watchList})
@@ -236,7 +241,12 @@ let getCourseJoin = async (req, res) => {
         var listCourseJoin = await courseStudentModel.findAll({
             where:{
                 userId
-            }
+            },
+            include: [
+                {
+                model: courseModel
+                }
+            ]
         })
 
         return res.status(200).json({message: 'Success!', data: listCourseJoin})

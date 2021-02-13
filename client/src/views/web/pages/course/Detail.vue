@@ -35,18 +35,30 @@
 				        >
 				        	<v-card-title>
 				        		{{ course.title }}
-				        		<v-btn 
-				        		@click="handleLikeCourse(course)"
-				        		style="position: absolute; right: 10px;"
-				        		class="text-right" 
-				        		outlined 
-				        		small 
-				        		color="pink"
+				        		<div class="block" style="position: absolute; right: 10px;">
+					        		<v-btn 
+					        		@click="enrollCourse(course.id)"
+					        		class="text-right mr-4" 
+					        		outlined 
+					        		small 
+					        		color="primary"
+					        		>
+					        			<v-icon>mdi-heart-circle</v-icon>
+					        			Tham gia
+					        		</v-btn>
 
-				        		>
-				        			<v-icon>mdi-heart-circle</v-icon>
-				        			Yêu thích
-				        		</v-btn>
+					        		<v-btn 
+					        		@click="handleLikeCourse(course)"
+					        		class="text-right" 
+					        		outlined 
+					        		small 
+					        		color="pink"
+
+					        		>
+					        			<v-icon>mdi-heart-circle</v-icon>
+					        			Yêu thích
+					        		</v-btn>
+					        	</div>
 				        	</v-card-title>
 
 				          <v-card-text>
@@ -222,6 +234,12 @@ export default {
 		{
 			this.isVisibleFormRating = true;
 		},
+
+		async enrollCourse(courseId)
+		{
+			const res = await UserService.joinCourse(courseId);
+			console.log(res);
+		},	
 
 		retrieveData()
 		{

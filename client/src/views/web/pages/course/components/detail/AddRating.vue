@@ -19,7 +19,7 @@
                   <v-col cols="12">
                       <v-card-subtitle>Vote</v-card-subtitle>
                       <v-rating
-                        v-model="form.rating"
+                        v-model="form.point"
                         color="amber"
                         dense
                         half-increments
@@ -93,7 +93,7 @@ export default {
     return {
       form: {
         comment: "",
-        rating: 1,
+        point: 1,
         courseId: this.course.id,
         userInfo: CookieService.get('userInfo')
       },

@@ -10,7 +10,7 @@
       <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }">
         <v-card tile  style="height: 100%;">
 
-          <v-card-title class="border-bottom">Khóa học đã đăng</v-card-title>
+          <v-card-title class="border-bottom">Khóa học yêu thích</v-card-title>
 
           <v-list two-line>
               <v-list-item-group
@@ -18,14 +18,14 @@
                 active-class="pink--text"
                 multiple
               >
-                <template v-for="(item, index) in postedCourses">
+                <template v-for="(item, index) in favoriteCourses">
                   <v-row>
                       <v-col cols="5">
                         <v-img 
-                          v-if="item.images"
+                          v-if="item.course.avatar"
                           width="100%"
                           height="auto"
-                          :src="$helper.getMainImageMotel(item.images)"
+                          :src="item.course.avatar"
                           contain
                           :aspect-ratio="16/9"
                         ></v-img>
@@ -42,39 +42,31 @@
                         </v-img>
                       </v-col>
                       <v-col cols="7">
-                      <v-card-title>{{ item.title }}</v-card-title>
-                        <v-card-text>
-                          <v-row
-                            align="center"
-                            class="mx-0"
-                          >
-                            <v-rating
-                              :value="item.rating"
-                              color="amber"
-                              dense
-                              half-increments
-                              readonly
-                              size="14"
-                            ></v-rating>
+                          <v-card-title>{{ item.course.title }}</v-card-title>
+                            <v-card-text>
+                              <v-row
+                                align="center"
+                                class="mx-0"
+                              >
+                                <v-rating
+                                  :value="item.course.rating"
+                                  color="amber"
+                                  dense
+                                  half-increments
+                                  readonly
+                                  size="14"
+                                ></v-rating>
 
-                          </v-row>
-
-                          <div class="my-4 subtitle-1 red--text font-weight-bold">
-                            {{ item.price }} triệu VNĐ
-                          </div>
-
-                          <div>
-                            <code>{{item.area}}m<sup>2</sup></code>
-                          </div>
-
-                          <div class="my-4 subtitle-1 text-decoration-underline" v-if="item.has_furniture">
-                            Có nội thất
-                          </div>
-                        </v-card-text>
-                    </v-col>
+                              </v-row>
+                               <v-row class="pa-4">
+                                  <v-btn outlined color="red" small @click="removeFavoriteCourse(item.course.id)">Bỏ thích</v-btn>
+                                </v-row>
+                            </v-card-text>
+                        </v-col>
                 </v-row>
+
                   <v-divider
-                    v-if="index < postedCourses.length - 1"
+                    v-if="index < favoriteCourses.length - 1"
                     :key="index"
                   ></v-divider>
                 </template>
@@ -89,7 +81,7 @@
 
 <script type="text/javascript">
 // services
-import Course from "@/services/course";
+import ProfileService from "@/services/profile";
 import CookieService from "@/services/cookie";
 
 // component
@@ -108,9 +100,9 @@ export default {
 
   data(){
     return {
-      userId: CookieService.get('userInfo')._id,
+      userId: CookieService.get('userInfo').id,
       selected: [2],
-      postedCourses: [],
+      favoriteCourses: [],
       currentPage: 1,
       pageCounts: 1,
     }
@@ -122,12 +114,18 @@ export default {
 
   methods: {
     async retrieveData(userId){
-      const res = await Course.getAllByOwner(userId);
+      const res = await ProfileService.getFavoriteCourse(userId);
+
       if(res.status === 200)
       {
-        this.postedCourses = res.data.data;
+        this.favoriteCourses = res.data.data;
         this.pageCounts = res.data.pageCounts;
       }
+    },
+    async removeFavoriteCourse(courseId)
+    {
+       const res = await ProfileService.removeFavoriteCourse(courseId);
+       console.log(res);
     }
   },
 

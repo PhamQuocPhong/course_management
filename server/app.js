@@ -43,7 +43,7 @@ var profileRouter = require('./routes/profile')
 var homeRouter = require('./routes/home')
 var userRouter = require('./routes/user')
 
-app.use('/api/users/', userRouter)
+app.use('/api/users/', auth, userRouter)
 app.use('/api/categories/', categoryRouter)
 app.use('/api/courses/', courseRouter)
 app.use('/api/auth/', authRouter)
