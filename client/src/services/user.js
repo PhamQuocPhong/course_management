@@ -51,7 +51,7 @@ export default {
   async delete(id)
   {
     try {
-      return await axios.delete(this.rootURL + `update/${id}`);
+      return await axios.delete(this.rootURL + `delete/${id}`);
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }
@@ -87,9 +87,11 @@ export default {
   async ratingCourse(courseId, data)
   {
     try {
-      return await axios.post(this.rootURL + `rating/${courseId}`);
+      return await axios.post(this.rootURL + `rating/${courseId}`, data);
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }
-  }
+  },
+
+
 };

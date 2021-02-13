@@ -24,7 +24,8 @@ import CourseDetail from "@/views/web/pages/course/Detail.vue";
 
 import StudentProfile from "@/views/web/pages/student/Profile.vue";
 import StudentProfileInfo from "@/views/web/pages/student/Info.vue";
-import StudentProfileCourse from "@/views/web/pages/student/Course.vue";
+import StudentProfileMyCourse from "@/views/web/pages/student/MyCourse.vue";
+import StudentProfileFavoriteCourse from "@/views/web/pages/student/FavoriteCourse.vue";
 
 import TeacherProfile from "@/views/web/pages/teacher/Profile.vue";
 import TeacherProfileInfo from "@/views/web/pages/teacher/Info.vue";
@@ -205,12 +206,12 @@ const routes = [
           },
           {
             path: "my_courses",
-            component: StudentProfileCourse,
+            component: StudentProfileMyCourse,
             name: "studentCourse"
           },
           {
             path: "favorite_courses",
-            component: StudentProfileCourse,
+            component: StudentProfileFavoriteCourse,
             name: "studentFavoriteCourse"
           }
         ]
