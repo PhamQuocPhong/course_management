@@ -67,9 +67,37 @@
                         <v-subheader class="mt-3 mb-3 pa-0 font-weight-bold">Chương</v-subheader>
 
                         <v-col cols="12" sm="6" md="3" lg="3">
-                          <v-btn outlined small color="primary"> Thêm chương</v-btn>
+                          <v-btn outlined small color="primary" @click="addChapter()"> Thêm chương</v-btn>
                         </v-col>
                       </div>
+
+                      <v-row>
+                        <v-col cols="12" md="6" lg="6" v-for="item, index in form.chapters">
+                          <v-card class="pa-4">
+                            <v-text-field
+                              :rules="[
+                                $validation.required(item.name, 'Tiêu đề chương')
+                              ]"
+                              v-model="item.name"
+                              label="Tiêu đề"
+                            >
+                            </v-text-field>
+
+                            <div class="d-flex" style="align-items: center;">
+                              <v-checkbox
+                                v-model="item.preview"
+
+                                label="Xem trước"
+                              ></v-checkbox>
+
+                              <v-btn outlined small color="red" class="ml-4" @click="removeChapter(index)">
+                                Xóa
+                              </v-btn>
+                            </div>
+                             
+                          </v-card>
+                        </v-col>
+                      </v-row>
 
                    </v-form>
 
@@ -133,7 +161,13 @@ export default {
         description: "",
         fullDescription: "",
         avatar: "",
-        chapters: [],
+        chapters: [
+          {
+            name: "",
+            description: "",
+            preview: false,
+          }
+        ],
       },
       chapters: Array.from({length: 10}, (_, i) => i + 1),
       chapterCount: "",
@@ -146,16 +180,29 @@ export default {
   },
 
   methods: {
-    async save(){
 
+    removeChapter(index)
+    {
+      this.form.chapters.splice(index, 1);
+    },
+
+    addChapter()
+    {
+      this.form.chapters.push({
+        name: "",
+        description: "",
+        preview: false,
+      })
+    },
+
+    async save()
+    {
       if (this.$refs.form.validate()) {
-
         const res = await CourseService.store(this.form);
-
         if(res.status === 201)
         {
            toastr.success(
-              "<p> Đăng bài thành công <p>",
+              "<p> Tạo khóa học thành công <p>",
               "Success",
               { timeOut: false }
             );

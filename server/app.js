@@ -8,6 +8,7 @@ const app = express()
 const port = process.env.PORT || 3000
 const auth = require('./middleware/auth_middleware')
 const socketModules = require('./socket')
+const fileUpload = require('express-fileupload');
 require('./database/migration')
 
 // app.use(express.static(__dirname  + '/public'))
@@ -27,6 +28,11 @@ app.locals = require('./helpers/helper')
 
 
 app.use(express.json())
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
 
 app.use(cors())
 
@@ -43,12 +49,15 @@ var profileRouter = require('./routes/profile')
 var homeRouter = require('./routes/home')
 var userRouter = require('./routes/user')
 
+var uploadRouter = require('./routes/upload')
+
 app.use('/api/users/', auth, userRouter)
 app.use('/api/categories/', categoryRouter)
 app.use('/api/courses/', courseRouter)
 app.use('/api/auth/', authRouter)
 app.use('/api/profile/', auth, profileRouter)
 app.use('/api/home/', homeRouter)
+app.use('/api/upload/', uploadRouter);
 
 app.use('/api/student/courses/', auth, courseRouter)
 app.use('/api/student/profile/', auth, profileRouter)
@@ -56,6 +65,8 @@ app.use('/api/student/user/', auth, userRouter)
 
 app.use('/api/teacher/courses/', auth, courseRouter)
 app.use('/api/teacher/profile/', auth, profileRouter)
+
+
 
 //Connect database
 // db.sync().then(function() {

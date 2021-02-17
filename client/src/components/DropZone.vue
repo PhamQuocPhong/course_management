@@ -68,14 +68,17 @@ export default {
     async complete(file) {
 
       const formData = new FormData();
-      formData.append("myFile", file); 
+      formData.append("image", file); 
 
       const res = await UploadService.image(formData);
-      if(res.data){
-        this.getData.push(res.data.link);
-        this.fileTemp.push(file);
-        this.$emit("update:data", this.getData);
-      }
+
+      console.log(res);
+
+      // if(res.data){
+      //   this.getData.push(res.data.link);
+      //   this.fileTemp.push(file);
+      //   this.$emit("update:data", this.getData);
+      // }
       // var files = this.$refs.myVueDropzone.dropzone.files
 
       
