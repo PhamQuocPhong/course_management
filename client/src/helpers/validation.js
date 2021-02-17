@@ -2,12 +2,12 @@ export default {
   required(val, name) {
     // if array
     if(Array.isArray(val)  && val.length <= 0){
-      return `${name}は必須です。`;
+      return `${name} bắt buộc`;
     }
-    return val => !!val || `${name}は必須です。`;
+    return val => !!val || `${name} bắt buộc`;
   },
   email(val) {
-    return val => /.+@.+\..+/.test(val) || "メールアドレスの形式が正しくありません";
+    return val => /.+@.+\..+/.test(val) || "Định dạng email không chính xác";
   },
 
   min(val, name, max) {

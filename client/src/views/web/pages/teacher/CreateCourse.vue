@@ -13,7 +13,7 @@
           <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }">
             <v-card tile  style="height: 100%;">
                 <v-card-title class="headline d-flex pb-4">
-                  Đăng bài
+                  Tạo khóa học
                 </v-card-title>
 
                 <v-card-text class="mt-4">
@@ -28,21 +28,6 @@
                         required
                       ></v-text-field>
 
-                      <v-text-field
-                        type="number"
-                        v-model.number="form.area"
-                        :rules="[
-                          $validation.required(form.area, 'Diện tích')
-                        ]"
-                        label="Diện tích"
-                        required 
-                      >
-
-                      <template v-slot:append>
-                          <p>m<sup>2</sup></p>
-                      </template>
-
-                      </v-text-field>
 
                       <v-text-field
                         v-model.number="form.price" 
@@ -54,16 +39,38 @@
                       >
 
                       <template v-slot:append>
-                          <p>triệu VNĐ</p>
+                          <p> VNĐ</p>
                       </template>
                       </v-text-field>
 
 
                       <m-dropzone
-                       :data.sync="form.images"
-                       :multiple="true"
+                       :data.sync="form.avatar"
+                       :multiple="false"
                       >
                       </m-dropzone>
+
+                      <v-text-field
+                        v-model="form.description"
+                        :rules="[
+                          $validation.required(form.description, 'Mô tả')
+                        ]"
+                        label="Mô tả"
+                        required
+                      ></v-text-field>
+
+                      <v-subheader class="mt-3 mb-3 pa-0 font-weight-bold">Mô tả chi tiết</v-subheader>
+
+                      <wysiwyg v-model="form.fullDescription" />
+
+                      <div class="d-flex" style="align-items: center;">
+                        <v-subheader class="mt-3 mb-3 pa-0 font-weight-bold">Chương</v-subheader>
+
+                        <v-col cols="12" sm="6" md="3" lg="3">
+                          <v-btn outlined small color="primary"> Thêm chương</v-btn>
+                        </v-col>
+                      </div>
+
                    </v-form>
 
                 </v-card-text>
@@ -123,8 +130,14 @@ export default {
       form: {
         title: "",
         price: 0,
-        images: "",
-      }
+        description: "",
+        fullDescription: "",
+        avatar: "",
+        chapters: [],
+      },
+      chapters: Array.from({length: 10}, (_, i) => i + 1),
+      chapterCount: "",
+      techers: [],
     }
   },
 
@@ -136,6 +149,7 @@ export default {
     async save(){
 
       if (this.$refs.form.validate()) {
+
         const res = await CourseService.store(this.form);
 
         if(res.status === 201)
