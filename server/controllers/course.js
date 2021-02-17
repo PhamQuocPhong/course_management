@@ -405,45 +405,36 @@ let searchCourse = async (req, res) => {
 
 //Teacher
 let createCourse = async (req, res) => {
-    const {avatarCourse, titleCourse, descriptionCourse, fullDescriptionCourse, priceCourse, nameChapter, previewChapter
-        , descriptionChapter, descriptionDocument, nameDocument, typeDocument, previewDocument} = req.body;
+    const data = req.body;
+    var chapters = data.chapters;
 
     var decoded = req.decoded;
     var userId = decoded.userId;
 
     try
     {
-        var course = await courseModel.create({
-            avatar : avatarCourse,
-            title: titleCourse,
-            description: descriptionCourse,
-            fullDescription: fullDescriptionCourse,
-            price: priceCourse,
-            active: false, //Hoàn thành hay chưa
-            status: true //Ẩn hay mở
-         }).then(async function(course){
-            await courseTeacherModel.create({
+        var course = await courseModel.create(data)
+        .then(async function(course){
+            courseTeacherModel.create({
                 courseId: course.id,
                 userId
-             })
-            var courseChapter = await courseChapterModel.create({
-                name: nameChapter,
-                description: descriptionChapter,
-                preview: previewChapter,
-                courseId: course.id
-            }).then(async function(chapter){    
-                await courseDocumentModel.create({
-                    name: nameDocument,
-                    description: descriptionDocument,
-                    preview: previewDocument,
-                    courseId: chapter.courseId,
-                    type: typeDocument,
-                    chapterId: chapter.id
-                    
-                 });
-            });
-         });
-        return res.status(200).json({message: 'Success!'})
+            })
+
+            if(chapters.length)
+            {
+                for(var i = 0; i < chapters.length; i++)
+                {
+                    courseChapterModel.create({
+                        name: chapters[i].name,
+                        preview: chapters[i].preview,
+                        courseId: course.id
+                    })
+                }
+            }
+        });
+
+
+        return res.status(201).json({message: 'Success!'})
     }
     catch(error) {
 		return res.status(500).json(error)
