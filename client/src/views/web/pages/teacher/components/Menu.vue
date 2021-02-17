@@ -17,7 +17,9 @@
           <v-list-item color="rgba(0, 0, 0, .4)" dark>
             <v-list-item-content>
               <v-list-item-title class="title"
-                >Marcus Obrien</v-list-item-title
+                >
+                  {{ userInfo.name }}
+                </v-list-item-title
               >
               <v-list-item-subtitle
                 >Network Engineer</v-list-item-subtitle
@@ -55,30 +57,25 @@
 </template>
 
 <script type="text/javascript">
-export default {
 
-  created(){
-    if(this.userInfo.roleId === 2)
-      {
-        this.menuInfo = [
-          { title: "Thông tin", icon: "mdi-account-circle", link: "/teacher/profile/info" },
-          { title: "Đăng khóa học", icon: "mdi-plus-box-outline", link: "/teacher/profile/create_course" },
-          { title: "Khóa học của tôi", icon: "mdi-playlist-edit", link: "/teacher/profile/my_courses" },
-        ];
-      }else{
-        this.menuInfo = [
-          { title: "Thông tin", icon: "mdi-account-circle", link: "/student/profile/info" },
-          { title: "Khóa học yêu thích", icon: "mdi-playlist-star", link: "/student/profile/favorite_courses" },
-          { title: "Khóa học của tôi", icon: "mdi-playlist-edit", link: "/student/profile/my_courses" },
-        ];
-      }
+import CookieService from "@/services/cookie";
+export default {
+  data(){
+    return {
+      menuInfo: [
+        { title: "Thông tin", icon: "mdi-account-circle", link: "/teacher/profile/info" },
+        { title: "Đăng khóa học", icon: "mdi-plus-box-outline", link: "/teacher/profile/create_course" },
+        { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/teacher/profile/my_courses" },
+        { title: "Logout", icon: "mdi-login-variant", link: "/logout" }
+      ],
+    }
   },
 
-	data(){
-		return {
-      menuInfo: [],
-      userInfo: this.$store.getters["users/currentUser"],
-		}
-	},
+
+   computed: {
+    userInfo(){
+      return CookieService.get('userInfo');
+    }
+  }
 }
 </script>

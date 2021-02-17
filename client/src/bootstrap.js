@@ -2,7 +2,11 @@ import Vue from "vue";
 import VueCookies from "vue-cookies";
 import colors from "vuetify/lib/util/colors";
 import helperCommon from '@/helpers/common';
-import helperValidation from '@/helpers/validation'
+import helperValidation from '@/helpers/validation';
+import wysiwyg from "vue-wysiwyg";
+import "vue-wysiwyg/dist/vueWysiwyg.css";
+
+Vue.use(wysiwyg, {}); 
 
 //plugin
 require("@/plugins/directive");

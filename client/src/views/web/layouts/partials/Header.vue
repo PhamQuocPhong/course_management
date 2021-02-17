@@ -121,8 +121,8 @@ export default {
       {
         this.menuInfo = [
           { title: "Thông tin", icon: "mdi-account-circle", link: "/teacher/profile/info" },
-          { title: "Đăng khóa học", icon: "mdi-plus-box-outline", link: "/teacher/profile/create_post" },
-          { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/teacher/profile/course" },
+          { title: "Đăng khóa học", icon: "mdi-plus-box-outline", link: "/teacher/profile/create_course" },
+          { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/teacher/profile/my_courses" },
           { title: "Logout", icon: "mdi-login-variant", link: "/logout" }
         ];
       }else{
