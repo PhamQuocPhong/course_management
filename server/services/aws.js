@@ -39,28 +39,26 @@ let removeImageAws = async (image, type) => {
     });
 }
 
-let uploadImageBase64 = async (imageBase64, type, callback) => {
+let uploadImage = async (image, type, callback) => {
 
 	var bucket = null
 	var imageRemoteName = null
-	var buffImage = Buffer.from(imageBase64.replace(/^data:image\/\w+;base64,/, ""),'base64')
-	var buffVideo = Buffer.from(imageBase64.replace(/^data:video\/\w+;base64,/, ""),'base64')
 	var s3 = new aws.S3()
 	var params = {}
 
-	if(!imageBase64 || imageBase64 === ''){
+	if(!image || image === ''){
 		return ''
 	}
 
 	if(type === "avatar"){
 		params.Key = `avatar_${new Date().getTime()}.jpg`
 		params.Bucket = avatarBucket
-		params.Body = buffImage
+		params.Body = fs.readFileSync(image)
 		params.ACL = "public-read"
 	}else if(type === "video"){
 		params.Key = `video_${new Date().getTime()}.mp4`
 		params.Bucket = videoBucket
-		params.Body = buffVideo
+		params.Body = fs.readFileSync(image)
 		params.ACL = "public-read"
 	}
 	
@@ -86,9 +84,9 @@ let getCallbackURL = (url) => {
 }
 
 module.exports = {
-	uploadImageBase64: uploadImageBase64,
-	removeImageAws: removeImageAws,
-	getCallbackURL: getCallbackURL
+	uploadImage,
+	removeImageAws,
+	getCallbackURL
 }
 
 

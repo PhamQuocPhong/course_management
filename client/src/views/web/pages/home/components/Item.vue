@@ -41,7 +41,7 @@
             </div>
 
             <div>
-              <p> Số học viên: <code>{{ getItem.studentTotal }}</code> </p>
+              <p> Số học viên: <code>{{ getItem.studentTotal || 0 }}</code> </p>
             </div>
 
             <div class="teachers" v-if="getItem.courseTeachers.length">

@@ -30,7 +30,8 @@ import StudentProfileFavoriteCourse from "@/views/web/pages/student/FavoriteCour
 import TeacherProfile from "@/views/web/pages/teacher/Profile.vue";
 import TeacherProfileInfo from "@/views/web/pages/teacher/Info.vue";
 import TeacherProfileCreateCourse  from "@/views/web/pages/teacher/CreateCourse.vue";
-import TeacherProfileCourse from "@/views/web/pages/teacher/Course.vue";
+import TeacherProfileCourse from "@/views/web/pages/teacher/MyCourse.vue";
+import TeacherProfileCourseDetail from "@/views/web/pages/teacher/CourseDetail.vue";
 
 
 
@@ -197,7 +198,9 @@ const routes = [
       {
         path: "student/profile",
         component: StudentProfile,
-
+        meta: {
+          requireAuth: true,
+        },
         children: [
           {
             path: "info",
@@ -220,7 +223,9 @@ const routes = [
       {
         path: "teacher/profile",
         component: TeacherProfile,
-
+         meta: {
+          requireAuth: true,
+        },
         children: [
           {
             path: "info",
@@ -236,11 +241,14 @@ const routes = [
             path: "my_courses",
             component: TeacherProfileCourse,
             name: "teacherProfileCourse"
+          },
+          {
+            path: "my_courses/:id",
+            component: TeacherProfileCourseDetail,
+            name: "teacherProfileCourseDetail"
           }
         ]
       }
-
-
     ]
   },
 
@@ -262,10 +270,14 @@ const router = new VueRouter({
   }
 });
 
+import CookieService from "@/services/cookie";
+
 router.beforeEach((to, from, next) => {
 
+  const accessToken = CookieService.get("accessToken");
+
   if (to.matched.some(m => m.meta.requireAuth)) {
-    if (to.name !== "login" && !tokenUser) {
+    if (to.name !== "login" && !accessToken) {
 
       next({ name: "login" });
     } else {

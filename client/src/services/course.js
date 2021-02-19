@@ -12,7 +12,6 @@ export default {
     }
   },
 
-  
 
   async fetchPagingByCategoryId(currentPage, categoryId) {
     try {
