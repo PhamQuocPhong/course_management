@@ -22,12 +22,13 @@
 					<span>Mới nhất </span>
 				</h2>
 			</div>
-
-			<v-row v-if="newestCourses.length">
-				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in newestCourses" :key="item.id">
-					<m-item :item="item" :key="item.id"></m-item>
-				</v-col>
-			</v-row>
+			<v-col cols cols="12">
+				<v-row  v-if="newestCourses.length">
+					<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in newestCourses" :key="item.id">
+						<m-item :item="item" :key="item.id"></m-item>
+					</v-col>
+				</v-row>
+			</v-col>
 		</v-row>
 	
 
@@ -37,12 +38,13 @@
 					<span>Quan tâm nhất </span>
 				</h2>
 			</div>
-
-			<v-row v-if="mostJoinCourses.length">
-				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in mostJoinCourses" :key="item.id">
-					<m-item :item="item" :key="item.id"></m-item>
-				</v-col>
-			</v-row>
+			<v-col cols cols="12">
+				<v-row v-if="mostJoinCourses.length">
+					<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in mostJoinCourses" :key="item.id">
+						<m-item :item="item" :key="item.id"></m-item>
+					</v-col>
+				</v-row>
+			</v-col>
 		</v-row>
 
 		<v-row>
@@ -51,12 +53,13 @@
 					<span>Xem nhiều nhất </span>
 				</h2>
 			</div>
-
+			<v-col cols cols="12">
 			<v-row v-if="mostWatchingCourses.length">
 				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in mostWatchingCourses" :key="item.id">
 					<m-item :item="item" :key="item.id"></m-item>
 				</v-col>
 			</v-row>
+		</v-col>
 		</v-row>
 
 

@@ -267,7 +267,12 @@ let getTeachList = async (req, res) => {
         var teachList = await courseTeacherModel.findAll({
             where:{
                 userId
-            }
+            },
+             include: [
+                {
+                model: courseModel
+                }
+            ]
         })
 
         return res.status(200).json({message: 'Success!', data: teachList})

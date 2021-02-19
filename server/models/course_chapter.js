@@ -13,8 +13,10 @@ const CourseChapter = db.define('courseChapter', {
   preview: {
     type: Sequelize.BOOLEAN,
     allowNull: false
+  },
+  courseId: {
+    type: Sequelize.INTEGER
   }
-
 });
 
 module.exports = db.model('courseChapter', CourseChapter);

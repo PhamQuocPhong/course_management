@@ -11,7 +11,6 @@
         <v-card tile  style="height: 100%;">
 
           <v-card-title class="border-bottom">Khóa học đã đăng</v-card-title>
-
           <v-list two-line>
               <v-list-item-group
                 v-model="selected"
@@ -22,10 +21,10 @@
                   <v-row>
                       <v-col cols="5">
                         <v-img 
-                          v-if="item.images"
+                          v-if="item.course.avatar"
                           width="100%"
                           height="auto"
-                          :src="$helper.getMainImageMotel(item.images)"
+                          :src="item.course.avatar"
                           contain
                           :aspect-ratio="16/9"
                         ></v-img>
@@ -42,14 +41,11 @@
                         </v-img>
                       </v-col>
                       <v-col cols="7">
-                      <v-card-title>{{ item.title }}</v-card-title>
+                      <v-card-title>{{ item.course.title }}</v-card-title>
                         <v-card-text>
-                          <v-row
-                            align="center"
-                            class="mx-0"
-                          >
+                         
                             <v-rating
-                              :value="item.rating"
+                              :value="item.course.rating"
                               color="amber"
                               dense
                               half-increments
@@ -57,19 +53,12 @@
                               size="14"
                             ></v-rating>
 
-                          </v-row>
-
                           <div class="my-4 subtitle-1 red--text font-weight-bold">
-                            {{ item.price }} triệu VNĐ
+                            <p> Số học viên: <code>{{ item.course.studentTotal || 0 }}</code> </p>
                           </div>
 
-                          <div>
-                            <code>{{item.area}}m<sup>2</sup></code>
-                          </div>
-
-                          <div class="my-4 subtitle-1 text-decoration-underline" v-if="item.has_furniture">
-                            Có nội thất
-                          </div>
+                          <v-btn color="primary" small outlined @click="viewDetail(item.course.id)" >Xem</v-btn>
+                        
                         </v-card-text>
                     </v-col>
                 </v-row>
@@ -79,7 +68,7 @@
                   ></v-divider>
                 </template>
               </v-list-item-group>
-            </v-list>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
@@ -89,8 +78,8 @@
 
 <script type="text/javascript">
 // services
-import Course from "@/services/course";
-import CookieService from "@/services/cookie";
+import ProfileService from "@/services/profile";
+
 
 // component
 import Menu from './components/Menu.vue';
@@ -108,7 +97,6 @@ export default {
 
   data(){
     return {
-      userId: CookieService.get('userInfo')._id,
       selected: [2],
       postedCourses: [],
       currentPage: 1,
@@ -117,17 +105,27 @@ export default {
   },
 
   created(){
-    this.retrieveData(this.userId);
+    this.retrieveData();
   },
 
   methods: {
-    async retrieveData(userId){
-      const res = await Course.getAllByOwner(userId);
+    async retrieveData()
+    {
+      const res = await ProfileService.getTeacherCourses();
+
       if(res.status === 200)
       {
         this.postedCourses = res.data.data;
         this.pageCounts = res.data.pageCounts;
       }
+    },
+
+    viewDetail(courseId)
+    {
+      this.$router.push({
+        name: "teacherProfileCourseDetail",
+        params: { id: courseId } 
+      })
     }
   },
 

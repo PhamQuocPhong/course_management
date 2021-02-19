@@ -53,7 +53,7 @@ var uploadRouter = require('./routes/upload')
 
 app.use('/api/users/', auth, userRouter)
 app.use('/api/categories/', categoryRouter)
-app.use('/api/courses/', courseRouter)
+app.use('/api/courses/',  courseRouter)
 app.use('/api/auth/', authRouter)
 app.use('/api/profile/', auth, profileRouter)
 app.use('/api/home/', homeRouter)

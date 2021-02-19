@@ -179,12 +179,10 @@ let getDeatailCourse = async (req, res) => {
                 ,
                 {
                     model: courseChapter,
-                    where: {preview: true},
                     required: false,
                     include: [
                     {
                         model: courseDocument,
-                        where: {preview: true},
                         required: false
                     }]
 
@@ -407,32 +405,32 @@ let searchCourse = async (req, res) => {
 let createCourse = async (req, res) => {
     const data = req.body;
     var chapters = data.chapters;
-
     var decoded = req.decoded;
     var userId = decoded.userId;
-
     try
     {
-        var course = await courseModel.create(data)
-        .then(async function(course){
-            courseTeacherModel.create({
-                courseId: course.id,
-                userId
-            })
 
-            if(chapters.length)
+        data.active = false;
+        data.status = true;
+
+        var course = await courseModel.create(data);
+        await courseTeacherModel.create({
+            courseId: course.id,
+            userId: userId
+        })
+
+        if(course && chapters.length)
+        {
+            for(var i = 0; i < chapters.length; i++)
             {
-                for(var i = 0; i < chapters.length; i++)
-                {
-                    courseChapterModel.create({
-                        name: chapters[i].name,
-                        preview: chapters[i].preview,
-                        courseId: course.id
-                    })
-                }
-            }
-        });
+                await courseChapter.create({
 
+                    name: chapters[i].name,
+                    preview: chapters[i].preview,
+                    courseId: course.id
+                })
+            }
+        }
 
         return res.status(201).json({message: 'Success!'})
     }

@@ -22,10 +22,19 @@ export default {
     }
   },
 
-   async getMyCourse()
+  async getMyCourse()
   {
     try {
       return await axios.get(this.rootURL + `my_courses`);
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
+  async getTeacherCourses()
+  {
+    try {
+      return await axios.get(this.rootURL + 'my_courses_teach');
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }
