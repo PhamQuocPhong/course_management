@@ -43,7 +43,7 @@ export default {
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 150,
-        maxFilesize: 10, // 10 MB
+        maxFilesize: 100, // 10 MB
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
         uploadMultiple: true,
@@ -65,23 +65,15 @@ export default {
 
   methods: {
 
-    async complete(file) {
-
-      const formData = new FormData();
-      formData.append("image", file); 
-
-      const res = await UploadService.image(formData);
-
-      console.log(res);
-
-      // if(res.data){
-      //   this.getData.push(res.data.link);
-      //   this.fileTemp.push(file);
-      //   this.$emit("update:data", this.getData);
-      // }
-      // var files = this.$refs.myVueDropzone.dropzone.files
-
+    async complete(file) 
+    {
       
+      const formData = new FormData();
+      formData.append("file", file); 
+      const res = await UploadService.image(formData);
+      if(res.status === 200){
+        this.$emit("update:data", res.data.url);
+      }
     },
     remove(file) {
       var findIndex = this.fileTemp.indexOf(file);

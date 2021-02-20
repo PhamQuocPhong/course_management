@@ -7,7 +7,7 @@
         <m-menu></m-menu>
       </v-col>
 
-      <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }">
+      <v-col cols="12" md="8" :class="{ 'pa-0 mt-4': isMobile }">
         <v-card tile  style="height: 100%;">
 
           <v-card-title class="border-bottom">Khóa học đã đăng</v-card-title>
@@ -44,21 +44,26 @@
                       <v-card-title>{{ item.course.title }}</v-card-title>
                         <v-card-text>
                          
-                            <v-rating
-                              :value="item.course.rating"
-                              color="amber"
-                              dense
-                              half-increments
-                              readonly
-                              size="14"
-                            ></v-rating>
+                          <v-rating
+                            :value="item.course.rating"
+                            color="amber"
+                            dense
+                            half-increments
+                            readonly
+                            size="14"
+                          ></v-rating>
+
+                          <div class="my-4 subtitle-1">
+                            <v-icon :color=" item.course.status  ? `green` : ``">mdi-check-bold</v-icon>
+                            <span class="ml-2"> {{ item.course.status ? `Đã hoàn thành` : `Chưa hoàn thành` }} </span>
+                          </div>
 
                           <div class="my-4 subtitle-1 red--text font-weight-bold">
                             <p> Số học viên: <code>{{ item.course.studentTotal || 0 }}</code> </p>
                           </div>
 
                           <v-btn color="primary" small outlined @click="viewDetail(item.course.id)" >Xem</v-btn>
-                        
+                          
                         </v-card-text>
                     </v-col>
                 </v-row>
@@ -126,7 +131,8 @@ export default {
         name: "teacherProfileCourseDetail",
         params: { id: courseId } 
       })
-    }
+    },
+
   },
 
 

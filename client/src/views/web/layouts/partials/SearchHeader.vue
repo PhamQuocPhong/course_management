@@ -40,7 +40,7 @@ export default{
 			}else{
 
 			}
-		}, 1200)
+		}, 100)
 	},
 
 

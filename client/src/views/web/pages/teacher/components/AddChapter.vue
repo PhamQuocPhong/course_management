@@ -4,41 +4,48 @@
       <v-dialog
         persistent
         max-width="500"
-        v-model="isVisibleFormRating"
+        v-model="isVisibleFormAddChapter"
       >
         <v-card
           class="pb-8"
         >
             <v-card-title primary-title style="width:100%;">
-              {{ title }}
+              Thêm chương
             </v-card-title>
 
             <v-card-text>
               <v-form ref="form" v-model="valid" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                      <v-card-subtitle>Vote</v-card-subtitle>
-                      <v-rating
-                        v-model="form.point"
-                        color="amber"
-                        dense
-                        half-increments
-                        
-                        size="20"
-
-                      >
-                      </v-rating>
+                    <v-text-field
+                      v-model="form.name"
+                      :rules="[
+                        $validation.required(form.name, 'Tiêu đề')
+                      ]"
+                      label="Tiêu đề"
+                      required
+                    ></v-text-field>
                   </v-col>
+
+                   <v-col cols="12">
+
+                  <v-checkbox
+                    v-model="form.preview"
+
+                    label="Xem trước"
+                  ></v-checkbox>
+                   </v-col>
+
 
                   <v-col cols="12">
                      <v-textarea
                      outlined
                      rows="5"
-                     v-model="form.comment"
-                     label="Nội dung"
+                     v-model="form.description"
+                     label="Mô tả"
                      class="no-resize"
                      :rules="[
-                        $validation.required(form.comment, 'Nội dung')
+                        $validation.required(form.description, 'Mô tả')
                       ]"
                      >
                      </v-textarea>
@@ -73,17 +80,16 @@
 
 <script>
 
-import UserService from "@/services/user";
+import ChapterService from "@/services/chapter";
 import CookieService from "@/services/cookie";
 
 export default {
 
   props: {
-    isVisibleFormRating: {
+    isVisibleFormAddChapter: {
       type: Boolean,
       default: false,
     },
-    title: String,
     data: [Array, String],
     course: Object,
   },
@@ -92,10 +98,10 @@ export default {
   data() {
     return {
       form: {
-        comment: "",
-        point: 1,
-        courseId: this.course.id,
-        userInfo: CookieService.get('userInfo')
+        name: "",
+        description: "",
+        preview: false,
+        courseId: this.course.id
       },
       valid: false,
     }
@@ -103,39 +109,45 @@ export default {
 
 
   computed: {
-    
+    getCourse: {
+      get()
+      {
+        return this.course
+      }
+    }
   },
 
   methods: {
     close(){
-     this.$emit('update:isVisibleFormRating', false) 
+     this.$emit('update:isVisibleFormAddChapter', false) 
     },
 
     async save(){
 
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("components/progressLoading", { option: "show" })
-        const res = await UserService.ratingCourse(this.course.id, this.form);
-        if(res.status === 200)
+
+        this.$store.dispatch("components/progressLoading", { option: "show" });
+        const res = await ChapterService.store(this.form);
+        if(res.status === 201)
         { 
-          this.$store.dispatch("motels/updateRatings", res.data);
+
            toastr.success(
-              "<p> Đánh giá thành công <p>",
+              "<p> Thêm thành công <p>",
               "Success",
-              { timeOut: false }
+              { timeOut: 3000 }
             );
 
-            this.$store.dispatch("components/progressLoading", { option: "hide" });
-           this.$emit('update:isVisibleFormRating', false);
-
+           this.getCourse.courseChapters.push(res.data.data)
+           this.$store.dispatch("components/progressLoading", { option: "hide" });
+           this.$emit('update:isVisibleFormAddChapter', false);
         }
         else{
            toastr.error(
-              "<p> Đánh giá thất bại <p>",
+              "<p> Thêm thất bại <p>",
               "Error",
-              { timeOut: false }
+              { timeOut: 3000 }
             );
-            this.$store.dispatch("components/progressLoading", { option: "hide" });
+                      this.$store.dispatch("components/progressLoading", { option: "hide" });
         }
 
         this.$refs.form.reset();

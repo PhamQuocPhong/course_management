@@ -7,7 +7,7 @@
         <m-menu></m-menu>
       </v-col>
 
-      <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }">
+      <v-col cols="12" md="8" :class="{ 'pa-0 mt-4': isMobile }">
         <v-card tile  style="height: 100%;">
 
           <v-card-title class="border-bottom">Khóa học yêu thích</v-card-title>

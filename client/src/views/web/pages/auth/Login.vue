@@ -176,9 +176,8 @@ export default {
 
         setTimeout(async () => {
           const res = await AuthServices.login(this.form);
-
            // case success
-          if(res.data){
+          if(res.status === 200){
 
             CookieServices.set("accessToken", res.data.accessToken);
             CookieServices.set("userInfo", res.data.findUser);
@@ -189,7 +188,7 @@ export default {
 
           // case error
           }else{
-            toastr.error(res.message, this.$lang.ERROR, { timeOut: 1000 });
+            toastr.error(res.data.message, this.$lang.ERROR, { timeOut: 1000 });
             this.$store.dispatch("components/progressLoading", { option: "hide" })
 
             // login fail -> reset input password

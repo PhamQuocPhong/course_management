@@ -41,19 +41,25 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
 server.listen(port)
-
+var promotionRouter = require('./routes/promotion')
 var categoryRouter = require('./routes/category')
 var courseRouter = require('./routes/course')
 var authRouter = require('./routes/auth')
 var profileRouter = require('./routes/profile')
 var homeRouter = require('./routes/home')
 var userRouter = require('./routes/user')
-
+var chapterRouter = require('./routes/chapter')
+var documentRouter = require('./routes/document')
 var uploadRouter = require('./routes/upload')
 
 app.use('/api/users/', auth, userRouter)
 app.use('/api/categories/', categoryRouter)
 app.use('/api/courses/',  courseRouter)
+app.use('/api/chapters/', auth, chapterRouter)
+app.use('/api/documents/', auth, documentRouter);
+
+app.use('/api/promotions/', auth, promotionRouter)
+
 app.use('/api/auth/', authRouter)
 app.use('/api/profile/', auth, profileRouter)
 app.use('/api/home/', homeRouter)
@@ -63,8 +69,9 @@ app.use('/api/student/courses/', auth, courseRouter)
 app.use('/api/student/profile/', auth, profileRouter)
 app.use('/api/student/user/', auth, userRouter)
 
-app.use('/api/teacher/courses/', auth, courseRouter)
-app.use('/api/teacher/profile/', auth, profileRouter)
+
+app.use('/api/teacher/courses/', auth, courseRouter);
+app.use('/api/teacher/profile/', auth, profileRouter);
 
 
 

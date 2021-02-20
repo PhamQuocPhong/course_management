@@ -15,9 +15,8 @@ export default {
 
   async fetchPagingByCategoryId(currentPage, categoryId) {
     try {
-      return await axios.get(this.rootURL, {
+      return await axios.get(this.rootURL + `/category/${categoryId}`, {
         params: {
-          categoryId: categoryId,
           page: currentPage,
         }
       });
@@ -30,9 +29,8 @@ export default {
     try {
       return await axios.get(this.rootURL, {
         params: {
-          categoryId: query.categoryId,
           page: query.page,
-          search: query.search
+          keyword: query.keyword
         }
       });
     } catch (error) {
@@ -40,7 +38,24 @@ export default {
     }
   },
 
-   async fetch(id) {
+  async searchCourse(query)
+  {
+     try {
+      return await axios.get(this.rootURL + 'search/', {
+        params: {
+          page: query.page,
+          keyword: query.keyword,
+          itemsPerPage: query.itemsPerPage,
+          orderPrice: query.orderPrice,
+          orderRating: query.orderRating
+        }
+      });
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
+  async fetch(id) {
     try {
       return await axios.get(this.rootURL + `${id}`);
     } catch (error) {
@@ -73,4 +88,5 @@ export default {
        return helperCommon.getError(error) || false; 
     }
   }
+
 };

@@ -4,7 +4,7 @@
     :loading="loading"
   >
     <v-row>
-      <v-col cols="5" class="d-flex">
+      <v-col cols="12" md="6" lg="5" sm="6" class="d-flex">
         <v-img 
           height="270"
           
@@ -19,7 +19,7 @@
         >
         </v-img>
       </v-col>
-      <v-col cols="7">
+      <v-col cols="12" md="6" lg="7" sm="6">
         <v-card-title>{{ getItem.title }}</v-card-title>
           <v-card-text>
             <v-row
@@ -27,7 +27,7 @@
               class="mx-0"
             >
               <v-rating
-                :value="getItem.rating"
+                :value="getItem.rateTotal.total"
                 color="amber"
                 dense
                 half-increments
@@ -41,7 +41,7 @@
             </div>
 
             <div>
-              <p> Số học viên: <code>{{ getItem.studentTotal }}</code> </p>
+              <p> Số học viên: <code>{{ getItem.studentTotal || 0 }}</code> </p>
             </div>
 
             <div class="teachers" v-if="getItem.courseTeachers.length">
@@ -90,6 +90,7 @@ export default {
     selection: 1,
   }),
 
+
   computed: {
     getItem: {
       get(){
@@ -98,13 +99,18 @@ export default {
     },
   },
 
+
   methods: {
     viewDetail(course){
+
+      var params = Object.assign({}, this.$route.params);
+      params.id = course.id
+
       this.$router.push({
         name: "courseDetail",
-        params: {
-          id: course.id
-        }
+        params: params
+      }).catch(error => {
+
       })
     }
   },

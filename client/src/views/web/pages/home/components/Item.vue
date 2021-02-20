@@ -4,7 +4,7 @@
     :loading="loading"
   >
     <v-row>
-      <v-col cols="5" class="d-flex">
+      <v-col cols="12" sm="6" md="6" lg="5" class="d-flex">
         <v-img 
           height="270"
           
@@ -19,7 +19,7 @@
         >
         </v-img>
       </v-col>
-      <v-col cols="7">
+      <v-col  cols="12" sm="6" md="6" lg="7">
         <v-card-title>{{ getItem.title }}</v-card-title>
           <v-card-text>
             <v-row

@@ -147,7 +147,7 @@ export default {
     @output: JSON
   */
   getError(error) {
-    const errors = error.response[0]
+    const errors = error.response
     return errors
   },
 
