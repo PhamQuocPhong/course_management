@@ -20,12 +20,14 @@ import Home from "@/views/web/pages/home/Index.vue";
 
 import Course from "@/views/web/pages/course/Course.vue";
 import CourseIndex from "@/views/web/pages/course/Index.vue";
+import CourseSearch from "@/views/web/pages/course/Search.vue";
 import CourseDetail from "@/views/web/pages/course/Detail.vue";
 
 import StudentProfile from "@/views/web/pages/student/Profile.vue";
 import StudentProfileInfo from "@/views/web/pages/student/Info.vue";
 import StudentProfileMyCourse from "@/views/web/pages/student/MyCourse.vue";
 import StudentProfileFavoriteCourse from "@/views/web/pages/student/FavoriteCourse.vue";
+import StudentProfileCourseDetail from "@/views/web/pages/student/CourseDetail.vue";
 
 import TeacherProfile from "@/views/web/pages/teacher/Profile.vue";
 import TeacherProfileInfo from "@/views/web/pages/teacher/Info.vue";
@@ -187,6 +189,13 @@ const routes = [
             component: CourseIndex,
             name: "courseIndex",
           },
+
+           {
+            path: "search/",
+            component: CourseSearch,
+            name: "courseSearch",
+          },
+
           {
             path: ":id",
             component: CourseDetail,
@@ -216,6 +225,11 @@ const routes = [
             path: "favorite_courses",
             component: StudentProfileFavoriteCourse,
             name: "studentFavoriteCourse"
+          },
+           {
+            path: "my_courses/:id",
+            component: StudentProfileCourseDetail,
+            name: "studentProfileCourseDetail"
           }
         ]
       },

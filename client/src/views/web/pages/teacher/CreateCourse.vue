@@ -1,16 +1,13 @@
 <template>
   <v-layout v-resize="onResize">
       <v-container>
-        <v-row>
-          <label-table title="Profile"> </label-table>
-        </v-row>
 
         <v-row>
           <v-col cols="12" md="4" :class="{ 'pa-0': isMobile }">
             <m-menu></m-menu>
           </v-col>
 
-          <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }">
+          <v-col cols="12" md="8" :class="{ 'pa-0 mt-4': isMobile }">
             <v-card tile  style="height: 100%;">
                 <v-card-title class="headline d-flex pb-4">
                   Tạo khóa học
@@ -47,6 +44,7 @@
                       <m-dropzone
                        :data.sync="form.avatar"
                        :multiple="false"
+                       typeUpload="courses"
                       >
                       </m-dropzone>
 
@@ -72,7 +70,7 @@
                       </div>
 
                       <v-row>
-                        <v-col cols="12" md="6" lg="6" v-for="item, index in form.chapters">
+                        <v-col cols="12" md="6" lg="6" v-for="item, index in form.chapters" :key="index">
                           <v-card class="pa-4">
                             <v-text-field
                               :rules="[
@@ -197,7 +195,11 @@ export default {
 
     async save()
     {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form.validate()) 
+      {
+        this.$store.dispatch("components/progressLoading", { option: "show" });
+        this.form.priceFinal = this.form.price;
+
         const res = await CourseService.store(this.form);
         if(res.status === 201)
         {
@@ -206,12 +208,14 @@ export default {
               "Success",
               { timeOut: false }
             );
-           this.form.images = [];
+          this.$refs.form.reset();
 
+          this.$store.dispatch("components/progressLoading", { option: "hide" });
         }else{
           toastr.error("Internal Server Error", "Error", {
               timeOut: 1000
           });
+          this.$store.dispatch("components/progressLoading", { option: "hide" });
         }
           
         this.$refs.form.reset();

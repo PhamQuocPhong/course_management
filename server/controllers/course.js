@@ -42,7 +42,6 @@ let show = async (req, res) => {
     return res.status(200).json({message: 'Success', data: data})
 }
 
-
 let update = async (req, res) => {
 
     var form = req.body;
@@ -144,6 +143,61 @@ let getCoursePaging = async (req, res) => {
 	}
 }
 
+let getCourseByCategory = async (req, res) => {
+
+    var query = req.query;
+    var page = req.query.page || 1;
+    var itemPerPage = req.query.itemPerPage || 20;
+    var categoryId = req.params.categoryId;
+
+    var offset = helper.calcPaginate(page, itemPerPage);
+    
+    try
+    {
+        var counts = 0;
+        var courseData = [];
+        var condition = {
+            categoryId: categoryId
+        };
+        var order = [];
+        if(query.orderPrice)
+        {
+            order.push(['priceFinal', query.orderPrice])
+        }
+
+        if(query.orderRating)
+        {
+           order.push([rateTotalModel, 'total', query.orderRating])
+        }
+
+
+        courseData = await courseModel.findAll({
+            offset: offset, 
+            limit: itemPerPage, 
+            where: condition,
+            order: order,
+            include: [
+                {
+                    model: courseTeacherModel, 
+                    include: [
+                    {
+                        model: userModel
+                    }]
+                },
+                {
+                    model: rateTotalModel
+                }
+            ],
+        });
+
+        return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(await courseModel.count({ where: condition} ) / itemPerPage ) })
+    
+    }
+    catch(error) {
+        return res.status(500).json(error)
+    }
+}
+
 
 let getDeatailCourse = async (req, res) => {
     const courseId = req.params.id;
@@ -230,19 +284,35 @@ let getDeatailCourse = async (req, res) => {
 
 let searchCourse = async (req, res) => {
     //console.log("checkkkkkkkkk")
-    var itemPerPage = req.query.itemPerPage;
+    var itemPerPage = req.query.itemPerPage || 20;
     //filter true hoặc false
     var orderPrice = req.query.orderPrice;
     var orderRating = req.query.orderRating;
     var keyword = req.query.keyword;
     
 	var page = req.query.page
-	var offset = 0
+	var offset = 0;
 	if(page == 1){
 		offset = 0
 	}
 	else{
 		offset = ((page - 1) * itemPerPage) 
+    }
+
+    // order by
+    var order = [];
+    if(orderPrice)
+    {
+        order.push(
+            ['priceFinal', orderPrice] 
+        )
+    }
+    if(orderRating)
+    {
+        order.push([
+            { model: rateTotalModel }, 'total', orderRating 
+            ]
+        )
     }
 
     keyword = slugify(keyword, {
@@ -252,146 +322,37 @@ let searchCourse = async (req, res) => {
         strict: false,    
         locale: 'vi'       
     });
+
     try
     {
         var courseData  = []
-        if(orderRating && orderPrice)
-        {
-            console.log("1");
-            courseData = await courseModel.findAll({
-                offset: offset, 
-                limit: itemPerPage, 
-                where: {
-                    [Op.and]: Sequelize.literal(`"course_tsv" @@ plainto_tsquery('${keyword}')`)
+        courseData = await courseModel.findAll({
+            offset: offset, 
+            limit: itemPerPage, 
+            where: {
+                [Op.and]: Sequelize.literal(`"course_tsv" @@ plainto_tsquery('${keyword}')`)
+            },
+            include: [
+                {
+                    model: courseTeacherModel, 
+                    include: [
+                    {
+                        model: userModel
+                    }]
                 },
-                include: [
-                    {
-                        model: courseTeacherModel, 
-                        include: [
-                        {
-                            model: userModel
-                        }]
-                    },
-                    {
-                        model: rateModel
-                    },
-    
-                    {
-                        model: promotionModel
-                    },
-                    {
-                        model: rateTotalModel
-                    }
-                ],
-                order: [
-                    [rateTotalModel, 'total', 'DESC'], //=> cách thường, cai nay la dc roi
-                    ['priceFinal', 'ASC'] 
-                ]
-            });
-            console.log("?")
-        }
-        else if(orderRating && !orderPrice)
-        {
-            console.log("2");
-            courseData = await courseModel.findAll({
-                offset: offset, 
-                limit: itemPerPage, 
-                where: {
-                    [Op.and]: Sequelize.literal(`"course_tsv" @@ plainto_tsquery('${keyword}')`)
-                },
-                include: [
-                    {
-                        model: courseTeacherModel, 
-                        include: [
-                        {
-                            model: userModel
-                        }]
-                    },
-                    {
-                        model: rateModel
-                    },
-    
-                    {
-                        model: promotionModel
-                    },
-                    {
-                        model: rateTotalModel
-                    }
-                ],
-                order: [
-                    [rateTotalModel, 'total', 'DESC']
-                ]
-            });
-
-        }
-        else if(!orderRating && orderPrice)
-        {
-            courseData = await courseModel.findAll({
-                offset: offset, 
-                limit: itemPerPage, 
-                where: {
-                    [Op.and]: Sequelize.literal(`"course_tsv" @@ plainto_tsquery('${keyword}')`)
-                },
-                include: [
-                    {
-                        model: courseTeacherModel, 
-                        include: [
-                        {
-                            model: userModel
-                        }]
-                    },
-                    {
-                        model: rateModel
-                    },
-    
-                    {
-                        model: promotionModel
-                    },
-                    {
-                        model: rateTotalModel
-                    }
-                ],
-                order: [
-                    ['priceFinal', 'ASC'] 
-                ]
-            });
-
-        }
-        else
-        {
-            courseData = await courseModel.findAll({
-                offset: offset, 
-                limit: itemPerPage, 
-                where: {
-                    [Op.and]: Sequelize.literal(`"course_tsv" @@ plainto_tsquery('${keyword}')`)
-                },
-                include: [
-                    {
-                        model: courseTeacherModel, 
-                        include: [
-                        {
-                            model: userModel
-                        }]
-                    },
-                    {
-                        model: rateModel
-                    },
-    
-                    {
-                        model: promotionModel
-                    },
-                    {
-                        model: rateTotalModel
-                    }
-                ],
-            });
-
-        }
+                {
+                    model: rateTotalModel
+                }
+            ],
+            order: order
+        });
+        
         var counts = await courseModel.count({
             where: {
                 [Op.and]: Sequelize.literal(`"course_tsv" @@ plainto_tsquery('${keyword}')`)
             }
         });
+
         
         return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(counts/itemPerPage)})
     }
@@ -440,19 +401,12 @@ let createCourse = async (req, res) => {
 }
 
 let updateCourse = async (req, res) => {
-    const {avatar, title, description, fullDescription, price, active} = req.body;
+    const data = req.body;
     const courseId = req.params.id;
 
     try
     {
-        var course = await courseModel.update({
-            avatar,
-            title,
-            description,
-            fullDescription,
-            price,
-            active
-         },
+        var course = await courseModel.update(data,
          {where: {id: courseId}}
          );
         return res.status(200).json({message: 'Success!'})
@@ -486,7 +440,7 @@ module.exports = {
     getDeatailCourse,
     searchCourse,
     getCoursePaging,
-
+    getCourseByCategory,
    
     //Teacher
     createCourse,

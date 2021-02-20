@@ -7,8 +7,11 @@
             <m-menu></m-menu>
           </v-col>
 
-          <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }" >
+          <v-col cols="12" md="8" :class="{ 'pa-0 mt-4': isMobile }" >
             <v-card tile  style="height: 100%;">
+
+               <v-card-title class="border-bottom">Thông tin cá nhân</v-card-title>
+
               <v-form ref="form">
                 <v-container>
                   <v-row>
@@ -132,19 +135,22 @@ export default {
     },
 
     async handleUpdateUserInfo(){
-      var userId = this.userInfo._id;
-      const res = await UserService.update(userId, this.getUser)
+      var userId = this.userInfo.id;
+      this.$store.dispatch("components/progressLoading", { option: "show" });
+      const res = await UserService.update(userId, this.userInfo)
       if(res.status === 200){
         toastr.success(
           "<p> Cập nhật thành công <p>",
           "Success",
           { timeOut: 1000 }
         );
-                  this.edit = false;
+        this.edit = false;
+        this.$store.dispatch("components/progressLoading", { option: "hide" });
       }else{
         toastr.error("Internal Server Error", "Error", {
               timeOut: 1000
           });
+        this.$store.dispatch("components/progressLoading", { option: "hide" });
       }
     },
   },

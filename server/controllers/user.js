@@ -158,13 +158,13 @@ let changePassword = async (req, res) => {
             
             else
             {
-                return res.status(401).send({message: "New password diffrent verify password" });
+                return res.status(422).send({message: "New password diffrent verify password" });
             }
       
             return res.status(200).json({message: "Success!"})
             
         }else{
-            return res.status(401).send({message: "Mật khẩu cũ không đúng!" })
+            return res.status(422).send({message: "Mật khẩu cũ không đúng!" })
         }
     }
     catch(error) {
@@ -233,8 +233,7 @@ let getWatchList = async (req, res) => {
 
 let getCourseJoin = async (req, res) => {
     var decoded = req.decoded;
-    var userId = decoded.userId;
-    console.log("tetssss")
+    var userId = decoded.userId || req.query.userId;
     
     try
     {

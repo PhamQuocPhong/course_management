@@ -3,7 +3,7 @@ const hourTime = 3600
 const dayTime = 3600 * 24
 const weekTime = 3600 * 24 * 7
 const myTimeZone = 7
-
+const path = require( "path" )
 
 let defaultValue = (input, option) => {
 
@@ -126,9 +126,38 @@ let calcPaginate = (currentPage, itemPerPage) => {
 	return offset;
 }
 
+let isImage = (filename) => {
+  var ext = path.extname(filename);
+  switch (ext.toLowerCase()) {
+    case '.jpg':
+    case '.gif':
+    case '.bmp':
+    case '.png':
+      //etc
+      return true;
+  }
+  return false;
+}
+
+let isVideo = (filename) => {
+
+  var ext = path.extname(filename);
+
+  switch (ext.toLowerCase()) {
+    case '.m4v':
+    case '.avi':
+    case '.mpg':
+    case '.mp4':
+      // etc
+      return true;
+  }
+  return false;
+}
 
 
 module.exports = {
+	isImage,
+	isVideo,
 	calcPaginate: calcPaginate,
 	defaultValue: defaultValue,
 	formatCurrency: formatCurrency,

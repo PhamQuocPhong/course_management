@@ -15,9 +15,9 @@
         </template>
 
         <v-list-item
-         
           v-for="child in item.subCategory"
           :key="child.id"
+           @click="view(child)"
         >
           <v-list-item-content class="pointer">
             <v-list-item-title   v-text="child.name"></v-list-item-title>
@@ -60,7 +60,17 @@ export default {
 			if(res.status === 200){
 				this.categories = res.data.data
 			}
-		}
+		},
+
+    view(category)
+    {
+      this.$router.push({
+        name: "courseIndex",
+        params: {
+          categoryId: category.id
+        }
+      });
+    }
 	}
 }
 </script>

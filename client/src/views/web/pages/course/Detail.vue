@@ -1,10 +1,10 @@
 <template>
 	<v-container  v-show="show">
-		<v-row>
+
+		<v-row >
 			<v-col cols="12" sm="8" md="8" lg="8">
 
 				<v-card >
-					
 					<v-img v-if="course.image"  :src="course.image"></v-img>
 
 					<v-img v-else src="@/assets/img/default.jpg"></v-img>
@@ -34,9 +34,24 @@
 				          flat
 				        >
 				        	<v-card-title>
-				        		{{ course.title }}
-				        		<div class="block" style="position: absolute; right: 10px;">
-					        		<v-btn 
+				        		<span> {{ course.title }} </span>
+				        		<div class="blockBtn" v-bind:style="{position: style.position, right: style.right + 'px' }">
+
+				        			<v-btn
+					        		v-if="myCourseIds.includes(course.id) || joined"
+					        		class="text-right mr-4" 
+					        		outlined 
+					        		small 
+					        		color="primary"
+					        		readonly
+					        		>
+					        			<v-icon>mdi-check-bold</v-icon>
+					        			Đã tham gia
+					        		</v-btn>
+
+
+					        		<v-btn
+					        		v-else 
 					        		@click="enrollCourse(course.id)"
 					        		class="text-right mr-4" 
 					        		outlined 
@@ -48,6 +63,18 @@
 					        		</v-btn>
 
 					        		<v-btn 
+					        		v-if="myFavoriteCourseIds.includes(course.id) || liked"
+					        		class="text-right" 
+					        		outlined 
+					        		small 
+					        		color="pink"
+					        		>
+					        			<v-icon>mdi-check-bold</v-icon>
+					        			Đã thích
+					        		</v-btn>
+
+					        		<v-btn 
+					        		v-else
 					        		@click="handleLikeCourse(course)"
 					        		class="text-right" 
 					        		outlined 
@@ -75,7 +102,7 @@
 				            </div>
 
 				             <div>
-				              <p> Số học viên: <code>{{ course.studentTotal }}</code> </p>
+				              <p> Số học viên: <code>{{ course.studentTotal || 0 }}</code> </p>
 				            </div>
 
 				            <div class="my-4 subtitle-1">
@@ -173,9 +200,10 @@
 import Rating from "./components/detail/ListRating.vue";
 import AddRating from "./components/detail/AddRating";
 
-
+import CookieService from "@/services/cookie";
 import CourseService from "@/services/course";
 import UserService from "@/services/user";
+import ProfileService from "@/services/profile";
 
 import MItem from "./components/index/Item";
 
@@ -203,10 +231,38 @@ export default {
 	        course: {},
 	        relatedCourses: [],
 	        isVisibleFormRating: false,
+
+	        myCourseIds: [],
+	        myFavoriteCourseIds: [],
+	        liked: false,
+	        joined: false
+		}
+	},
+
+	computed: {
+		style: {
+			get()
+			{
+				return {
+					position: this.isMobile === true ? "relative" : "absolute",
+	        		right: 10,
+				}
+			}
+		},
+		userInfo()
+		{
+			return CookieService.get("userInfo");
 		}
 	},
 
 	async created(){
+
+		if(this.userInfo)
+		{
+			this.getMyCourses();
+			this.getMyFavoriteCourses();
+		}
+
 		this.retrieveData();
 	},
 
@@ -215,6 +271,14 @@ export default {
 	    if(data)
 	        this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
 	    	this.show = true;
+	    },
+
+	    '$route'(data, oldData)
+	    {
+	    	if(data.name === oldData.name)
+	    	{
+	    		this.retrieveData();
+	    	}
 	    }
 	},
 
@@ -225,6 +289,7 @@ export default {
 			const res = await UserService.handleFavoriteCourse(course.id)
 			if(res.status === 200)
 			{
+				this.liked = true;
 				toastr.success("Bạn vừa thêm vào danh sách yêu thích", this.$lang.SUCCESS, { timeOut: 1000 });
 
 			}
@@ -238,8 +303,31 @@ export default {
 		async enrollCourse(courseId)
 		{
 			const res = await UserService.joinCourse(courseId);
-			console.log(res);
+			if(res.status === 200)
+			{
+				this.joined = true;
+				toastr.success("Tham giá khóa học thành công", this.$lang.SUCCESS, { timeOut: 1000 });
+
+			}
 		},	
+
+		async getMyCourses(userId)
+		{
+			const res = await ProfileService.getMyCourse(userId);
+			if(res.status === 200)
+			{
+				this.myCourseIds = res.data.data.map(item => item.courseId);
+			}
+		},
+
+		async getMyFavoriteCourses(userId)
+		{
+			const res = await ProfileService.getFavoriteCourse(userId);
+			if(res.status === 200)
+			{
+				this.myFavoriteCourseIds = res.data.data.map(item => item.courseId);
+			}
+		},
 
 		retrieveData()
 		{
@@ -252,9 +340,8 @@ export default {
 	      	this.relatedCourses = res.data.courseList;
 	      }, 200);
 	    },
-
-
 	},
+
 
 }	
 

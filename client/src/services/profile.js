@@ -4,28 +4,36 @@ export default {
 
   rootURL: '/profile/',
 
-  async changePassword()
+  async changePassword(data)
   {
     try {
-      return await axios.post(this.rootURL + `like/${courseId}`);
+      return await axios.post(this.rootURL + `password/update/`, data);
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }
   },
 
-  async getFavoriteCourse()
+  async getFavoriteCourse(userId)
   {
     try {
-      return await axios.get(this.rootURL + `favorite_courses`);
+      return await axios.get(this.rootURL + `favorite_courses`, {
+        params: {
+          userId: userId
+        }
+      });
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }
   },
 
-  async getMyCourse()
+  async getMyCourse(userId)
   {
     try {
-      return await axios.get(this.rootURL + `my_courses`);
+      return await axios.get(this.rootURL + `my_courses`, {
+        params: {
+          userId: userId
+        }
+      });
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }

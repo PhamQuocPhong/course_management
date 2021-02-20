@@ -27,14 +27,13 @@
 
           <v-row justify="center">
             <v-col cols="8">
-              <v-container class="max-width">
+              <v-container class="max-width" v-if="courses.length">
                  <pagination-custom
                   :pageCounts="pageCounts"
                   :currentPage.sync="currentPage"
                   :key="currentPage"
                   @change="nextPage()"
                  >
-                   
                  </pagination-custom>
               </v-container>
             </v-col>
@@ -71,7 +70,7 @@ export default {
 
 	data(){
 		return {
-		currentPage: 1,	
+		currentPage: this.$route.query.hasOwnProperty("page") ? parseInt(this.$route.query.page) : 1, 
 		pageCounts: 1,	
 		courses: [],
 
@@ -94,7 +93,6 @@ export default {
 
 
   created(){
-
     this.retrieveData(this.$route.query);
   },
 
@@ -105,6 +103,13 @@ export default {
       if(data.length)
          this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
     },
+
+    '$route.params' (data, oldData){
+      if(data.categoryId)
+      {
+        this.retrieveData(this.$route.query);
+      }
+    }
   },
 
   methods: {
@@ -138,7 +143,7 @@ export default {
       payload.page = this.currentPage;
       this.$store.dispatch("components/actionProgressHeader", { option: "show" })
       setTimeout(async () => {
-        	const res = await CourseService.fetchPaging(payload.page, this.$route.params.categoryId);
+        	const res = await CourseService.fetchPagingByCategoryId(payload.page, this.$route.params.categoryId);
         	if(res.status === 200)
           {
             this.courses = res.data.data

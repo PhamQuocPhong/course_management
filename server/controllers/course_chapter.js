@@ -1,28 +1,22 @@
 const courseChapterModel = require('../models/course_chapter');
 
 //Teacher
-let createChapter = async (req, res) => {
-    const {name, description, preview} = req.body;
-    var courseId = req.params.id;
-
+let store = async (req, res) => {
+    const data = req.body;
     try
     {
-        var courseChapter = await courseChapterModel.create({
-            name,
-            description,
-            preview,
-            courseId
-         });
-        return res.status(200).json({message: 'Success!', courseChapterId: courseChapter.id})
+        var courseChapter = await courseChapterModel.create(data);
+
+        return res.status(201).json({message: 'Success!', data: courseChapter})
     }
     catch(error) {
 		return res.status(500).json(error)
 	}
 }
 
-let updateChapter = async (req, res) => {
+let update = async (req, res) => {
     const form = req.body;
-    const courseChapterId = req.params.courseChapterId;
+    const courseChapterId = req.params.id;
 
     try
     {
@@ -33,15 +27,15 @@ let updateChapter = async (req, res) => {
             returning: true,
             plain: true
         });
-        return res.status(200).json({message: 'Success!', data})
+        return res.status(200).json({message: 'Success!', data: data[1]})
     }
     catch(error) {
 		return res.status(500).json(error)
 	}
 }
 
-let deleteChapter = async (req, res) => {
-    const courseChapterId = req.params.courseChapterId;
+let remove = async (req, res) => {
+    const courseChapterId = req.params.id;
 
     try
     {
@@ -57,7 +51,7 @@ let deleteChapter = async (req, res) => {
 
 
 module.exports = {
-    createChapter,
-    updateChapter,
-    deleteChapter
+    store,
+    update,
+    remove
 }

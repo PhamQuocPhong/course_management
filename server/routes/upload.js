@@ -3,16 +3,15 @@ var router = express.Router();
 const AwsService = require('../services/aws');
 
 router.post('/image', async (req, res) => {
-	var image = req.files;
+	var file = req.files.file;
+	var getURL = '';
 
-
-	var typeUpload = ""
-	var urlImage = '';
-	await AwsService.uploadImage(image, typeUpload, (url) => {
-		urlImage = AwsService.getCallbackURL(url)
+	await AwsService.upload(file, (url) => {
+		getURL = AwsService.getCallbackURL(url);
+		if(getURL){
+			return res.status(200).json({message: "Upload success", url: getURL})
+		}
 	});
-
-	console.log(urlImage);
 });
 
 module.exports = router

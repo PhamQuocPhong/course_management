@@ -5,6 +5,15 @@ export default {
     };
   },
 
+  created()
+  {
+    if (window.innerWidth < 769) {
+        this.isMobile = true;
+      } else {
+        this.isMobile = false;
+      }
+  },
+
   methods: {
     onResize() {
       if (window.innerWidth < 769) {

@@ -19,7 +19,7 @@
           v-for="child in item.subCategory"
           :key="child.id"
           :to="{ name: 'courseIndex', params: { categoryId: child.id }}"
-
+          
         >
           <v-list-item-content class="pointer">
             <v-list-item-title   v-text="child.name"></v-list-item-title>

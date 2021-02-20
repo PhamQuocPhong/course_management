@@ -7,7 +7,7 @@
         <m-menu></m-menu>
       </v-col>
 
-      <v-col cols="12" md="8" :class="{ 'pa-0': isMobile }">
+      <v-col cols="12" md="8" :class="{ 'pa-0 mt-4': isMobile }">
         <v-card tile  style="height: 100%;">
 
           <v-card-title class="border-bottom">Khóa học của tôi</v-card-title>
@@ -44,10 +44,7 @@
                       <v-col cols="7">
                       <v-card-title>{{ item.course.title }}</v-card-title>
                         <v-card-text>
-                          <v-row
-                            align="center"
-                            class="mx-0"
-                          >
+                         
                             <v-rating
                               :value="item.course.rating"
                               color="amber"
@@ -57,8 +54,11 @@
                               size="14"
                             ></v-rating>
 
-                          </v-row>
+                          <div class="my-4 subtitle-1 red--text font-weight-bold">
+                            <p> Số học viên: <code>{{ item.course.studentTotal || 0 }}</code> </p>
+                          </div>
 
+                          <v-btn color="primary" small outlined @click="viewDetail(item.course.id)" >Xem</v-btn>
                         
                         </v-card-text>
                     </v-col>
@@ -119,6 +119,14 @@ export default {
         this.myCourses = res.data.data;
         this.pageCounts = res.data.pageCounts;
       }
+    },
+
+    viewDetail(courseId)
+    {
+      this.$router.push({
+        name: "studentProfileCourseDetail",
+        params: { id: courseId } 
+      })
     }
   },
 

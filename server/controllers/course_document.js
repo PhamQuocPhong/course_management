@@ -1,46 +1,51 @@
-const { where } = require('sequelize/types');
 const courseDocumentModel = require('../models/course_document');
 const stateDocumentModel = require('../models/state_document');
-
+const helper = require('../helpers/helper');
 
 //Teacher
-let createDocument = async (req, res) => {
-    const {name, description, preview, type, preview} = req.body;
-
+let store = async (req, res) => {
+    const data = req.body;
     try
     {
-        await courseDocumentModel.create({
-            name,
-            description,
-            preview,
-            courseId,
-            type,
-            chapterId
-            
-         });
-        return res.status(200).json({message: 'Success!'})
+        if(helper.isVideo(data.link))
+        {
+            data.type = 1
+        }else 
+        {
+            data.type = 0;
+        }
+
+        var newDocument = await courseDocumentModel.create(data);
+        return res.status(201).json({message: 'Success!', data: newDocument})
     }
     catch(error) {
 		return res.status(500).json(error)
 	}
 }
 
-let updateDocument = async (req, res) => {
-    const {name, description, preview, type, preview} = req.body;
+let update = async (req, res) => {
+    const data  = req.body;
     const courseDocumentId = req.params.id;
     try
     {
-        await courseDocumentModel.update({
-            name,
-            description,
-            preview,
-            courseId,
-            type,
-            chapterId
-            
-         },
-         {where: {id : courseDocumentId}});
-        return res.status(200).json({message: 'Success!'})
+        if(helper.isVideo(data.link))
+        {
+            data.type = 1
+        }else 
+        {
+            data.type = 0;
+        }
+
+
+        var documentUpdate = await courseDocumentModel.update(
+            data,
+            {
+                where: {id : courseDocumentId},
+                returning: true,
+                plain: true
+            }
+        );
+        return res.status(200).json({message: 'Success!', data: documentUpdate[1]})
     }
     catch(error) {
 		return res.status(500).json(error)
@@ -48,7 +53,7 @@ let updateDocument = async (req, res) => {
 }
 
 
-let deleteDocument = async (req, res) => {
+let remove = async (req, res) => {
     const courseDocumentId = req.params.id;
     try
     {
@@ -64,7 +69,7 @@ let deleteDocument = async (req, res) => {
 }
 
 let changeStateDocument = async (req, res) => {
-    const {time, done, userId, documentId} = req.body;
+    const {time, done, documentId} = req.body;
     var decoded = req.decoded;
     var userId = decoded.userId;
 
@@ -92,7 +97,7 @@ let changeStateDocument = async (req, res) => {
 }
 
 let getStateDocument = async (req, res) => {
-    const {userId, documentId} = req.body;
+    const {documentId} = req.body;
     var decoded = req.decoded;
     var userId = decoded.userId;
 
@@ -108,9 +113,9 @@ let getStateDocument = async (req, res) => {
 }
 
 module.exports = {
-    createDocument,
-    updateDocument,
-    deleteDocument,
+    store,
+    update,
+    remove,
 
     changeStateDocument,
     getStateDocument

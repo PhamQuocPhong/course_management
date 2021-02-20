@@ -2,7 +2,7 @@
   <nav id="header-top">
     <v-app-bar app>
 
-    <div style="width: 10%;">
+    <div style="width: 12%;">
       <v-list-item class="logo" :to="'/'">
           <v-img
             width="50"
@@ -21,13 +21,13 @@
       <v-spacer></v-spacer>
 
 
-      <v-col cols="6" lg="4" md="4" class="d-flex">
+      <v-col cols="6" lg="4" md="4" class="d-flex" v-if="!isMobile">
         <search-header
         :data.sync="inputSearch"
 
         >
         </search-header>
-        <v-btn small class="primary"  style="border-radius: 0 30px 30px 0; height: auto;">
+        <v-btn small class="primary"  style="border-radius: 0 30px 30px 0; height: auto;" @click="searchCourse()">
           <v-icon>
             mdi-search-web
           </v-icon>
@@ -97,7 +97,12 @@ import SearchHeader from "./SearchHeader";
 // services
 import CookieService from "@/services/cookie";
 
+//mixins 
+import IsMobile from "@/mixins/is_mobile";
 export default {
+
+  mixins: [IsMobile],
+
   components: {
     'search-header': SearchHeader
   },
@@ -110,7 +115,7 @@ export default {
       ],
       theme: this.getTheme(),
 
-      inputSearch: "",
+      inputSearch: this.$route.query.hasOwnProperty("keyword") ? this.$route.query.keyword : "", 
     };
   },
 
@@ -160,17 +165,19 @@ export default {
 
   methods: {
 
-    redirectLogin(){
-      this.$router.push('/login');
+
+    searchCourse()
+    {
+      var query = Object.assign({}, this.$route.query);
+      query.keyword = this.inputSearch
+      this.$router.push({
+        name: "courseSearch",
+        query: query
+      }).catch(err => {});
     },
 
-    isMobile() {
-      if (screen.width <= 768) {
-        return true;
-      } else {
-        this.drawer = true;
-        return false;
-      }
+    redirectLogin(){
+      this.$router.push('/login');
     },
 
     switchMode() {
