@@ -59,7 +59,7 @@
 
                               </v-row>
                                <v-row class="pa-4">
-                                  <v-btn outlined color="red" small @click="removeFavoriteCourse(item.course.id)">Bỏ thích</v-btn>
+                                  <v-btn outlined color="red" small @click="removeFavoriteCourse(item.course.id, index)">Bỏ thích</v-btn>
                                 </v-row>
                             </v-card-text>
                         </v-col>
@@ -122,10 +122,13 @@ export default {
         this.pageCounts = res.data.pageCounts;
       }
     },
-    async removeFavoriteCourse(courseId)
+    async removeFavoriteCourse(courseId, index)
     {
        const res = await ProfileService.removeFavoriteCourse(courseId);
-       console.log(res);
+        if(res.status === 200)
+        {
+          this.favoriteCourses.splice(index, 1);
+        }
     }
   },
 

@@ -50,12 +50,12 @@
                 >
                   Login
                 </v-btn>
-
+<!-- 
                 <v-card-text class="text-center horizontal-line">
                   OR Continue
                 </v-card-text>
-
-                <div class="text-center pb-8">
+ -->
+         <!--        <div class="text-center pb-8">
                   <v-btn
                     v-bind:style="[isMobile ? styleBtn : '']"
                     :class="{ 'mx-2': !isMobile}"
@@ -77,18 +77,18 @@
                     <v-icon dark>mdi-facebook</v-icon>
                     <span class="pl-3">With Facebook</span>
                   </v-btn>
-                </div>
+                </div> -->
 
                 <hr />
 
                 <v-card-text class="text-center">
-                  Don't have account?
+                  Bạn chưa có tài khoản?
                   <v-btn
                     text
                     class="light-blue--text pa-0 caption"
                     @click="redirectRegister()"
                   >
-                    Sign up now
+                    Đăng kí ngay
                   </v-btn>
                 </v-card-text>
               </v-form>
@@ -208,7 +208,9 @@ export default {
         const googleUser = await this.$gAuth.signIn();
         var data = {};
 
-        data.email =
+        console.log(googleUser);
+        return false;
+
         googleUser.getBasicProfile().$t || googleUser.getBasicProfile().yu;
         data.password = "";
         data.providerId = googleUser.getId();
@@ -228,7 +230,9 @@ export default {
             this.$router.push("/");
           }
         });
-      } catch (e) {}
+      } catch (e) {
+        console.log(e)
+      }
     },
 
     async loginFacebook() {

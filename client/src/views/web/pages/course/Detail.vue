@@ -141,7 +141,13 @@
 				                size="20"
 				              ></v-rating>
 				              	<v-spacer></v-spacer>
-				              	<v-btn outlined small color="primary" @click="addRating(course)">Đánh giá</v-btn>
+
+				              	<v-btn v-if="myCourseIds.includes(course.id)" 
+				              	outlined small color="primary" 
+				              	@click="addRating(course)"
+				              	>
+				              		Đánh giá
+				          		</v-btn>
 				            </v-card-text>
 
 				            <v-card-text>
@@ -252,6 +258,10 @@ export default {
 		userInfo()
 		{
 			return CookieService.get("userInfo");
+		},
+		accessToken()
+		{
+			return CookieService.get("accessToken");
 		}
 	},
 
@@ -286,6 +296,13 @@ export default {
 
 		async handleLikeCourse(course)
 		{
+			if(!this.accessToken)
+			{
+				this.$router.push({
+					name: "login"
+				});
+			}
+
 			const res = await UserService.handleFavoriteCourse(course.id)
 			if(res.status === 200)
 			{
@@ -302,6 +319,13 @@ export default {
 
 		async enrollCourse(courseId)
 		{
+			if(!this.accessToken)
+			{
+				this.$router.push({
+					name: "login"
+				});
+			}
+			
 			const res = await UserService.joinCourse(courseId);
 			if(res.status === 200)
 			{

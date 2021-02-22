@@ -32,10 +32,14 @@ export default {
       }
    },
 
-   async fetchAll()
+   async fetchAll(noParent)
    {
       try {
-        return  await axios.get(this.rootURL);
+        return  await axios.get(this.rootURL, {
+          params: {
+            noParent: noParent
+          }
+        });
         return result;
       } catch (error) {
          return helperCommon.getError(error) || false; 
