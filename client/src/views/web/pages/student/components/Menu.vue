@@ -17,10 +17,10 @@
           <v-list-item color="rgba(0, 0, 0, .4)" dark>
             <v-list-item-content>
               <v-list-item-title class="title"
-                >Marcus Obrien</v-list-item-title
+                >{{ userInfo.name }}</v-list-item-title
               >
               <v-list-item-subtitle
-                >Network Engineer</v-list-item-subtitle
+                >{{ userInfo.email }}</v-list-item-subtitle
               >
             </v-list-item-content>
           </v-list-item>
@@ -55,6 +55,8 @@
 </template>
 
 <script type="text/javascript">
+
+import CookieService from "@/services/cookie";
 export default {
 	data(){
 		return {
@@ -66,5 +68,12 @@ export default {
 		    ],
 		}
 	},
+
+  computed: {
+    userInfo()
+    {
+      return CookieService.get("userInfo");
+    }
+  }
 }
 </script>

@@ -13,7 +13,15 @@ const helper = require('../helpers/helper');
 
 let getAllCategory = async (req, res) => {
 
-    var condition = req.query;
+    var condition = {};
+    if(req.query.noParent)
+    {
+        condition.parentId = {
+            [Op.ne]: null
+        }
+    }
+
+
     try
     {
         const categories = await categoryModel.findAll({
@@ -43,6 +51,8 @@ let getMenu = async (req, res) => {
         return res.status(500).json(error)
     }
 }
+
+
 
 let getCategoryPaging = async (req, res) => {
 

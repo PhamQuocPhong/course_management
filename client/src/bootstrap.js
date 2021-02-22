@@ -1,16 +1,25 @@
 import Vue from "vue";
 import VueCookies from "vue-cookies";
 import colors from "vuetify/lib/util/colors";
-import helperCommon from '@/helpers/common';
-import helperValidation from '@/helpers/validation';
+import gAuth from "vue-google-oauth2";
 import wysiwyg from "vue-wysiwyg";
+import VueVideoPlayer from 'vue-video-player'
+import 'video.js/dist/video-js.css'
 import "vue-wysiwyg/dist/vueWysiwyg.css";
 
 Vue.use(wysiwyg, {}); 
+Vue.use(VueVideoPlayer, /* {
+  options: global default options,
+  events: global videojs events
+} */)
 
 //plugin
 require("@/plugins/directive");
 require("@/plugins/filter");
+
+// helpers
+import helperCommon from '@/helpers/common';
+import helperValidation from '@/helpers/validation';
 
 
 // component
@@ -69,6 +78,7 @@ const gauthOption = {
   prompt: process.env.VUE_APP_GOOGLE_PROMPT
 };
 
+Vue.use(gAuth, gauthOption);
 
 Vue.prototype.$helper = helperCommon;
 Vue.prototype.$validation = helperValidation;

@@ -16,6 +16,20 @@
                 <v-card-text class="mt-4">
                        
                   <v-form ref="form" v-model="valid" lazy-validation>
+
+                       <v-select
+                        :items="categories"
+                        label="Thể loại"
+                        dense
+                        outlined
+                        return-object
+                        item-text="name"
+                         :rules="[
+                          $validation.required(form.category, 'Thể loại')
+                        ]"
+                        v-model="form.category"
+                      ></v-select>
+
                       <v-text-field
                         v-model="form.title"
                         :rules="[
@@ -112,14 +126,6 @@
                   >
                   </btn-save>
                   
-                  <btn-cancel 
-                    :outlined="true"
-                    title="Close"
-                    v-on:action="close()"
-                    color="blue darken-1"
-                    type="close"
-                  >
-                  </btn-cancel>
                 </v-card-actions>
             </v-card>
           </v-col>
@@ -135,6 +141,7 @@
 import Menu from './components/Menu.vue';
 
 // services
+import CategoryService from "@/services/category";
 import CourseService from "@/services/course";
 import CookieService from "@/services/cookie";
 
@@ -166,15 +173,17 @@ export default {
             preview: false,
           }
         ],
+        category: "",
       },
       chapters: Array.from({length: 10}, (_, i) => i + 1),
       chapterCount: "",
       techers: [],
+      categories: []
     }
   },
 
   created(){
-
+    this.getCategoryWithoutParent();
   },
 
   methods: {
@@ -193,12 +202,26 @@ export default {
       })
     },
 
+    async getCategoryWithoutParent()
+    {
+      var noParent = true
+      const res = await CategoryService.fetchAll(noParent);
+      if(res.status === 200)
+      {
+        this.categories = res.data.data;
+      }
+    },   
+
     async save()
     {
       if (this.$refs.form.validate()) 
       {
-        this.$store.dispatch("components/progressLoading", { option: "show" });
+        // this.$store.dispatch("components/progressLoading", { option: "show" });
         this.form.priceFinal = this.form.price;
+        this.form.categoryId = this.form.category.id;
+
+        console.log(this.form);
+        return false;
 
         const res = await CourseService.store(this.form);
         if(res.status === 201)

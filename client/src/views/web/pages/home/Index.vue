@@ -128,6 +128,9 @@ export default {
 
 	methods: {
 		async retrieveData(){
+
+			 this.$store.dispatch("components/actionProgressHeader", { option: "show" })
+
 			const newestCoursesResponse = await HomeService.getNewestCourses();
 			if(newestCoursesResponse.status === 200){
 				this.newestCourses = newestCoursesResponse.data.data;
@@ -148,6 +151,8 @@ export default {
 			if(mostRatingCoursesResponse.status === 200){
 				this.mostRatingCourses = mostRatingCoursesResponse.data.data;
 			}
+
+			 this.$store.dispatch("components/actionProgressHeader", { option: "hide" })
 		}
 	}
 }

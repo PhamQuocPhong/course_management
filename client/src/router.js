@@ -209,6 +209,7 @@ const routes = [
         component: StudentProfile,
         meta: {
           requireAuth: true,
+          roleId: 3 // student
         },
         children: [
           {
@@ -239,6 +240,7 @@ const routes = [
         component: TeacherProfile,
          meta: {
           requireAuth: true,
+          roleId: 2 // teacher
         },
         children: [
           {
@@ -289,12 +291,20 @@ import CookieService from "@/services/cookie";
 router.beforeEach((to, from, next) => {
 
   const accessToken = CookieService.get("accessToken");
+  const userInfo = CookieService.get("userInfo");
 
   if (to.matched.some(m => m.meta.requireAuth)) {
     if (to.name !== "login" && !accessToken) {
-
       next({ name: "login" });
     } else {
+        
+      if(to.matched.some(m => m.meta.roleId === userInfo.roleId))
+      {
+          next();
+      }else{
+        next({ name: "forbidden"})
+      }
+
       next();
     }
     return next();
