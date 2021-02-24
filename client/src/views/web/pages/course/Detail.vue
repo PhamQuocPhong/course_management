@@ -95,24 +95,27 @@
 				            >
 				            </v-row>
 
-				            <p>{{ course.description }}</p>
-
+				         
 				            <div class="my-4 subtitle-1 red--text font-weight-bold">
 				              {{ course.price | toCurrency }} 
 				            </div>
 
-				             <div>
-				              <p> Số học viên: <code>{{ course.studentTotal || 0 }}</code> </p>
+				            <div>
+				              <p> <span class="font-weight-bold" >Số học viên: </span> <code>{{ course.studentTotal || 0 }}</code> </p>
 				            </div>
 
-				            <div class="my-4 subtitle-1">
+				            <div class="my-4 subtitle-1" v-if="course.promotions.length">
 				              <h2 class="font-weight-bold mb-2">Ưu đãi: </h2>
 
 				              <div v-for="(promotion, index) in course.promotions">
 				              	<span class=" red--text ">{{ promotion.name }}</span>
-				              	<p>{{ promotion.description }}</p>
+				              	<p>  {{ promotion.description }}</p>
 				              </div>
 				            </div>
+
+				             <div class="my-4 subtitle-1">
+				             	  <p>  <span class="font-weight-bold" >Mô tả: </span> {{ course.description }}</p>
+				             </div>
 
 				        </v-card-text>
 
@@ -142,7 +145,7 @@
 				              ></v-rating>
 				              	<v-spacer></v-spacer>
 
-				              	<v-btn v-if="myCourseIds.includes(course.id)" 
+				              	<v-btn v-if="myCourseIds.includes(course.id) || joined" 
 				              	outlined small color="primary" 
 				              	@click="addRating(course)"
 				              	>

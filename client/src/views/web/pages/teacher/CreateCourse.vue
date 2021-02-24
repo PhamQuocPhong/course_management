@@ -216,12 +216,9 @@ export default {
     {
       if (this.$refs.form.validate()) 
       {
-        // this.$store.dispatch("components/progressLoading", { option: "show" });
+        this.$store.dispatch("components/progressLoading", { option: "show" });
         this.form.priceFinal = this.form.price;
         this.form.categoryId = this.form.category.id;
-
-        console.log(this.form);
-        return false;
 
         const res = await CourseService.store(this.form);
         if(res.status === 201)
