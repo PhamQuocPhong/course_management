@@ -130,7 +130,7 @@ export default {
           { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/teacher/profile/my_courses" },
           { title: "Logout", icon: "mdi-login-variant", link: "/logout" }
         ];
-      }else if(this.userInfo.roleId === 3){
+      }else{
         this.menuInfo = [
           { title: "Thông tin", icon: "mdi-account-circle", link: "/student/profile/info" },
           { title: "Khóa học của tôi", icon: "mdi-plus-box-outline", link: "/student/profile/my_courses" },
@@ -154,14 +154,7 @@ export default {
   },
 
   mounted() {
-    if(this.userInfo)
-    {
-      if(this.userInfo.roleId === 1){
-          this.menuInfo.unshift({
-            title: "Quản lý admin", icon: "mdi-clipboard-list", link: "/admin/users"
-          });
-      }
-    }
+
     this.$vuetify.theme.dark = this.getTheme();
   },
 
