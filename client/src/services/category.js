@@ -20,10 +20,23 @@ export default {
       }
    },
 
-   async fetchByCondition(condition)
+   async fetchAllByCondition(condition)
    {
       try {
         return  await axios.get(this.rootURL, {
+          params: condition
+        });
+        return result;
+      } catch (error) {
+         return helperCommon.getError(error) || false; 
+      }
+   },
+
+   async fetchByCondition(condition)
+   {
+
+      try {
+        return  await axios.get(this.rootURL + 'getByCondition', {
           params: condition
         });
         return result;

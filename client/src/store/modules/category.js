@@ -9,6 +9,7 @@ export  const getters = {
 
     currentPage: state => state.currentPage,
     pageCounts: state => state.pageCounts,
+    itemsPerPage: state => state.itemsPerPage
 
 };
 
@@ -16,7 +17,7 @@ export const getDefaultState = () => ({
     categories: [],
     category: {},
     currentPage: 1,
-    itemPerPage: 20,
+    itemsPerPage: 20,
     pageCounts: 1,
 
 })
@@ -36,8 +37,6 @@ export  const actions = {
 
     async fetchPaging({ commit }, payload) {
 
-      const currentPage = payload.page;
-      const searchkey = payload.searchkey || null;
       var query = payload;
       const res = await CategoryService.fetchPaging(query);
       if(res.data){
