@@ -125,6 +125,20 @@
             </v-responsive>
           </v-layout>
 
+          <v-row justify="center">
+            <v-col cols="8">
+              <v-container class="max-width">
+                 <pagination-custom
+                  :pageCounts="pageCounts"
+                  :currentPage.sync="currentPage"
+                  :key="currentPage"
+                  @change="nextPage()"
+                 >
+                   
+                 </pagination-custom>
+              </v-container>
+            </v-col>
+          </v-row>
         </v-card>
       </v-flex>
     </v-row>
@@ -152,8 +166,6 @@ export default {
 
   data(){
     return {
-      currentPage: this.$constant.pagination.CURRENT_PAGE,
-      itemsPerPage: this.$constant.pagination.ITEMS_PER_PAGE,
       isLoading: false,
     }
   },
@@ -163,7 +175,24 @@ export default {
       get(){
         return this.$store.getters["categories/categories"];
       }
-    }
+    },
+    itemsPerPage: {
+      get(){
+        return this.$store.getters["categories/itemsPerPage"];
+      }
+    },
+    currentPage: {
+      get(){
+         return this.$store.getters["categories/currentPage"]
+      },
+      set(page)
+      {
+        this.$store.commit('categories/UPDATE_CURRENT_PAGE', page)
+      }
+    },
+     pageCounts(){
+      return this.$store.getters["categories/pageCounts"]
+    },
   },
 
   watch: {
@@ -185,13 +214,26 @@ export default {
     retrieveData(query)
     {
       var payLoad = query;
-      payLoad.page = this.currentPage;
+      payLoad.currentPage = this.currentPage;
 
       this.$store.dispatch("components/actionProgressHeader", { option: "show" })
       this.isLoading = true;
       this.$store.dispatch("categories/fetchPaging", payLoad);
     },
 
+    nextPage(){
+
+      var query = Object.assign({}, this.$route.query);
+      query.page = this.currentPage;
+
+      delete query.currentPage;
+
+      this.$router.push({
+            query: query
+      });
+
+      this.retrieveData(query);
+    },
 
     edit(item){
       this.$router.push({ name: "adminCategoryEdit", params: {id: item.id}});
@@ -207,9 +249,9 @@ export default {
       var condition = {
         parentId: item.id
       }
-      const findChild = await CategoryService.fetchByCondition(condition);
 
-      if(findChild.data.data.length > 0)
+      const findChild = await CategoryService.fetchByCondition(condition);
+      if(findChild.data.data)
       {
         toastr.error("Không thể xóa", this.$lang.ERROR, { timeOut: 1000 });
         return;

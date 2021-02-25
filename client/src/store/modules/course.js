@@ -6,7 +6,7 @@ export  const getters = {
     course: state => state.course,
     currentPage: state => state.currentPage,
     pageCounts: state => state.pageCounts,
-     itemsPerPage: state => state.itemsPerPage
+    itemsPerPage: state => state.itemsPerPage
 };
 
 export const getDefaultState = () => ({

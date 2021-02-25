@@ -20,8 +20,6 @@ let getAllCategory = async (req, res) => {
             [Op.ne]: null
         }
     }
-
-
     try
     {
         const categories = await categoryModel.findAll({
@@ -52,6 +50,30 @@ let getMenu = async (req, res) => {
     }
 }
 
+let getByCondition = async (req, res) => {
+
+    var condition = {};
+
+    if(req.query.parentId)
+    {
+        condition.parentId = {
+            [Op.eq]: req.query.parentId
+        }
+    }
+
+
+    try
+    {
+        const category = await categoryModel.findOne({
+            where: condition,
+        });
+
+        return res.status(200).json({message: 'Success!', data: category})
+    }
+    catch(error) {
+        return res.status(500).json(error)
+    }
+}
 
 
 let getCategoryPaging = async (req, res) => {
@@ -81,7 +103,8 @@ let getCategoryPaging = async (req, res) => {
             data.push(categories[i]);
         }
 
-        const counts  = Math.ceil(categoryModel.count() / itemPerPage ) 
+        const counts  = Math.ceil( await categoryModel.count() / itemPerPage ) ;
+
         return res.status(200).json({message: 'Success', data: data, pageCounts: counts })
     }
     catch(error)
@@ -110,10 +133,15 @@ let show = async (req, res) => {
 
 let store = async (req, res) => {
 
-    var form = req.body
+    var form = req.body;
+
 
     try{
-        var data = await categoryModel.create(form);
+        var data = await categoryModel.create({
+            name: form.name,
+            description: form.description,
+            parentId: form.parentId === '' ? null : null
+        });
         return res.status(200).json({message: 'Success', data: data})
  
     }catch(error){
@@ -491,6 +519,7 @@ module.exports = {
     update,
     remove,
     getCategoryPaging,
+    getByCondition,
 
     getMenu,
     getAllCategory,
