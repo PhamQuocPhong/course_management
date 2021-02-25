@@ -63,6 +63,8 @@ export default {
                 { timeOut: 1000 }
               );
 
+                      this.$store.dispatch("components/progressLoading", { option: "hide" })
+
               this.$router.push('/login');
             } else if (res.status === 401) {
 

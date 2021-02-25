@@ -6,7 +6,7 @@ const courseModel = require('../models/course');
 const courseStudentModel = require('../models/course_student');
 const courseTeacherModel = require('../models/course_teacher');
 const roleModel = require('../models/role');
-
+const rateModel = require('../models/rate');
 const helper = require('../helpers/helper');
 
 const { Op } = require("sequelize");
@@ -53,7 +53,6 @@ let store = async (req, res) => {
     try
     {   
 
-        console.log(form.email);
         if(userModel.count({where: {
             email: form.email
         }}) > 0 )
@@ -185,11 +184,9 @@ let removeElementWatchList = async (req, res) => {
                 courseId
             }
         })
-        console.log(watchList)
-        if(watchList)
-        
+
+        if(watchList)  
         {
-            console.log("yesy")
             await watchListModel.destroy({
                 where: {
                     userId,
@@ -304,12 +301,11 @@ let addCourseWatchList = async (req, res) => {
     catch(error) {
 		return res.status(500).json(error)
 	}
-   
 }
 
 let ratingCourse = async (req, res) => {
     const {point, comment} = req.body;
-    const courseId = req.params.courseId;
+    const courseId = req.body.courseId;
     var decoded = req.decoded;
     var userId = decoded.userId;
 
@@ -317,23 +313,67 @@ let ratingCourse = async (req, res) => {
     {
         if(await courseStudentModel.findOne({where:{userId}} ))
         {
-            if(!await rateModel.findOne({
+            var find = await rateModel.findOne({
                 where: {
                     userId,
                     courseId
                 }
-             }))
+             })
+
+            if(!find)
              {
-                var rating = await rateModel.create({
+                var newRating = await rateModel.create({
                     userId,
                     courseId,
                     point,
                     comment
                  })
+
+                 var findRating = await rateModel.findOne({
+                    where: {
+                        id: newRating.id
+                    },
+                    include: [
+                        {
+                            model: userModel
+                        }
+                    ]
+                });
+
+                 return res.status(200).json({message: 'Success!', data: findRating})
+             }else{
+                // case update rating
+
+                await rateModel.update(
+                    {
+                        userId,
+                        courseId,
+                        point,
+                        comment
+                    },
+                    {
+                        where: {
+                            id: find.id
+                        },
+                        returning: true,
+                        plain: true
+                })
+
+                var findRating = await rateModel.findOne({
+                    where: {
+                        id: find.id
+                    },
+                    include: [
+                        {
+                            model: userModel
+                        }
+                    ]
+                });
+
+
+                return res.status(200).json({message: 'Success!', data: findRating})
              }
-            
         }
-        return res.status(200).json({message: 'Success!'})
     }
     catch(error) {
 		return res.status(500).json(error)
@@ -457,11 +497,25 @@ let learnCourse = async (req, res) => {
     catch(error) {
 		return res.status(500).json(error)
 	}
-   
 }
 
-module.exports = {
+let getMyRatingOfCourse = async (req, res) => {
 
+    const userId = req.decoded.userId;
+    const courseId = req.params.courseId;
+    const data = await rateModel.findOne({
+        where: {
+            courseId: req.params.courseId,
+            userId: userId
+        }
+    })
+
+    return res.status(200).json({message: "Success", data: data})
+}
+
+
+module.exports = {
+    getMyRatingOfCourse,
     getUserPaging,
     show,
     store,
