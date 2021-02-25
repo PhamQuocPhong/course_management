@@ -122,8 +122,6 @@ let verifyOTP = async (req, res) => {
           }
         }
       });
-
-      console.log(activeEmail);
      
       if(activeEmail)
       {

@@ -4,41 +4,48 @@
       <v-dialog
         persistent
         max-width="500"
-        v-model="isVisibleFormRating"
+        v-model="isVisibleFormUpdateChapter"
       >
         <v-card
           class="pb-8"
         >
             <v-card-title primary-title style="width:100%;">
-              {{ title }}
+              Thêm chương
             </v-card-title>
 
             <v-card-text>
               <v-form ref="form" v-model="valid" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                      <v-card-subtitle>Vote</v-card-subtitle>
-                      <v-rating
-                        v-model="form.point"
-                        color="amber"
-                        dense
-                        half-increments
-                        
-                        size="20"
-
-                      >
-                      </v-rating>
+                    <v-text-field
+                      v-model="getChapter.name"
+                      :rules="[
+                        $validation.required(getChapter.name, 'Tiêu đề')
+                      ]"
+                      label="Tiêu đề"
+                      required
+                    ></v-text-field>
                   </v-col>
+
+                   <v-col cols="12">
+
+                  <v-checkbox
+                    v-model="getChapter.preview"
+
+                    label="Xem trước"
+                  ></v-checkbox>
+                   </v-col>
+
 
                   <v-col cols="12">
                      <v-textarea
                      outlined
                      rows="5"
-                     v-model="form.comment"
-                     label="Nội dung"
+                     v-model="getChapter.description"
+                     label="Mô tả"
                      class="no-resize"
                      :rules="[
-                        $validation.required(form.comment, 'Nội dung')
+                        $validation.required(getChapter.description, 'Mô tả')
                       ]"
                      >
                      </v-textarea>
@@ -73,90 +80,76 @@
 
 <script>
 
-import UserService from "@/services/user";
+import ChapterService from "@/services/chapter";
 import CookieService from "@/services/cookie";
 
 export default {
 
   props: {
-    isVisibleFormRating: {
+    isVisibleFormUpdateChapter: {
       type: Boolean,
       default: false,
     },
-    title: String,
+    chapterIndex: Number,
+    data: [Array, String],
     course: Object,
-    myRating: Object,
-    ratings: Array,
+    chapter: Object,
   },
 
-  created()
-  {
-    if(this.myRating)
-    {
-      this.form = this.myRating;
-    }
-  },
 
   data() {
     return {
-      form: {
-        comment: "",
-        point: 1,
-        courseId: this.course.id,
-        userInfo: CookieService.get('userInfo')
-      },
       valid: false,
     }
   },
-  
+
+
   computed: {
-    getRatings: {
+    getCourse: {
       get()
       {
-        return this.ratings;
+        return this.course
       }
-    }
+    },
+
+    getChapter: {
+      get(){
+        return this.chapter
+      }
+    },
   },
 
   methods: {
     close(){
-     this.$emit('update:isVisibleFormRating', false) 
+     this.$emit('update:isVisibleFormUpdateChapter', false) 
     },
 
     async save(){
-
-
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("components/progressLoading", { option: "show" })
-        const res = await UserService.ratingCourse(this.course.id, this.form);
+
+        this.$store.dispatch("components/progressLoading", { option: "show" });
+        const res = await ChapterService.update(this.getChapter.id, this.getChapter);
         if(res.status === 200)
         { 
+
            toastr.success(
-              "<p> Đánh giá thành công <p>",
+              "<p> Cập nhật thành công <p>",
               "Success",
-              { timeOut: false }
+              { timeOut: 3000 }
             );
 
-           if(!this.myRating)
-           {
-              this.getRatings.unshift(res.data.data);
-           }else{
-
-            var indexRating = this.getRatings.findIndex(item => item.id === res.data.data.id);
-            this.getRatings[indexRating] = res.data.data;
-           }
-
-          this.$emit("update: course", this.getCourse); 
-          this.$emit('update:isVisibleFormRating', false);
-          this.$store.dispatch("components/progressLoading", { option: "hide" });
-          this.$forceUpdate();
-
+            this.getCourse.courseChapters[this.chapterIndex].name  = res.data.data.name;
+            this.getCourse.courseChapters[this.chapterIndex].preview  = res.data.data.preview;
+            this.getCourse.courseChapters[this.chapterIndex].description  = res.data.data.description;
+            
+           this.$store.dispatch("components/progressLoading", { option: "hide" });
+           this.$emit('update:isVisibleFormUpdateChapter', false);
         }
         else{
            toastr.error(
-              "<p> Đánh giá thất bại <p>",
+              "<p> Cập nhật thất bại <p>",
               "Error",
-              { timeOut: false }
+              { timeOut: 3000 }
             );
             this.$store.dispatch("components/progressLoading", { option: "hide" });
         }

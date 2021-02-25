@@ -24,7 +24,7 @@ export default {
   async delete(id)
   {
      try {
-      return await axios.delete(this.rootURL + `update/${id}`);
+      return await axios.delete(this.rootURL + `delete/${id}`);
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }

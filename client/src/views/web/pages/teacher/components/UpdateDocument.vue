@@ -148,7 +148,7 @@ export default {
         if(res.status === 200)
         { 
 
-          this.getChapter.courseDocuments[this.courseDocument] = res.data.data;
+          this.getChapter.courseDocuments[this.documentIndex] = res.data.data;
 
            toastr.success(
               "<p> Cập nhật  thành công <p>",

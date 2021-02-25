@@ -4,7 +4,7 @@
 		<v-row >
 			<v-col cols="12" sm="8" md="8" lg="8">
 
-				<v-card >
+				<v-card v-if="course">
 					<v-img v-if="course.image"  :src="course.image"></v-img>
 
 					<v-img v-else src="@/assets/img/default.jpg"></v-img>
@@ -104,7 +104,7 @@
 				              <p> <span class="font-weight-bold" >Số học viên: </span> <code>{{ course.studentTotal || 0 }}</code> </p>
 				            </div>
 
-				            <div class="my-4 subtitle-1" v-if="course.promotions.length">
+				            <div class="my-4 subtitle-1" v-if=" course.promotions && course.promotions.length">
 				              <h2 class="font-weight-bold mb-2">Ưu đãi: </h2>
 
 				              <div v-for="(promotion, index) in course.promotions">
@@ -156,8 +156,40 @@
 				            <v-card-text>
 				              <h3>Lượt đánh giá: </h3>
 
-				              <m-rating :ratings.sync="course.rates" v-show="course.rates"  >
-				              </m-rating>
+				             <v-list two-line >
+							      <v-list-item-group
+							        active-class="pink--text"
+							        multiple
+							      >
+							        <template  v-for="(item, index) in course.rates"> 
+							          <v-list-item  :key="index">
+							            <template v-slot:default="{ active }">
+							              <v-list-item-content>
+							                <v-list-item-title v-text="item.user.name"></v-list-item-title>
+
+							                <v-list-item-subtitle v-text="item.comment"></v-list-item-subtitle>
+							              </v-list-item-content>
+
+							              <v-list-item-action>
+							                    <v-rating
+							                        :value="item.point"
+							                        color="amber"
+							                        dense
+							                        half-increments
+							                        readonly
+							                        size="20"
+							                      ></v-rating>
+							              </v-list-item-action>
+							            </template>
+							          </v-list-item>
+
+							          <v-divider
+							            v-if="index < course.rates.length - 1"
+							           
+							          ></v-divider>
+							        </template>
+							      </v-list-item-group>
+							  </v-list>
 							</v-card-text>
 				      
 				        </v-card>
@@ -196,7 +228,9 @@
 		<m-add-rating
 		v-if="isVisibleFormRating"
 		title="Đánh giá"
+		:ratings.sync="course.rates"
 		:course="course"
+		:myRating.sync="myRating"
 		:isVisibleFormRating.sync="isVisibleFormRating"
 		>
 		</m-add-rating>
@@ -244,7 +278,8 @@ export default {
 	        myCourseIds: [],
 	        myFavoriteCourseIds: [],
 	        liked: false,
-	        joined: false
+	        joined: false,
+	        myRating: {},
 		}
 	},
 
@@ -274,6 +309,7 @@ export default {
 		{
 			this.getMyCourses();
 			this.getMyFavoriteCourses();
+			this.getMyRatingOfCourse(this.$route.params.id);
 		}
 
 		this.retrieveData();
@@ -356,12 +392,23 @@ export default {
 			}
 		},
 
-		retrieveData()
+		async getMyRatingOfCourse(courseId)
+		{
+	      	const res = await ProfileService.getMyRatingOfCourse(courseId);
+		      if(res.status === 200)
+		      {
+		      	this.myRating = res.data.data;
+		      }
+		},
+
+		async retrieveData()
 		{
 	      var id = this.$route.params.id;
 	      this.$store.dispatch("components/actionProgressHeader", { option: "show" })
-
 	      setTimeout(async () => {
+
+
+
 	      	var res = await CourseService.fetch(id);
 	      	this.course = res.data.data
 	      	this.relatedCourses = res.data.courseList;

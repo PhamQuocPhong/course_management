@@ -44,8 +44,17 @@
           <v-row>
             <v-col cols="12" v-for="chapter, index in getCourse.courseChapters" :key="index">
               <v-card-text >
-                <h3 class="red--text">  Chương {{ index+=1 }}:   {{ chapter.name }}</h3>
-                <v-btn class="mt-2" color="primary" outlined small @click="addDocument(chapter)"> Thêm tài liệu </v-btn>
+                <h3 class="red--text">  Chương {{  showIndexChapter(index) }}:   {{ chapter.name }}</h3>
+                <p> <span class="font-weight-bold">Mô tả:</span>  {{ chapter.description }}  </p>
+                <div class="d-flex">
+                  <v-btn class="mt-2" color="primary" outlined small @click="addDocument(chapter)"> Thêm tài liệu </v-btn>
+
+                  <v-spacer></v-spacer>
+
+                  <v-btn class="mt-2" color="primary" outlined small @click="updateChapter(getCourse, chapter, index)"> Cập nhật chương </v-btn>
+                  <v-btn class="mt-2 ml-2" color="red" outlined small @click="removeChapter(chapter, index)" > Xóa chương </v-btn>
+                </div>
+
 
                 <v-expansion-panels
                 multiple
@@ -101,6 +110,7 @@
   v-if="isVisibleFormUpdateCourse"
   :isVisibleFormUpdateCourse.sync="isVisibleFormUpdateCourse"
   :course.sync="getCourse"
+   :chapter.sync="chapter"
   >
 
   </m-update-course>
@@ -111,6 +121,15 @@
   :course.sync="getCourse"
   >
   </m-add-chapter>
+
+  <m-update-chapter
+  v-if="isVisibleFormUpdateChapter"
+  :isVisibleFormUpdateChapter.sync="isVisibleFormUpdateChapter"
+  :course.sync="getCourse"
+   :chapter.sync="chapter"
+     :chapterIndex.sync="chapterIndex"
+  >
+  </m-update-chapter>
 
    <m-add-document
    v-if="isVisibleFormAddDocument"
@@ -134,11 +153,13 @@
 <script type="text/javascript">
 // services
 import CourseService from "@/services/course";
+import ChapterService from "@/services/chapter";
 import DocumentService from "@/services/document";
 
 // component
 import Menu from './components/Menu.vue';
 import AddChapter from './components/AddChapter.vue';
+import UpdateChapter from './components/UpdateChapter.vue';
 import AddDocument from './components/AddDocument.vue';
 import UpdateDocument from './components/UpdateDocument.vue';
 
@@ -152,6 +173,7 @@ export default {
   components: {
     'm-menu': Menu,
     'm-add-chapter': AddChapter,
+    'm-update-chapter': UpdateChapter,
     'm-add-document': AddDocument,
     'm-update-document': UpdateDocument,
 
@@ -168,8 +190,9 @@ export default {
       isVisibleFormAddChapter: false,
       isVisibleFormAddDocument: false,
       isVisibleFormUpdateDocument: false,
-
+      isVisibleFormUpdateChapter: false,
       documentIndex: 0,
+      chapterIndex: 0,
     }
   },
 
@@ -208,15 +231,47 @@ export default {
       }
     },
 
+    showIndexChapter(index)
+    {
+      return index+=1;
+    },
+
     addChapter()
     {
       this.isVisibleFormAddChapter = true;
+    },
+
+    async removeChapter(chapter, chapterIndex)
+    {
+      var conf = confirm("Bạn muốn xóa chương này?");
+      if(conf)
+      {
+        const res = await ChapterService.delete(chapter.id);
+        if(res.status === 200)
+        {
+          this.getCourse.courseChapters.splice(chapterIndex, 1);
+          toastr.success(
+            "<p> Xóa thành công <p>",
+            "Success",
+            { timeOut: 3000 }
+          );
+
+          this.$forceUpdate();
+        }
+      }
     },
 
     addDocument(chapter)
     {
       this.chapter = {...chapter};
       this.isVisibleFormAddDocument = true;
+    },
+
+    updateChapter(course, courseChapter, chapterIndex)
+    {
+      this.chapter = {...courseChapter };
+      this.chapterIndex = chapterIndex;
+      this.isVisibleFormUpdateChapter = true;
     },
 
     updateDocument(chapter, courseDocument, documentIndex)

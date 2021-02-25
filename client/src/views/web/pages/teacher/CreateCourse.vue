@@ -62,6 +62,11 @@
                       >
                       </m-dropzone>
 
+
+                      <v-checkbox v-model="form.status" label="Tình trạng">
+                        
+                      </v-checkbox>
+
                       <v-text-field
                         v-model="form.description"
                         :rules="[
@@ -166,6 +171,7 @@ export default {
         description: "",
         fullDescription: "",
         avatar: "",
+        status: false,
         chapters: [
           {
             name: "",

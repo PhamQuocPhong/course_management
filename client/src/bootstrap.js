@@ -78,7 +78,7 @@ const gauthOption = {
   prompt: process.env.VUE_APP_GOOGLE_PROMPT
 };
 
-Vue.use(gAuth, gauthOption);
+// Vue.use(gAuth, gauthOption);
 
 Vue.prototype.$helper = helperCommon;
 Vue.prototype.$validation = helperValidation;

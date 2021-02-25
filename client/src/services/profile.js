@@ -73,5 +73,15 @@ export default {
     } catch (error) {
        return helperCommon.getError(error) || false; 
     }
+  },
+
+    async getMyRatingOfCourse(courseId)
+  {
+    try {
+      return await axios.get(this.rootURL + `getMyRatingOfCourse/${courseId}`);
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
   }
+
 };

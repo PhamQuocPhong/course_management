@@ -31,7 +31,7 @@
                     <v-expansion-panel-header>
                       <h3>{{ courseDocument.name }} </h3>
                     </v-expansion-panel-header>
-                    <v-expansion-panel-content>
+                    <v-expansion-panel-content  v-if="courseDocument.preview">
 
                       <div>
                          <p >

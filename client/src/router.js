@@ -295,6 +295,7 @@ router.beforeEach((to, from, next) => {
 
   if (to.matched.some(m => m.meta.requireAuth)) {
     if (to.name !== "login" && !accessToken) {
+      console.log(accessToken)
       next({ name: "login" });
     } else {
         

@@ -9,6 +9,8 @@ router.get('/favorite_courses', userController.getWatchList);
 router.post('/favorite_courses/:course_id/unlike', userController.removeElementWatchList);
 router.get('/my_courses', userController.getCourseJoin);
 
+router.get('/getMyRatingOfCourse/:courseId', userController.getMyRatingOfCourse);
+
 //Teacher
 router.get('/my_courses_teach', userController.getTeachList);
 
