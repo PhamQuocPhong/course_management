@@ -59,7 +59,8 @@
 
                               </v-row>
                                <v-row class="pa-4">
-                                  <v-btn outlined color="red" small @click="removeFavoriteCourse(item.course.id, index)">Bỏ thích</v-btn>
+                                   <v-btn outlined color="primary" small @click="viewDetail(item.course.id)">Xem </v-btn>
+                                  <v-btn outlined color="red" class="ml-2" small @click="removeFavoriteCourse(item.course.id, index)">Bỏ thích</v-btn>
                                 </v-row>
                             </v-card-text>
                         </v-col>
@@ -129,6 +130,15 @@ export default {
         {
           this.favoriteCourses.splice(index, 1);
         }
+    },
+    viewDetail(courseId)
+    {
+      this.$router.push({
+        name: "courseDetail",
+        params: {
+          id: courseId
+        }
+      })
     }
   },
 
