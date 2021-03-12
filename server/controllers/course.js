@@ -12,7 +12,6 @@ const rateTotalModel = require('../models/rate_total');
 const watchListModel = require('../models/watch_list');
 const courseStudentModel = require('../models/course_student');
 
-
 const slugify = require('slugify');
 const helper = require('../helpers/helper');
 
@@ -85,6 +84,8 @@ let getCoursePaging = async (req, res) => {
     var page = req.query.page || 1;
     var itemPerPage = req.query.itemPerPage || 20;
     var offset = helper.calcPaginate(page, itemPerPage);
+
+    
     
     try
     {

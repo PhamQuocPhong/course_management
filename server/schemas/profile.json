@@ -1,0 +1,16 @@
+{
+    "required": [
+      "name",
+      "email"
+    ],
+    "additionalProperties": true,
+    "properties": {
+      "name":
+      {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      }
+    }
+  }
