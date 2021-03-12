@@ -54,7 +54,7 @@
                     color="success" 
                     small
                     >
-                      Edit
+                      Sửa
                     </v-btn>
 
                     <v-divider  v-show="!edit" class="mx-2" vertical> </v-divider>
@@ -65,7 +65,7 @@
                     small
                     @click="handleUpdateUserInfo()"
                     >
-                      Save
+                      Lưu 
                     </v-btn>
 
                     <v-divider  v-show="edit" class="mx-2" vertical> </v-divider>
@@ -77,7 +77,7 @@
                       class="mr-4"
                       small
                     >
-                      Cancel
+                      Hủy
                     </v-btn>
 
 
@@ -157,7 +157,7 @@
                     small
                     v-on:click="handleChangePassword()"
                     >
-                      Save
+                      Lưu mật khẩu
                     </v-btn>
 
                     <v-divider  v-show="isChangePassword" class="mx-2" vertical> </v-divider>
@@ -169,7 +169,7 @@
                       class="mr-4"
                       small
                     >
-                      Cancel
+                      Hủy
                     </v-btn>
                   </v-row>
                 </v-container>

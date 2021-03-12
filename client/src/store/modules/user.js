@@ -54,6 +54,15 @@ export  const actions = {
       }
     },
 
+    async update({ commit }, payload)
+    {
+      var user = payload;
+      console.log(user);
+      return false;
+      const res = await UserService.update(user.id, user);
+
+    },
+
     async remove({ commit }, payload)
     {
       const user = payload;
@@ -93,6 +102,7 @@ export  const mutations = {
     FETCH(state, user){
       state.user = user;
     },
+
 
     REMOVE(state, user)
     {

@@ -289,9 +289,9 @@ export default {
       this.retrieveData(query);
     },
 
-    handleStatus(item)
+    handleStatus(user)
     {
-      var payload = item;
+      var payload = user;
       this.$store.dispatch("users/update", payload);
     },
 

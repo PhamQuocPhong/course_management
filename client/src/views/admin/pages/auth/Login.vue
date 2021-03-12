@@ -112,8 +112,6 @@ export default {
             	this.$store.dispatch("components/progressLoading", { option: "hide" })
             }
 
-            
-
           // case error
           }else{
             toastr.error(res.data.message, this.$lang.ERROR, { timeOut: 1000 });

@@ -54,11 +54,18 @@
                               size="14"
                             ></v-rating>
 
+
+                          <div class="my-4 subtitle-1">
+                            <v-icon :color=" item.course.status  ? `green` : ``">mdi-check-bold</v-icon>
+                            <span class="ml-2"> {{ item.course.status ? `Đã hoàn thành` : `Chưa hoàn thành` }} </span>
+                          </div>
+
                           <div class="my-4 subtitle-1 red--text font-weight-bold">
                             <p> Số học viên: <code>{{ item.course.studentTotal || 0 }}</code> </p>
                           </div>
 
-                          <v-btn color="primary" small outlined @click="viewDetail(item.course.id)" >Xem</v-btn>
+                          <v-btn color="primary" small outlined @click="viewDetail(item.course.id)" >Xem chi tiết</v-btn>
+                          <v-btn color="primary" small outlined @click="viewCourse(item.course.id)" class="ml-2" >Xem khóa học</v-btn>
                         
                         </v-card-text>
                     </v-col>
@@ -113,7 +120,6 @@ export default {
   methods: {
     async retrieveData(userId){
       const res = await ProfileService.getMyCourse(userId);
-      console.log(res);
       if(res.status === 200)
       {
         this.myCourses = res.data.data;
@@ -121,10 +127,18 @@ export default {
       }
     },
 
-    viewDetail(courseId)
+    viewCourse(courseId)
     {
       this.$router.push({
         name: "studentProfileCourseDetail",
+        params: { id: courseId } 
+      })
+    },
+
+     viewDetail(courseId)
+    {
+      this.$router.push({
+        name: "courseDetail",
         params: { id: courseId } 
       })
     }
