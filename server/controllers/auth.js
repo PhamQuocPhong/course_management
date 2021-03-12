@@ -198,9 +198,47 @@ let login = async (req, res) => {
 	}
 }
 
+let adminLogin = async (req, res) => {
+	const { email, password } = req.body
+
+	try {
+    const findUser = await userModel.findOne({
+      attributes: ['id','name', 'email', 'password', 'roleId'],
+      where: {
+        email: email,
+        active: true,
+        roleId: 1
+      }
+    })
+    console.log("test")
+
+    if(findUser && bcrypt.compareSync(password, findUser.password)){
+      console.log("testdn")
+      delete findUser.dataValues.password
+      const accessToken = await jwtHelper.generateToken(findUser.id, accessTokenSecret, accessTokenLife)
+      const refreshToken = await jwtHelper.generateToken(findUser.id, refreshTokenSecret, refreshTokenLife)
+
+      console.log("testdn1")
+      await userModel.update(
+        
+        {rfToken: refreshToken},
+        {where: {id: 1}},
+      );
+
+      return res.status(200).json({accessToken, refreshToken, findUser})
+    }else{
+      return res.status(401).send({message: "Email or Password is not exactly or account is not active!" })
+    }
+
+	}catch (error) {
+	    return res.status(500).json(error)
+	}
+}
+
 
 module.exports = {
     register,
     verifyOTP,
-    login
+    login,
+    adminLogin
 }

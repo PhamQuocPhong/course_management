@@ -155,6 +155,44 @@ let getCourseByCategory = async (req, res) => {
     
     try
     {
+        //
+        var listTopCourse = await courseModel.findAll({
+            limit: 3, 
+                include: [
+                    {
+                        model: courseTeacherModel, 
+                        include: [
+                        {
+                            model: userModel
+                        }]
+                    },
+                    {
+                        model: rateModel,
+                        
+                    },
+        
+                    {
+                        model: promotionModel
+                    },
+                    {
+                        model: rateTotalModel
+                        
+                    }
+                ],
+                order: [
+                  ['studentTotal', 'DESC'], 
+                  ['watchTotal', 'DESC'], 
+                  [rateTotalModel, 'total', 'DESC']
+                ],
+                where: {
+                    createdAt: {
+                        [Op.gte]: Sequelize.literal('NOW() - INTERVAL \'7d\'')
+                    }
+                }
+                
+        }).
+        then(courses => courses.map(course => course.id));
+
         var counts = 0;
         var courseData = [];
         var condition = {
@@ -191,7 +229,7 @@ let getCourseByCategory = async (req, res) => {
             ],
         });
 
-        return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(await courseModel.count({ where: condition} ) / itemPerPage ) })
+        return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(await courseModel.count({ where: condition} ) / itemPerPage ) }, listTopCourse)
     
     }
     catch(error) {
@@ -326,6 +364,43 @@ let searchCourse = async (req, res) => {
 
     try
     {
+        var listTopCourse = await courseModel.findAll({
+            limit: 3, 
+                include: [
+                    {
+                        model: courseTeacherModel, 
+                        include: [
+                        {
+                            model: userModel
+                        }]
+                    },
+                    {
+                        model: rateModel,
+                        
+                    },
+        
+                    {
+                        model: promotionModel
+                    },
+                    {
+                        model: rateTotalModel
+                        
+                    }
+                ],
+                order: [
+                  ['studentTotal', 'DESC'], 
+                  ['watchTotal', 'DESC'], 
+                  [rateTotalModel, 'total', 'DESC']
+                ],
+                where: {
+                    createdAt: {
+                        [Op.gte]: Sequelize.literal('NOW() - INTERVAL \'7d\'')
+                    }
+                }
+                
+        }).
+        then(courses => courses.map(course => course.id));
+
         var courseData  = []
         courseData = await courseModel.findAll({
             offset: offset, 
@@ -355,7 +430,7 @@ let searchCourse = async (req, res) => {
         });
 
         
-        return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(counts/itemPerPage)})
+        return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(counts/itemPerPage), listTopCourse})
     }
     catch(error) {
 		return res.status(500).json(error)
