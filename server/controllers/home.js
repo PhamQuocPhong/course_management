@@ -12,7 +12,7 @@ const rateTotalModel = require('../models/rate_total');
 const watchListModel = require('../models/watch_list');
 const courseStudentModel = require('../models/course_student');
 
-
+//Mới
 let getNewestCourse = async (req, res) => {
     try
     {
@@ -48,12 +48,12 @@ let getNewestCourse = async (req, res) => {
 		return res.status(500).json(error)
 	}
 }
-
+//Nổi bật
 let getCourseWithOrderRate = async (req, res) => {
     try
     {
         courseData = await courseModel.findAll({
-            limit: 10, 
+            limit: 3, 
                 include: [
                     {
                         model: courseTeacherModel, 
@@ -76,8 +76,15 @@ let getCourseWithOrderRate = async (req, res) => {
                     }
                 ],
                 order: [
-                  [rateTotalModel, 'total', 'DESC'], 
-                ]
+                  ['studentTotal', 'DESC'], 
+                  ['watchTotal', 'DESC'], 
+                  [rateTotalModel, 'total', 'DESC']
+                ],
+                where: {
+                    start_datetime: {
+                        [Op.gte]: moment().subtract(7, 'days').toDate()
+                    }
+                }
                 
         });
         return res.status(200).json({message: 'Success!', data: courseData})
@@ -87,7 +94,7 @@ let getCourseWithOrderRate = async (req, res) => {
 		return res.status(500).json(error)
 	}
 }
-
+//Xem nhiều
 let getCourseWithOrderWatchTotal = async (req, res) => {
     try
     {
@@ -131,7 +138,7 @@ let getCourseWithOrderStudentTotal = async (req, res) => {
     try
     {
         courseData = await courseModel.findAll({
-            limit: 10, 
+            limit: 5, 
                 include: [
                     {
                         model: courseTeacherModel, 

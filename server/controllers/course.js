@@ -368,6 +368,7 @@ let createCourse = async (req, res) => {
     var chapters = data.chapters;
     var decoded = req.decoded;
     var userId = decoded.userId;
+    console.log("data");
     try
     {
 
