@@ -14,6 +14,7 @@ const courseStudentModel = require('../models/course_student');
 
 //Mới
 let getNewestCourse = async (req, res) => {
+   
     try
     {
         const courseData = await courseModel.findAll({
@@ -81,8 +82,8 @@ let getCourseWithOrderRate = async (req, res) => {
                   [rateTotalModel, 'total', 'DESC']
                 ],
                 where: {
-                    start_datetime: {
-                        [Op.gte]: moment().subtract(7, 'days').toDate()
+                    createdAt: {
+                        [Op.gte]: Sequelize.literal('NOW() - INTERVAL \'7d\'')
                     }
                 }
                 
