@@ -34,9 +34,19 @@ export default{
 	    }
 	},
 
+	watch: {
+		data(data){
+			if(!data || data === "")
+			{
+				this.getData = "";
+			}
+		}
+	},
+
   	methods: {
 	    emitChange()
 	    {
+
 	    	var query = Object.assign({}, this.$route.query);
 	    	if(this.type === "price")
 	    	{

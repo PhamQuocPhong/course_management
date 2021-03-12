@@ -21,6 +21,10 @@
         type="rating"
         ></m-filter>
       </v-col>
+
+       <v-col cols="12" sm="3" md="3" lg="3">
+        <v-btn color="primary" outlined @click="removeSort()" >Mặc định</v-btn>
+      </v-col>
     </v-row>
     <v-row>
       <v-flex :class="{ 'pa-4': !isMobile }">
@@ -158,6 +162,7 @@ export default {
     this.retrieveData(this.$route.query);
   },
 
+
   watch: {
     courses(data){
       if(data.length){
@@ -167,20 +172,35 @@ export default {
       }
     },
     '$route' (data, oldData)
-    {
-
+    { 
       if(data.name === oldData.name){
         this.retrieveData(this.$route.query)
       }
-    }
+    },
+    // 
   },
 
   methods: {
 
+    removeSort()
+    {
+      var query = Object.assign({}, this.$route.query);
+      delete query.orderPrice;
+      delete query.orderRating;
+
+      this.filter.price = "";
+      this.filter.rating = "";
+
+      this.$router.push({
+          query: query
+      }).catch(error => {
+
+      })
+    },
 
     viewDetail(item){
        this.$router.push({
-            name: "motelDetail",
+            name: "courseDetail",
             params: {
                 id: item.id
             }
