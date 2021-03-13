@@ -6,6 +6,7 @@ import lang from "@/config/lang";
 export  const getters = {
     users: state => state.users,
     user: state => state.user,
+    teachers: state => state.teachers,
 
     currentPage: state => state.currentPage,
     pageCounts: state => state.pageCounts,
@@ -15,6 +16,7 @@ export  const getters = {
 export const getDefaultState = () => ({
     users: [],
     user: {},
+    teachers: [],
     currentPage: 1,
     itemsPerPage: 20,
     pageCounts: 1,
@@ -31,6 +33,15 @@ export  const actions = {
       if(res.status === 200){
         var data = res.data;
         commit("FETCH_ALL", data);
+      }
+    },
+
+    async fetchAllTeacher({ commit }, payload) {
+      var query = payload;
+      const res = await UserService.fetchAllTeacher();
+      if(res.status === 200){
+        var data = res.data;
+        commit("FETCH_ALL_TEACHER", data);
       }
     },
 
@@ -57,10 +68,16 @@ export  const actions = {
     async update({ commit }, payload)
     {
       var user = payload;
-      console.log(user);
-      return false;
-      const res = await UserService.update(user.id, user);
+      var form = {
+        active: user.active,
+        email: user.email
+      }
+      const res = await UserService.update(user.id, form);
 
+      if(res.status === 200)
+      {
+         toastr.success(lang.UPDATE_SUCCESS, lang.SUCCESS, { timeOut: 1000 });
+       }
     },
 
     async remove({ commit }, payload)
@@ -92,6 +109,11 @@ export  const mutations = {
 
     FETCH_ALL(state, data){
       state.users = data.data;
+    },
+
+    FETCH_ALL_TEACHER(state, data)
+    {
+      state.teachers = data.data;
     },
 
     FETCH_PAGING(state, data){

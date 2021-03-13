@@ -12,6 +12,20 @@ export default {
     }
   },
 
+  async fetchAllTeacher()
+  {
+    const roleTeacher = 2;
+    try {
+      return await axios.get(this.rootURL, {
+        params: {
+           role: roleTeacher
+        }
+      });
+    } catch (error) {
+       return helperCommon.getError(error) || false; 
+    }
+  },
+
   async updateProfile(id, data)
   {
     try {

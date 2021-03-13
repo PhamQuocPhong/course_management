@@ -1,6 +1,6 @@
 <template>
 	<v-text-field
-	    placeholder="Tìm kiếm khóa học..."
+	    placeholder="Tìm kiếm khóa học, lĩnh vực,..."
 	    item-text="name"
 	    return-object
 	    v-model="getInputSearch"

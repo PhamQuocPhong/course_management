@@ -23,7 +23,6 @@
                       <v-col cols="12">
                         <m-category-list 
                           label="Danh mục cha" 
-                          :items="categories"  
                           :data.sync="getCategory.parent"
                         >
                         </m-category-list>

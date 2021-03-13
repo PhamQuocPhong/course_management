@@ -65,31 +65,13 @@
 
                         <td class="text-center">{{ item.role.name }}</td>
 
-                         <td>
+                         <td class="text-center">
                             <v-switch
                               v-model="item.active"
                               @change="handleStatus(item)"
                             >
                             </v-switch>
                          </td>
-
-                    <!--      <td class="text-center">
-                           <btn-detail
-                            
-                            :title="$lang.DETAIL"
-                            v-on:action="edit(item)"
-                            color="blue darken-1"
-                            :classProp="`mr-4`"
-                            type="edit"
-                          ></btn-detail>
-
-                          <btn-remove 
-                            :title="$lang.REMOVE"
-                            v-on:action="remove(item)"
-                            type="remove"
-                          >
-                          </btn-remove>
-                        </td> -->
                       </tr>
                     </tbody>
                 </template>
@@ -129,24 +111,6 @@
                             >
                             </v-switch>
                          </li>
-
-                 <!--         <li class="flex-item" data-label="No.">
-                           <btn-detail
-                            
-                            :title="$lang.DETAIL"
-                            v-on:action="edit(item)"
-                            color="blue darken-1"
-                            :classProp="`mr-4`"
-                            type="edit"
-                          ></btn-detail>
-
-                          <btn-remove 
-                            :title="$lang.REMOVE"
-                            v-on:action="remove(item)"
-                            type="remove"
-                          >
-                          </btn-remove>
-                        </li> -->
 
                       </ul>
                     </td>
@@ -204,7 +168,6 @@ export default {
   data(){
     return {
       isLoading: false,
-      filterRole: {},
       roles: [
         {
           key: 1,
@@ -245,6 +208,36 @@ export default {
     pageCounts(){
       return this.$store.getters["users/pageCounts"]
     },
+
+    filterRole: {
+      get()
+      {
+        var query = Object.assign({}, this.$route.query);
+
+        if(query.role)
+        {
+          switch (+query.role){
+            case 1:
+              return this.roles[0]
+            case 2:
+              return this.roles[1]
+            case 3:
+            return this.roles[2]
+          }
+        }
+      },
+      set(data){
+        var query = Object.assign({}, this.$route.query);
+        this.$router.push({
+          query: {
+            role: data.key
+          }
+        });
+
+         query.role = data.key;
+        this.retrieveData(query);
+      }
+    },
   },
 
   watch: {
@@ -262,20 +255,6 @@ export default {
   },
 
   methods: {
-
-    filter(searchCategory)
-    {
-      var query = Object.assign({}, this.$route.query);
-
-      if(!searchCategory.id)
-      {
-        delete query.categoryId;
-      }else{
-        query.categoryId = searchCategory.id;
-      }
-
-      this.retrieveData(query);
-    },
 
     nextPage()
     {

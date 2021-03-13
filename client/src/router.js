@@ -42,6 +42,7 @@ import AuthAdminLayout from "@/views/admin/layouts/AuthLayout";
 import MainAdminLayout from "@/views/admin/layouts/MainLayout";
 
 import AdminLogin from "@/views/admin/pages/auth/Login";
+import AdminLogout from "@/views/admin/pages/auth/Logout";
 
 
 import AdminCategory from "@/views/admin/pages/category/Category";
@@ -71,6 +72,11 @@ const routes = [
         path: "login",
         component: AdminLogin,
         name: "adminLogin",
+      },
+      {
+        path: "logout",
+        component: AdminLogout,
+        name: "adminLogout",
       },
     ]
   },
@@ -295,7 +301,7 @@ router.beforeEach((to, from, next) => {
 
   if (to.matched.some(m => m.meta.requireAuth)) {
     if (to.name !== "login" && !accessToken) {
-      console.log(accessToken)
+
       next({ name: "login" });
     } else {
         

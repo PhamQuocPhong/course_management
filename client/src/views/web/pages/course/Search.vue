@@ -39,6 +39,7 @@
               <v-col v-for="(item, index) in courses" cols="12" sm="12" md="6" lg="6" :key="item.id">
                 <m-item 
                 :item="item" 
+                :specialCourses.sync="specialCourses"
                 v-on:action="viewDetail(item)"
                 >
                   
@@ -105,7 +106,8 @@ export default {
 	data(){
 		return {
 		currentPage: this.$route.query.hasOwnProperty("page") ? parseInt(this.$route.query.page) : 1,	
-		pageCounts: 1,	
+		pageCounts: 1,
+    specialCourses: [],	
 		courses: [],
 	   itemsPerPage: this.$constant.pagination.ITEMS_PER_PAGE,
 	   filter: {
@@ -231,6 +233,7 @@ export default {
         	if(res.status === 200)
           {
             this.courses = res.data.data;
+            this.specialCourses = res.data.listTopCourse;
             this.pageCounts = res.data.pageCounts;
           }
       }, 200);

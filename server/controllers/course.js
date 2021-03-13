@@ -108,6 +108,12 @@ let getCoursePaging = async (req, res) => {
            order.push([rateTotalModel, 'total', query.orderRating])
         }
 
+        var conditionTeacher = {}
+        if(query.teacherId)
+        {
+            conditionTeacher.userId = query.teacherId
+        }
+
 
         courseData = await courseModel.findAll({
             offset: offset, 
@@ -120,7 +126,8 @@ let getCoursePaging = async (req, res) => {
                     include: [
                     {
                         model: userModel
-                    }]
+                    }],
+                    where: conditionTeacher
                 },
                 {
                     model: rateModel,
@@ -132,8 +139,9 @@ let getCoursePaging = async (req, res) => {
                 },
                 {
                     model: rateTotalModel
-                }
+                },
             ],
+
         });
 
         return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(await courseModel.count({ where: condition} ) / itemPerPage ) })
@@ -160,19 +168,8 @@ let getCourseByCategory = async (req, res) => {
             limit: 3, 
                 include: [
                     {
-                        model: courseTeacherModel, 
-                        include: [
-                        {
-                            model: userModel
-                        }]
-                    },
-                    {
                         model: rateModel,
                         
-                    },
-        
-                    {
-                        model: promotionModel
                     },
                     {
                         model: rateTotalModel
@@ -225,11 +222,19 @@ let getCourseByCategory = async (req, res) => {
                 },
                 {
                     model: rateTotalModel
-                }
+                },
+                 {
+                    model: promotionModel
+                },
             ],
         });
 
-        return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(await courseModel.count({ where: condition} ) / itemPerPage ) }, listTopCourse)
+        return res.status(200).json({
+            message: 'Success!', 
+            data: courseData, 
+            pageCounts: Math.ceil(await courseModel.count({ where: condition} ) / itemPerPage ),
+            listTopCourse: listTopCourse
+        })
     
     }
     catch(error) {
@@ -368,20 +373,10 @@ let searchCourse = async (req, res) => {
             limit: 3, 
                 include: [
                     {
-                        model: courseTeacherModel, 
-                        include: [
-                        {
-                            model: userModel
-                        }]
-                    },
-                    {
                         model: rateModel,
                         
                     },
-        
-                    {
-                        model: promotionModel
-                    },
+    
                     {
                         model: rateTotalModel
                         

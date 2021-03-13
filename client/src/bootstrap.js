@@ -40,6 +40,7 @@ import ButtonBackList from '@/components/button/ButtonBackList';
 import ButtonRemove from '@/components/button/ButtonRemove';
 
 import CategoryList from '@/components/list/CategoryList';
+import TeacherList from '@/components/list/TeacherList';
 
 // config
 import constant from '@/config/constant';
@@ -93,6 +94,7 @@ Vue.component('btn-back-list', ButtonBackList);
 Vue.component('btn-remove', ButtonRemove);
 
 Vue.component('m-category-list', CategoryList);
+Vue.component('m-teacher-list', TeacherList);
 
 
 Vue.component('breadcrumbs', BreadCrumbs);

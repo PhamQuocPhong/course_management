@@ -16,6 +16,11 @@ let getUserPaging = async (req, res) => {
     var page = req.query.page || 1;
     var itemPerPage = req.query.itemPerPage || 20;
     var offset = helper.calcPaginate(page, itemPerPage);
+    var condition = {};
+    if(req.query.role)
+    {
+        condition.roleId = req.query.role
+    }
 
     try{
         const users = await userModel.findAll({
@@ -25,9 +30,13 @@ let getUserPaging = async (req, res) => {
                 {
                     model: roleModel
                 }
-            ]
+            ],
+            order: [
+                ['id', 'DESC'],
+            ],
+            where: condition
         });
-        const counts  = Math.ceil( await userModel.count() / itemPerPage ) 
+        const counts  = Math.ceil( await userModel.count({where: condition}) / itemPerPage ) 
         return res.status(200).json({message: 'Success', data: users, pageCounts: counts })
     }
     catch(error)
