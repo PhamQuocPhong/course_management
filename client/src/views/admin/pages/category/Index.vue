@@ -96,6 +96,9 @@
                         <li class="flex-item" data-label="No.">
                            {{ $helper.showIndex(index, currentPage, itemsPerPage) }}
                         </li>
+
+                         <li class="flex-item" data-label="Danh mục cha">{{ item.parent !== null ? item.parent.name : "" }}</li>
+
                         <li class="flex-item" data-label="Tiêu đề">{{ item.name }}</li>
 
                         <li class="flex-item" data-label="Mô tả">{{ item.description }}</li>

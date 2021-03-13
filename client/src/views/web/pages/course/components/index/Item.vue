@@ -20,7 +20,13 @@
         </v-img>
       </v-col>
       <v-col cols="12" md="6" lg="7" sm="6">
-        <v-card-title>{{ getItem.title }}</v-card-title>
+        <v-card-title style="width: 90%;">
+          {{ getItem.title }}
+
+           <span class="blink" v-if="$helper.checkSpecialCourse(getItem.id, specialCourses)">Đặc biệt</span>
+
+          <span class="blink" v-else-if="$helper.checkNewCourse(getItem.createdAt)">Mới</span>
+        </v-card-title>
           <v-card-text>
             <v-row
               align="center"
@@ -36,8 +42,11 @@
               ></v-rating>
             </v-row>
 
-             <div class="my-4 subtitle-1 red--text font-weight-bold ">
-              {{ getItem.price | toCurrency }}
+            <div class="my-4">
+              <span class="subtitle-1 red--text font-weight-bold"> {{ getItem.price | toCurrency }}</span>
+              <span class="promotions" v-if="getItem.promotions" style="float: right;">
+                  <b class="subtitle-1 red--text font-weight-bold">{{ getItem.promotions.length }} </b> mã giảm giá
+              </span>
             </div>
 
             <div>
@@ -54,9 +63,6 @@
           </v-card-text>
           <v-card-actions class="bottom">
             <div class="text-right">
-<!--               <v-btn color="pink" class="mr-2"  outlined small @click="favorite(getItem)"> 
-                Yêu thích
-              </v-btn> -->
               <v-btn color="primary"  outlined small @click="viewDetail(getItem)">  Xem chi tiết</v-btn>
             </div>
           </v-card-actions>
@@ -82,7 +88,8 @@ import CookieService from "@/services/cookie";
 export default {
 
   props: {
-    item: Object
+    item: Object,
+    specialCourses: Array,
   },
 
   data: () => ({

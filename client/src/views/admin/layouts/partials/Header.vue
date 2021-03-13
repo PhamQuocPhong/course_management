@@ -81,10 +81,7 @@ export default {
       mini: false,
       drawer: false,
       menuInfo: [
-        { title: "Thông tin", icon: "mdi-account-circle", link: "/profile/info" },
-        { title: "Đăng bài", icon: "mdi-plus-box-outline", link: "/profile/create_post" },
-        { title: "Danh sách bài đã đăng", icon: "mdi-playlist-edit", link: "/profile/list_motel" },
-        { title: "Logout", icon: "mdi-login-variant", link: "/auth/logout" }
+        { title: "Logout", icon: "mdi-login-variant", link: "/admin/logout" }
       ],
       theme: this.getTheme(),
 
@@ -105,7 +102,7 @@ export default {
   methods: {
 
     login(){
-      this.$router.push('/auth/login');
+      this.$router.push('/admin/login');
     },
 
     isMobile() {

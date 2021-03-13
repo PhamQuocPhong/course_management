@@ -19,7 +19,8 @@ export default{
 		data: {
 			type: [Array, String, Object, Number]
 		},
-    items: Array,
+		noParent: Boolean,
+    	items: Array,
 	    label: String,
 	},
 
@@ -36,7 +37,14 @@ export default{
 			get(){
 				if(this.$route.query.hasOwnProperty("categoryId"))
 				{
-					return this.data
+					if(this.categories.length)
+					{
+						var categoryId = +this.$route.query.categoryId;
+						var findCategory = this.categories.find(item => item.id === categoryId);
+						return findCategory;
+					}
+				}else{
+					return this.data;
 				}
 			},
 			set(data)
@@ -49,8 +57,14 @@ export default{
 			get(){
 				if(!this.items || this.items.length <= 0)
 				{
-					var categories = this.$store.getters["categories/categories"];
-					categories.unshift({id: null, name: "Tất cả"});
+					if(this.noParent)
+					{
+						var categories = this.$store.getters["categories/noParentCategories"];
+						categories.unshift({id: null, name: "Tất cả"});
+					}else{
+						var categories = this.$store.getters["categories/categories"];
+						categories.unshift({id: null, name: "Tất cả"});
+					}
 					return categories;
 				}else{
 					return this.items

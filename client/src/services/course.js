@@ -30,7 +30,9 @@ export default {
       return await axios.get(this.rootURL, {
         params: {
           page: query.page,
-          keyword: query.keyword
+          keyword: query.keyword,
+          categoryId: query.categoryId,
+          teacherId: query.teacherId
         }
       });
     } catch (error) {

@@ -16,6 +16,7 @@
             <v-row>
               <v-col v-for="(item, index) in courses" cols="12" sm="12" md="6" lg="6" :key="item.id">
                 <m-item 
+                :specialCourses="specialCourses"
                 :item="item" 
                 v-on:action="viewDetail(item)"
                 >
@@ -146,7 +147,8 @@ export default {
         	const res = await CourseService.fetchPagingByCategoryId(payload.page, this.$route.params.categoryId);
         	if(res.status === 200)
           {
-            this.courses = res.data.data
+            this.courses = res.data.data;
+            this.specialCourses = res.data.listTopCourse;
           }
       }, 200);
 

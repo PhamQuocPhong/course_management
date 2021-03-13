@@ -5,6 +5,7 @@ import lang from "@/config/lang";
 
 export  const getters = {
     categories: state => state.categories,
+    noParentCategories: state => state.categories.filter(item => item.parentId !== null),
     category: state => state.category,
 
     currentPage: state => state.currentPage,

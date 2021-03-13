@@ -30,6 +30,21 @@
 				</v-row>
 			</v-col>
 		</v-row>
+
+		<v-row>
+			<div class="title">
+					<h2> 
+						<span>Đặc biệt </span>
+					</h2>
+				</div>
+				<v-col cols cols="12">
+				<v-row v-if="specialCourses.length">
+					<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in specialCourses" :key="item.id">
+						<m-item :item="item" :key="item.id"></m-item>
+					</v-col>
+				</v-row>
+			</v-col>
+		</v-row>
 	
 
 		<v-row>
@@ -49,20 +64,18 @@
 
 		<v-row>
 			<div class="title">
-				<h2> 
-					<span>Xem nhiều nhất </span>
-				</h2>
-			</div>
-			<v-col cols cols="12">
-			<v-row v-if="mostWatchingCourses.length">
-				<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in mostWatchingCourses" :key="item.id">
-					<m-item :item="item" :key="item.id"></m-item>
-				</v-col>
-			</v-row>
-		</v-col>
+					<h2> 
+						<span>Xem nhiều nhất </span>
+					</h2>
+				</div>
+				<v-col cols cols="12">
+				<v-row v-if="mostWatchingCourses.length">
+					<v-col cols="12"  sm="12" md="6" lg="6" v-for="(item, index) in mostWatchingCourses" :key="item.id">
+						<m-item :item="item" :key="item.id"></m-item>
+					</v-col>
+				</v-row>
+			</v-col>
 		</v-row>
-
-
 	</v-container>
 	<v-main>
 				
@@ -118,7 +131,7 @@ export default {
 			mostJoinCourses: [],	
 			mostWatchingCourses: [],
 			newestCourses: [],
-			mostRatingCourses: [],
+			specialCourses: [],
 		}
 	},
 
@@ -147,9 +160,9 @@ export default {
 				this.mostJoinCourses = mostJoinCoursesResponse.data.data;
 			}
 
-			const mostRatingCoursesResponse = await HomeService.getMostRatingCourses();
-			if(mostRatingCoursesResponse.status === 200){
-				this.mostRatingCourses = mostRatingCoursesResponse.data.data;
+			const specialCoursesResponse = await HomeService.getspecialCourses();
+			if(specialCoursesResponse.status === 200){
+				this.specialCourses = specialCoursesResponse.data.data;
 			}
 
 			 this.$store.dispatch("components/actionProgressHeader", { option: "hide" })

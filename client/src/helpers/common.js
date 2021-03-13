@@ -191,5 +191,21 @@ export default {
     if(!status)
       return "red";
     return "primary";   
+  },
+
+  checkNewCourse(createdAt)
+  {
+    var now = new Date();
+    now.setDate(now.getDate() - 7);
+    if(createdAt > now.toISOString())
+      return true;
+    return false;
+  },
+
+  checkSpecialCourse(courseId, arrayCourseSpecical)
+  {
+    if(arrayCourseSpecical.length && arrayCourseSpecical.includes(courseId))
+      return true;
+    return false;
   }
 };

@@ -104,6 +104,7 @@ export default {
           if(res.status === 200){
 
             CookieServices.set("accessToken", res.data.accessToken);
+            CookieServices.set("refreshToken", res.data.refreshToken, 60 * 60 * 24);
             CookieServices.set("userInfo", res.data.findUser);
 
             if(res.data.findUser && res.data.findUser.roleId === 1)

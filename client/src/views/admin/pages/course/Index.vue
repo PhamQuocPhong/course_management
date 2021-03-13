@@ -9,12 +9,23 @@
           <v-row  :class="{ 'mt-4': isMobile }">
             <v-col cols="12" md="3" lg="3" sm="3">
               <m-category-list
-              label="Danh mục"
+              label="Lĩnh vực"
               :data.sync="searchCategory"
-              v-on:action="filter(searchCategory)"
+              v-on:action="filterCategory(searchCategory)"
+              :noParent="true"
               >
               </m-category-list>
             </v-col>
+
+            <v-col cols="12" md="3" lg="3" sm="3">
+              <m-teacher-list
+              label="Giảng viên"
+              :data.sync="searchTeacher"
+              v-on:action="filterTeacher(searchTeacher)"
+              >
+              </m-teacher-list>
+            </v-col>
+
             <v-col cols="12" md="3" lg="3" sm="3">
               <btn-create 
                 :title="$lang.CREATE"
@@ -41,7 +52,8 @@
                         <th class="text-center">Giá</th>
                         <th class="text-center">Giá sau khuyến mãi</th>
                         <th class="text-center">Đánh giá</th>
-                        <th class="text-center">Tình trạng</th>
+                        <th class="text-center">Hoàn thành</th>
+                        <th class="text-center">Đình chỉ</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -71,7 +83,7 @@
 
                         <td class="text-center">{{ item.priceFinal | toCurrency}}</td>
 
-                         <td class="text-center">
+                        <td class="text-center">
                             <v-rating
                                 v-model="item.rateTotal && item.rateTotal.total"
                                 color="yellow darken-3"
@@ -88,6 +100,14 @@
                             <v-switch
                               v-model="item.status"
                               @change="handleStatus(item)"
+                            >
+                            </v-switch>
+                         </td>
+
+                          <td>
+                            <v-switch
+                              v-model="item.active"
+                              @change="handleStatus(active)"
                             >
                             </v-switch>
                          </td>
@@ -194,7 +214,8 @@ export default {
   data(){
     return {
       isLoading: false,
-      searchCategory: {}
+      searchCategory: {},
+      searchTeacher: {},
     }
   },
 
@@ -239,16 +260,38 @@ export default {
 
   methods: {
 
-    filter(searchCategory)
+    filterCategory(searchCategory)
     {
       var query = Object.assign({}, this.$route.query);
 
-      if(!searchCategory.id)
+      if(query.teacherId)
+      {
+        delete query.teacherId;
+      }
+
+      query.categoryId = searchCategory.id;
+      
+
+      this.$router.push({
+        query: query
+      })
+
+      this.retrieveData(query);
+    },
+
+    filterTeacher(searchTeacher)
+    {
+      var query = Object.assign({}, this.$route.query);
+
+      if(query.categoryId)
       {
         delete query.categoryId;
-      }else{
-        query.categoryId = searchCategory.id;
       }
+      query.teacherId = searchTeacher.id;
+
+       this.$router.push({
+        query: query
+      })
 
       this.retrieveData(query);
     },
@@ -300,7 +343,7 @@ export default {
       if(conf){
         this.$store.dispatch("courses/remove", item)
       }
-    }
+    },
   },
 
 

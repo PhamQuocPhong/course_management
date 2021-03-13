@@ -13,7 +13,7 @@ export default {
     }
   },
 
-  async getMostRatingCourses(data) {
+  async getspecialCourses(data) {
     try {
       const result = await axios.get(this.rootURL + `course_sort_by_rate`);
       return result;
