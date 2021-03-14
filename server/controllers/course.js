@@ -327,7 +327,7 @@ let getDeatailCourse = async (req, res) => {
 }
 
 let searchCourse = async (req, res) => {
-    //console.log("checkkkkkkkkk")
+
     var itemPerPage = req.query.itemPerPage || 20;
     //filter true hoặc false
     var orderPrice = req.query.orderPrice;
@@ -369,6 +369,40 @@ let searchCourse = async (req, res) => {
 
     try
     {
+        const categoryData = await categoryModel.findAll({
+            where: {
+                [Op.and]: Sequelize.literal(`"category_tsv" @@ plainto_tsquery('${keyword}')`)
+            }
+        }).then(categories => categories.map(category => category.id));
+        
+
+        var courseData1 = await courseModel.findAll({
+            offset: offset, 
+            limit: itemPerPage, 
+            where: {
+                categoryId: {
+                [Sequelize.Op.in]: categoryData
+                }
+            },
+            include: [
+                {
+                    model: courseTeacherModel, 
+                    include: [
+                    {
+                        model: userModel
+                    }]
+                },
+                {
+                    model: rateTotalModel
+                }
+            ],
+            order: order
+        });
+      
+        var courseIdList = [];
+        courseData1.map(item => {return courseIdList.push(item.id)});
+        console.log(courseIdList)
+
         var listTopCourse = await courseModel.findAll({
             limit: 3, 
                 include: [
@@ -401,7 +435,10 @@ let searchCourse = async (req, res) => {
             offset: offset, 
             limit: itemPerPage, 
             where: {
-                [Op.and]: Sequelize.literal(`"course_tsv" @@ plainto_tsquery('${keyword}')`)
+                [Op.and]: Sequelize.literal(`"course_tsv" @@ plainto_tsquery('${keyword}')`),
+                id: {
+                    [Sequelize.Op.notIn]: courseIdList
+                }
             },
             include: [
                 {
@@ -418,12 +455,8 @@ let searchCourse = async (req, res) => {
             order: order
         });
         
-        var counts = await courseModel.count({
-            where: {
-                [Op.and]: Sequelize.literal(`"course_tsv" @@ plainto_tsquery('${keyword}')`)
-            }
-        });
-
+        courseData = courseData.concat(courseData1);
+        var counts = courseData.length;
         
         return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(counts/itemPerPage), listTopCourse})
     }
