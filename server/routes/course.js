@@ -9,7 +9,6 @@ const auth = require('../middleware/auth_middleware')
 router.get('/', courseController.getCoursePaging);
 router.get('/category/:categoryId', courseController.getCourseByCategory);
 router.get('/search', courseController.searchCourse);
-router.get('/search_with_category', courseController.searchCourseWithCategory);
 router.get('/:id', courseController.getDeatailCourse);
 
 //Teacher
