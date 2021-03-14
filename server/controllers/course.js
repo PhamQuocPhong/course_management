@@ -290,7 +290,9 @@ let getDeatailCourse = async (req, res) => {
 
         var courseList = await courseModel.findAll({
             limit: 5, 
-            where: {categoryId: courseData.categoryId},
+            where: {categoryId: courseData.categoryId, id: {
+                [Sequelize.Op.not]: courseId
+            }},
                 include: [
                     {
                         model: courseTeacherModel, 
