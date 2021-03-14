@@ -432,6 +432,124 @@ let searchCourse = async (req, res) => {
 	}
 }
 
+let searchCourseWithCategory = async (req, res) => {
+    //console.log("checkkkkkkkkk")
+    var itemPerPage = req.query.itemPerPage || 20;
+    //filter true hoặc false
+    var orderPrice = req.query.orderPrice;
+    var orderRating = req.query.orderRating;
+    var keyword = req.query.keyword;
+    
+	var page = req.query.page
+	var offset = 0;
+	if(page == 1){
+		offset = 0
+	}
+	else{
+		offset = ((page - 1) * itemPerPage) 
+    }
+
+    // order by
+    var order = [];
+    if(orderPrice)
+    {
+        order.push(
+            ['priceFinal', orderPrice] 
+        )
+    }
+    if(orderRating)
+    {
+        order.push([
+            { model: rateTotalModel }, 'total', orderRating 
+            ]
+        )
+    }
+
+    keyword = slugify(keyword, {
+        replacement: ' ',  
+        remove: undefined, 
+        lower: true,     
+        strict: false,    
+        locale: 'vi'       
+    });
+
+    try
+    {
+        const categoryData = await categoryModel.findAll({
+            where: {
+                [Op.and]: Sequelize.literal(`"category_tsv" @@ plainto_tsquery('${keyword}')`)
+            }
+        }).then(categories => categories.map(category => category.id));
+    
+        var listTopCourse = await courseModel.findAll({
+            limit: 3, 
+                include: [
+                    {
+                        model: rateModel,
+                        
+                    },
+    
+                    {
+                        model: rateTotalModel
+                        
+                    }
+                ],
+                order: [
+                  ['studentTotal', 'DESC'], 
+                  ['watchTotal', 'DESC'], 
+                  [rateTotalModel, 'total', 'DESC']
+                ],
+                where: {
+                    createdAt: {
+                        [Op.gte]: Sequelize.literal('NOW() - INTERVAL \'7d\'')
+                    }
+                }
+                
+        }).
+        then(courses => courses.map(course => course.id));
+
+        var courseData  = []
+        courseData = await courseModel.findAll({
+            offset: offset, 
+            limit: itemPerPage, 
+            where: {
+                categoryId: {
+                [Sequelize.Op.in]: categoryData
+                }
+            },
+            include: [
+                {
+                    model: courseTeacherModel, 
+                    include: [
+                    {
+                        model: userModel
+                    }]
+                },
+                {
+                    model: rateTotalModel
+                }
+            ],
+            order: order
+        });
+        
+        var counts = await courseModel.count({
+            where: {
+                where: {
+                    categoryId: {
+                    [Sequelize.Op.in]: categoryData
+                    }
+                }
+            }
+        });
+
+        
+        return res.status(200).json({message: 'Success!', data: courseData, pageCounts: Math.ceil(counts/itemPerPage), listTopCourse})
+    }
+    catch(error) {
+		return res.status(500).json(error)
+	}
+}
+
 
 //Teacher
 let createCourse = async (req, res) => {
@@ -513,6 +631,7 @@ module.exports = {
     searchCourse,
     getCoursePaging,
     getCourseByCategory,
+    searchCourseWithCategory,
    
     //Teacher
     createCourse,
