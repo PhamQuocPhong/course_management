@@ -52,6 +52,10 @@
               <p> Số học viên: <code>{{ getItem.studentTotal || 0 }}</code> </p>
             </div>
 
+            <div>
+              <p v-if="getItem.rate"> Lượt đánh giá: <code>{{ getItem.rates.length || 0 }}</code> </p>
+            </div>
+
             <div class="teachers" v-if="getItem.courseTeachers.length">
               <p>Giảng viên: 
                 <span v-for="(item, index) in getItem.courseTeachers" class="font-weight-bold">

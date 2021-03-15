@@ -5,19 +5,20 @@
   >
     <v-row>
       <v-col cols="12" sm="6" md="6" lg="5" class="d-flex">
-        <v-img 
-          height="270"
-          
-          :aspect-ratio="16/9"
-          :src="getItem.avatar"
-        ></v-img>
-
         <v-img
         v-if="!getItem.avatar"
         height="270"
         src="@/assets/img/default.jpg"
         >
         </v-img>
+
+        <v-img 
+          v-else
+          height="270"
+          
+          :aspect-ratio="16/9"
+          :src="getItem.avatar"
+        ></v-img>
       </v-col>
       <v-col  cols="12" sm="6" md="6" lg="7">
         <v-card-title>{{ getItem.title }}</v-card-title>
@@ -42,6 +43,10 @@
 
             <div>
               <p> Số học viên: <code>{{ getItem.studentTotal || 0 }}</code> </p>
+            </div>
+
+            <div>
+              <p> Lượt đánh giá: <code>{{ getItem.rates.length || 0 }}</code> </p>
             </div>
 
             <div class="teachers" v-if="getItem.courseTeachers.length">
