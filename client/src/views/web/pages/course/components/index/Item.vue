@@ -22,8 +22,7 @@
       <v-col cols="12" md="6" lg="7" sm="6">
         <v-card-title style="width: 90%;">
           {{ getItem.title }}
-
-           <span class="blink" v-if="$helper.checkSpecialCourse(getItem.id, specialCourses)">Đặc biệt</span>
+           <span class="blink" v-if="specialCourses && $helper.checkSpecialCourse(getItem.id, specialCourses)">Đặc biệt</span>
 
           <span class="blink" v-else-if="$helper.checkNewCourse(getItem.createdAt)">Mới</span>
         </v-card-title>
