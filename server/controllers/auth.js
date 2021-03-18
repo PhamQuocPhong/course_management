@@ -25,25 +25,22 @@ let register = async (req, res) => {
     var findUser = await userModel.findOne({
       where: {email: email}
     })
-    
-    var verifyCode = randomstring.generate()
 
     if(findUser){
       return res.status(401).json({message: 'This email is existed!'})
     }
-    console.log("test3");
    
-
     var newUser = await userModel.create({
       name: name,
       email: email,
       password: bcrypt.hashSync(password, 10),
       roleId: 3,
-      active: false,
-      rfToken: verifyCode,
+      active: false
+    
     }).then(function(user){
       if(user)
       { 
+        //Cấu hình email
           try
           {
             //req.session.userId = user.id;
@@ -56,12 +53,14 @@ let register = async (req, res) => {
                   pass: 'uarvqtnyovhyxqrc' // create app password for email -> gg search
               }
           });
-  
+          
+          //Tạo mã otp bằng 1 chuỗi ngẫu nhiên
            var secretToken = randomstring.generate({
               length: 20,
               charset: 'alphabetic'
             });
   
+            //Ghi nhận vào database cái chuỗi otp mới vừa
            var newActive =  activeEmailModel.create({
               otp: secretToken,
               active: true,
@@ -131,7 +130,7 @@ let verifyOTP = async (req, res) => {
             { active: true },
             { where: { email} }
           ).then(async function(){
-            console.log("sss")
+          
             await activeEmailModel.update(
               { active: false },
               { where: { userId: findUser.id} }
@@ -173,19 +172,19 @@ let login = async (req, res) => {
         active: true
       }
     })
-    console.log("test")
+  
 
     if(findUser && bcrypt.compareSync(password, findUser.password)){
-      console.log("testdn")
+     
       delete findUser.dataValues.password
       const accessToken = await jwtHelper.generateToken(findUser.id, accessTokenSecret, accessTokenLife)
       const refreshToken = await jwtHelper.generateToken(findUser.id, refreshTokenSecret, refreshTokenLife)
 
-      console.log("testdn1")
+     
       await userModel.update(
         
         {rfToken: refreshToken},
-        {where: {id: 1}},
+        {where: {id: findUser.id}},
       );
 
       return res.status(200).json({accessToken, refreshToken, findUser})
@@ -210,19 +209,18 @@ let adminLogin = async (req, res) => {
         roleId: 1
       }
     })
-    console.log("test")
+  
 
     if(findUser && bcrypt.compareSync(password, findUser.password)){
-      console.log("testdn")
+     
       delete findUser.dataValues.password
       const accessToken = await jwtHelper.generateToken(findUser.id, accessTokenSecret, accessTokenLife)
       const refreshToken = await jwtHelper.generateToken(findUser.id, refreshTokenSecret, refreshTokenLife)
 
-      console.log("testdn1")
       await userModel.update(
         
         {rfToken: refreshToken},
-        {where: {id: 1}},
+        {where: {id: findUser.id}},
       );
 
       return res.status(200).json({accessToken, refreshToken, findUser})
