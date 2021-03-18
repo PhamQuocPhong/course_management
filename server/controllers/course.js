@@ -476,6 +476,7 @@ let searchCourse = async (req, res) => {
 //Teacher
 let createCourse = async (req, res) => {
     const data = req.body;
+    console.log(data);
     var chapters = data.chapters;
     var decoded = req.decoded;
     var userId = decoded.userId;

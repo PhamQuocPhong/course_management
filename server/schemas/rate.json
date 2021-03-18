@@ -1,18 +1,17 @@
 {
     "type": "object",
     "required": [
-      "name",
-      "email"
+        "comment",
+        "point"
     ],
     "additionalProperties": true,
     "properties": {
-      "name":
+      "comment":
       {
-        "type": "string",
-        "minLength": 3
-      },
-      "email": {
         "type": "string"
+      },
+      "point": {
+        "type": "number"
       }
     }
   }

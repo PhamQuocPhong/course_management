@@ -1,18 +1,13 @@
 {
     "type": "object",
     "required": [
-      "name",
-      "email"
+        "otp"
     ],
     "additionalProperties": true,
     "properties": {
-      "name":
-      {
+      "otp": {
         "type": "string",
-        "minLength": 3
-      },
-      "email": {
-        "type": "string"
+        "minLength": 20
       }
     }
   }

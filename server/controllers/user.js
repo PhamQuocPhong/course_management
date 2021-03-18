@@ -8,8 +8,10 @@ const courseTeacherModel = require('../models/course_teacher');
 const roleModel = require('../models/role');
 const rateModel = require('../models/rate');
 const helper = require('../helpers/helper');
+const rateTotalModel = require('../models/rate_total');
 
 const { Op } = require("sequelize");
+
 
 let getUserPaging = async (req, res) => {
 
@@ -78,7 +80,6 @@ let store = async (req, res) => {
 }
 
 let update = async (req, res) => {
-
     var form = req.body;
     var id = req.params.id;
 
@@ -145,7 +146,9 @@ let changeInfo = async (req, res) => {
 }
 
 let changePassword = async (req, res) => {
+    console.log(req.body);
     const {oldPassword, newPassword, verifyPassword} = req.body;
+
     var decoded = req.decoded;
     var userId = decoded.userId;
 
@@ -311,7 +314,7 @@ let addCourseWatchList = async (req, res) => {
 	}
 }
 
-let ratingCourse = async (req, res) => {
+let  ratingCourse = async (req, res) => {
     const {point, comment} = req.body;
     const courseId = req.body.courseId;
     var decoded = req.decoded;
@@ -368,13 +371,17 @@ let ratingCourse = async (req, res) => {
                         returning: true,
                         plain: true
                 }).then(async function(rate){
+                    console.log("check,,,,,,,,,,,,,,,,,,,,,,,");
                     if(rate)
                     {
+                        console.log("check,,,,,,,,,,,,,,,,,,,,,,,2");
                         var rateTotal = await rateTotalModel.findOne({
                             where: {courseId}
                         })
+                        console.log("check,,,,,,,,,,,,,,,,,,,,,,,3");
                         if(rateTotal)
                         {
+                            console.log("check,,,,,,,,,,,,,,,,,,,,,,,4");
                             if(rateTotal.turn == 1)
                             {
                                 await rateTotalModel.update({
