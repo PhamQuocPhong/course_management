@@ -22,8 +22,7 @@
       <v-col cols="12" md="6" lg="7" sm="6">
         <v-card-title style="width: 90%;">
           {{ getItem.title }}
-
-           <span class="blink" v-if="$helper.checkSpecialCourse(getItem.id, specialCourses)">Đặc biệt</span>
+           <span class="blink" v-if="specialCourses && $helper.checkSpecialCourse(getItem.id, specialCourses)">Đặc biệt</span>
 
           <span class="blink" v-else-if="$helper.checkNewCourse(getItem.createdAt)">Mới</span>
         </v-card-title>
@@ -51,6 +50,10 @@
 
             <div>
               <p> Số học viên: <code>{{ getItem.studentTotal || 0 }}</code> </p>
+            </div>
+
+            <div>
+              <p v-if="getItem.rate"> Lượt đánh giá: <code>{{ getItem.rates.length || 0 }}</code> </p>
             </div>
 
             <div class="teachers" v-if="getItem.courseTeachers.length">

@@ -5,7 +5,7 @@
 			<v-col cols="12" sm="8" md="8" lg="8">
 
 				<v-card v-if="course">
-					<v-img v-if="course.image"  :src="course.image"></v-img>
+					<v-img v-if="course.avatar"  :src="course.avatar"></v-img>
 
 					<v-img v-else src="@/assets/img/default.jpg"></v-img>
 	
@@ -95,9 +95,12 @@
 				            >
 				            </v-row>
 
-				         
+				            <div class="my-4" v-if="course.price && course.promotions.length">
+				              <p class="text-decoration-line-through"> {{ course.price | toCurrency }} </p>
+				            </div>
+				         	
 				            <div class="my-4 subtitle-1 red--text font-weight-bold">
-				              {{ course.price | toCurrency }} 
+				              {{ course.priceFinal | toCurrency }} 
 				            </div>
 
 				            <div>
@@ -370,7 +373,6 @@ export default {
 			{
 				this.joined = true;
 				toastr.success("Tham giá khóa học thành công", this.$lang.SUCCESS, { timeOut: 1000 });
-
 			}
 		},	
 
