@@ -215,7 +215,6 @@ let removeElementWatchList = async (req, res) => {
 let getWatchList = async (req, res) => {
     var decoded = req.decoded;
     var userId = decoded.userId;
-    console.log("?")
     try
     {
         watchList = await watchListModel.findAll({
@@ -295,15 +294,15 @@ let addCourseWatchList = async (req, res) => {
 
     try
     {
-        if(!await watchListModel.findOne({where:{userId,
+        /*if(!await watchListModel.findOne({where:{userId,
             courseId}}))
             
-        {
+        {*/
             await watchListModel.create({
                 userId,
                 courseId
              })
-        }
+        //}
     
         return res.status(200).json({message: 'Success!'})
     }
@@ -352,6 +351,8 @@ let ratingCourse = async (req, res) => {
                  return res.status(200).json({message: 'Success!', data: findRating})
              }else{
                 // case update rating
+                //Thực hiện update rating
+                var rateData = await rateModel.findOne({where: {userId, courseId}});
 
                 await rateModel.update(
                     {
@@ -366,7 +367,42 @@ let ratingCourse = async (req, res) => {
                         },
                         returning: true,
                         plain: true
-                })
+                }).then(function(rate){
+                    if(rate)
+                    {
+                        var rateTotal = await rateTotalModel.findOne({
+                            where: {courseId}
+                        })
+                        if(rateTotal)
+                        {
+                            if(rateTotal.turn == 1)
+                            {
+                                await rateTotalModel.update({
+                                    total: point
+                                },
+                                {
+                                    where: {
+                                        id: rateTotal.id
+                                    }
+                                })
+                            }
+                            else
+                            {
+                                await rateTotalModel.update({
+                                    total: ((rateTotal.total * rateTotal.turn - rateData.point)/(rateTotal.turn - 1)* (rateTotal.turn - 1) + point)/ rateTotal.turn,
+                                    comment
+                                },
+                                {
+                                    where: {
+                                        id: rateTotal.id
+                                    }
+                                })
+                            }
+                           
+                        }
+                        
+                    }
+                });
 
                 var findRating = await rateModel.findOne({
                     where: {
@@ -396,6 +432,7 @@ let joinCourse = async (req, res) => {
 
     try
     {
+        //
         if(!await courseStudentModel.findOne({
             where:{
                 userId,
@@ -403,7 +440,8 @@ let joinCourse = async (req, res) => {
             }
          }))
          {
-            await courseStudentModel.create({
+             //Tiến hàng tạo trên db
+            var joincourse = await courseStudentModel.create({
                 userId,
                 courseId
              })
