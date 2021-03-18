@@ -352,6 +352,7 @@ let ratingCourse = async (req, res) => {
              }else{
                 // case update rating
                 //Thực hiện update rating
+                var rateData = await rateModel.findOne({where: {userId, courseId}});
 
                 await rateModel.update(
                     {
@@ -366,7 +367,42 @@ let ratingCourse = async (req, res) => {
                         },
                         returning: true,
                         plain: true
-                })
+                }).then(function(rate){
+                    if(rate)
+                    {
+                        var rateTotal = await rateTotalModel.findOne({
+                            where: {courseId}
+                        })
+                        if(rateTotal)
+                        {
+                            if(rateTotal.turn == 1)
+                            {
+                                await rateTotalModel.update({
+                                    total: point
+                                },
+                                {
+                                    where: {
+                                        id: rateTotal.id
+                                    }
+                                })
+                            }
+                            else
+                            {
+                                await rateTotalModel.update({
+                                    total: ((rateTotal.total * rateTotal.turn - rateData.point)/(rateTotal.turn - 1)* (rateTotal.turn - 1) + point)/ rateTotal.turn,
+                                    comment
+                                },
+                                {
+                                    where: {
+                                        id: rateTotal.id
+                                    }
+                                })
+                            }
+                           
+                        }
+                        
+                    }
+                });
 
                 var findRating = await rateModel.findOne({
                     where: {
