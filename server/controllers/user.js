@@ -396,6 +396,7 @@ let joinCourse = async (req, res) => {
 
     try
     {
+        //
         if(!await courseStudentModel.findOne({
             where:{
                 userId,
@@ -403,7 +404,8 @@ let joinCourse = async (req, res) => {
             }
          }))
          {
-            await courseStudentModel.create({
+             //Tiến hàng tạo trên db
+            var joincourse = await courseStudentModel.create({
                 userId,
                 courseId
              })
