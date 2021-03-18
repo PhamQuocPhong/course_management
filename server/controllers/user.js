@@ -215,7 +215,6 @@ let removeElementWatchList = async (req, res) => {
 let getWatchList = async (req, res) => {
     var decoded = req.decoded;
     var userId = decoded.userId;
-    console.log("?")
     try
     {
         watchList = await watchListModel.findAll({
@@ -295,15 +294,15 @@ let addCourseWatchList = async (req, res) => {
 
     try
     {
-        if(!await watchListModel.findOne({where:{userId,
+        /*if(!await watchListModel.findOne({where:{userId,
             courseId}}))
             
-        {
+        {*/
             await watchListModel.create({
                 userId,
                 courseId
              })
-        }
+        //}
     
         return res.status(200).json({message: 'Success!'})
     }
@@ -352,6 +351,7 @@ let ratingCourse = async (req, res) => {
                  return res.status(200).json({message: 'Success!', data: findRating})
              }else{
                 // case update rating
+                //Thực hiện update rating
 
                 await rateModel.update(
                     {
