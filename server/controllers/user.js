@@ -367,7 +367,7 @@ let ratingCourse = async (req, res) => {
                         },
                         returning: true,
                         plain: true
-                }).then(function(rate){
+                }).then(async function(rate){
                     if(rate)
                     {
                         var rateTotal = await rateTotalModel.findOne({
