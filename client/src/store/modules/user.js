@@ -68,10 +68,7 @@ export  const actions = {
     async update({ commit }, payload)
     {
       var user = payload;
-      var form = {
-        active: user.active,
-        email: user.email
-      }
+      var form = user;
       const res = await UserService.update(user.id, form);
 
       if(res.status === 200)

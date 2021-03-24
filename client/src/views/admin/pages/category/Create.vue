@@ -133,6 +133,7 @@ export default {
         var conf = confirm(this.$lang.SAVE_CONFIRM);
         if(conf){
 
+          this.form.parentId = this.form.parentId.id;
           const res = await CategoryService.store(this.form);
           
           if(res.status === 200){

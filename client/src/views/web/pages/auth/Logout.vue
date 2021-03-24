@@ -1,7 +1,7 @@
 <template> </template>
 
 <script>
-
+import AuthService from "@/services/auth";
 
 export default {
   data() {
@@ -10,20 +10,27 @@ export default {
     };
   },
 
-  mounted() {
+  async created() {
     // remove user in socket
+     var refreshToken = this.$cookies.get("refreshToken");
 
 
-    // clear user in cookies
-    this.$cookies.remove("accessToken");
-    this.$cookies.remove("userInfo");
+    const res = await AuthService.logout({refreshToken});
+    if(res.status === 200)
+    {
 
-    // clear store
-    this.$store.dispatch("components/reset");
+      // clear user in cookies
+      this.$cookies.remove("refreshToken");
+      this.$cookies.remove("accessToken");
+      this.$cookies.remove("userInfo");
+
+      // clear store
+      this.$store.dispatch("components/reset");
 
 
 
-    this.$router.replace("/login");
+      this.$router.replace("/login");
+    }
   },
 
 
