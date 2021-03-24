@@ -44,6 +44,21 @@
                     </v-col>
                   </v-row>
 
+                   <v-row>
+                    <v-col cols="4">
+                      <v-subheader class="font-weight-bold"
+                        >Info</v-subheader
+                      >
+                    </v-col>
+                    <v-col cols="8">
+                      <v-text-field
+                        :disabled="!edit"
+                        class="font-weight-bold"
+                        v-model="userInfo.info"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+
 
                   <v-row>
                     <v-spacer></v-spacer>
