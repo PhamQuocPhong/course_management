@@ -135,12 +135,11 @@ let store = async (req, res) => {
 
     var form = req.body;
 
-
     try{
         var data = await categoryModel.create({
             name: form.name,
             description: form.description,
-            parentId: form.parentId === '' ? null : null
+            parentId: form.parentId,
         });
         return res.status(200).json({message: 'Success', data: data})
  

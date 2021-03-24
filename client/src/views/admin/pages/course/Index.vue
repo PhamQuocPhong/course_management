@@ -107,7 +107,7 @@
                           <td>
                             <v-switch
                               v-model="item.active"
-                              @change="handleStatus(active)"
+                              @change="handleActive(item)"
                             >
                             </v-switch>
                          </td>
@@ -162,8 +162,21 @@
                                <span>( {{ item.rateTotal && item.rateTotal.turn }} )</span>
                          </li>
 
-                          <li class="flex-item" data-label="Mô tả">{{ item.description }}</li>
+                          <li class="flex-item" data-label="Hoàn thành">
+                               <v-switch
+                            v-model="item.status"
+                            @change="handleStatus(item)"
+                          >
+                          </v-switch>
+                          </li> 
 
+                           <li class="flex-item" data-label="Đình chỉ">
+                               <v-switch
+                            v-model="item.status"
+                            @change="handleActive(item)"
+                          >
+                          </v-switch>
+                          </li> 
                       </ul>
                     </td>
                   </tr>
@@ -309,6 +322,12 @@ export default {
     },
 
     handleStatus(item)
+    {
+      var payload = item;
+      this.$store.dispatch("courses/update", payload);
+    },
+
+    handleActive(item)
     {
       var payload = item;
       this.$store.dispatch("courses/update", payload);

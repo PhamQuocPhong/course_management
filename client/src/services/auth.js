@@ -41,9 +41,9 @@ export default {
     }
   },  
 
-  async logout(){
+  async logout(data){
     try {
-      
+     return await axios.post(`/auth/logout`, data);
 
     } catch(error) {
        return helperCommon.getError(error) || false;

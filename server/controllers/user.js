@@ -71,6 +71,8 @@ let store = async (req, res) => {
             return res.status(422).json({message: "This email existed"});
         }
 
+        form.password = bcrypt.hashSync(form.password, 10);
+
         var newUser = userModel.create(form);
         return res.status(200).json({message: 'Success', data: newUser})
  
@@ -82,19 +84,21 @@ let store = async (req, res) => {
 let update = async (req, res) => {
     var form = req.body;
     var id = req.params.id;
+ 
+    if(form.email) {
+         const findUser = await userModel.findOne({where: {
+            email: form.email,
+            id: {
+                [Op.ne]: id
+            }
+        }});
 
-    const findUser = await userModel.findOne({where: {
-        email: form.email,
-        id: {
-            [Op.ne]: id
+        if(findUser)
+        {
+            return res.status(422).json({message: "This email existed"});
         }
-    }});
-
-
-    if(findUser)
-    {
-        return res.status(422).json({message: "This email existed"});
     }
+   
 
     try{
         var data = await userModel.update(form, {

@@ -197,6 +197,65 @@
 				      
 				        </v-card>
 				      </v-tab-item>
+
+				       <v-tab-item
+				        :key="tabs[2]"
+				      >
+				        <v-card
+				          color="basil"
+				          flat
+				        >
+				        	<v-card-title>
+				        	 	Tài liệu sơ bộ: 
+				        	</v-card-title>
+			            	<v-col cols="12" v-for="chapter, index in course.courseChapters" :key="index">
+				              <v-card-text  v-if="chapter.preview">
+				                <h3 class="red--text">  Chương {{  index+=1 }}:   {{ chapter.name }}</h3>
+				                <p> <span class="font-weight-bold">Mô tả:</span>  {{ chapter.description }}  </p>
+
+				                <v-expansion-panels
+				                multiple
+				                class="pt-4"
+				                v-if="chapter.courseDocuments"
+				               >
+				                  <v-expansion-panel
+				                    v-for="(courseDocument, documentIndex) in chapter.courseDocuments"
+				                    :key="documentIndex"
+				                    v-if="courseDocument.preview"
+				                  >
+				                    <v-expansion-panel-header>
+				                      <h3>{{ courseDocument.name }} </h3>
+				                    </v-expansion-panel-header>
+				                    <v-expansion-panel-content>
+
+				                      <div>
+				                         <p >
+				                         Mô tả: {{ courseDocument.description }}
+				                        </p>
+				                      </div>
+
+				                      <div v-if="courseDocument.type === 0">
+				                        <p >
+				                         Tài liệu: <a  v-if="courseDocument.link" target="_blank"  :href="courseDocument.link"> {{ courseDocument.link }} </a>
+				                        </p>
+				                      </div>
+				                      <div v-else-if="courseDocument.type === 1">
+				                        Video: 
+
+				                        <video width="100%" height="350" controls>
+				                          <source :src="courseDocument.link" type="video/mp4">
+				                        Your browser does not support the video tag.
+				                        </video>
+				                      </div>
+
+				                    </v-expansion-panel-content>  
+				                  </v-expansion-panel>
+				                </v-expansion-panels>
+				              </v-card-text>
+            				</v-col>
+            			</v-card>
+            		</v-tab-item>
+				          		
 				    </v-tabs-items>
 				</v-card>
 			</v-col> 
@@ -271,7 +330,7 @@ export default {
 			show: false,
 	        tab: 0,
 	        tabs: [
-	          'Thông tin chi tiết', 'Lượt đánh giá', 
+	          'Thông tin chi tiết', 'Lượt đánh giá', 'Tài liệu' 
 	        ],
 	         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
 	        course: {},

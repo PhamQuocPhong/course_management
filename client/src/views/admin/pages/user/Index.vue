@@ -39,7 +39,8 @@
                         <th class="text-center">Họ tên</th>
                         <th class="text-center">Email</th>
                         <th class="text-center">Vai trò</th>
-                        <th class="text-center">Tình trạng</th>
+                        <th class="text-center">Active Email</th>
+                        <th class="text-center">Bị khóa</th>
               <!--           <th class="text-center">Hành động</th> -->
                       </tr>
                     </thead>
@@ -69,6 +70,14 @@
                             <v-switch
                               v-model="item.active"
                               @change="handleStatus(item)"
+                            >
+                            </v-switch>
+                         </td>
+
+                         <td class="text-center">
+                            <v-switch
+                              v-model="item.block"
+                              @change="handleBlock(item)"
                             >
                             </v-switch>
                          </td>
@@ -108,6 +117,14 @@
                             <v-switch
                               v-model="item.active"
                               @change="handleStatus(item)"
+                            >
+                            </v-switch>
+                         </li>
+
+                         <li>
+                            <v-switch
+                              v-model="item.block"
+                              @change="handleBlock(item)"
                             >
                             </v-switch>
                          </li>
@@ -269,6 +286,12 @@ export default {
     },
 
     handleStatus(user)
+    {
+      var payload = user;
+      this.$store.dispatch("users/update", payload);
+    },
+
+    handleBlock(user)
     {
       var payload = user;
       this.$store.dispatch("users/update", payload);
