@@ -261,11 +261,33 @@ let refreshToken = async (req, res) => {
   }
 }
 
+let logOut = async (req, res) => {
+  try
+  {
+    const refreshTokenFromClient = req.body.refreshToken;
+    const decoded = await jwtHelper.verifyToken(refreshTokenFromClient, refreshTokenSecret);
+
+    var findUser = await user.findOne({where: {id: decoded.userId, rfToken: refreshTokenFromClient}})
+    findUser.rfToken = null;
+    await findUser.save();
+    return res.status(200).json({message: "Đăng xuất thành công"})
+
+  }
+  catch(err)
+  {
+    return res.status(500).json({
+      message: 'Lỗi hệ thống',
+    }, err)
+  }
+}
+
+
 
 module.exports = {
     register,
     verifyOTP,
     login,
     adminLogin,
-    refreshToken
+    refreshToken,
+    logOut
 }
