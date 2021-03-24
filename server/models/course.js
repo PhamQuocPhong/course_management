@@ -30,14 +30,17 @@ const Course = db.define('course', {
   studentTotal: {
     type: Sequelize.INTEGER,
     allowNull: true,
+    defaultValue: 0
   },
   watchTotal: {
     type: Sequelize.INTEGER,
     allowNull: true,
+    defaultValue: 0
   },
   active: {
     type: Sequelize.BOOLEAN,
-    allowNull: false,
+    allowNull: true,
+    defaultValue: true
   },
   status: {
     type: Sequelize.BOOLEAN,

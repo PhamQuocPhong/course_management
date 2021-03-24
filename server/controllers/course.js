@@ -483,10 +483,6 @@ let createCourse = async (req, res) => {
     console.log("data");
     try
     {
-
-        data.active = false;
-        data.status = true;
-
         var course = await courseModel.create(data);
         await courseTeacherModel.create({
             courseId: course.id,
