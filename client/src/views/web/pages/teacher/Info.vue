@@ -139,6 +139,10 @@ export default {
       this.$store.dispatch("components/progressLoading", { option: "show" });
       const res = await UserService.update(userId, this.userInfo)
       if(res.status === 200){
+
+         CookieService.set('userInfo', res.data.data);
+        this.userInfo = res.data.data;
+
         toastr.success(
           "<p> Cập nhật thành công <p>",
           "Success",
@@ -147,7 +151,7 @@ export default {
         this.edit = false;
         this.$store.dispatch("components/progressLoading", { option: "hide" });
       }else{
-        toastr.error("Internal Server Error", "Error", {
+        toastr.error(res.data.message, {
               timeOut: 1000
           });
         this.$store.dispatch("components/progressLoading", { option: "hide" });
