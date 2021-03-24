@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
 const jwtHelper = require('../helpers/jwt.helper');
+const user = require('../models/user');
 
 const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "1h"
 const refreshTokenLife = process.env.REFRESH_TOKEN_LIFE || "365d"
@@ -233,10 +234,38 @@ let adminLogin = async (req, res) => {
 	}
 }
 
+let refreshToken = async (req, res) => {
+
+  const refreshTokenFromClient = req.body.refreshToken;
+  const decoded = await jwtHelper.verifyToken(refreshTokenFromClient, refreshTokenSecret);
+
+  var findUser = await user.findOne({
+    where: {id: decoded.userId, rfToken: refreshTokenFromClient}
+  })
+  
+  if (refreshTokenFromClient && findUser) {
+    try {
+      const accessToken = await jwtHelper.generateToken(decoded.userId, accessTokenSecret, accessTokenLife)
+
+      return res.status(200).json({accessToken})
+    } catch (error) {
+
+      res.status(403).json({
+        message: 'Invalid refresh token.',
+      })
+    }
+  } else {
+    return res.status(403).send({
+      message: 'No token provided.',
+    })
+  }
+}
+
 
 module.exports = {
     register,
     verifyOTP,
     login,
-    adminLogin
+    adminLogin,
+    refreshToken
 }

@@ -76,12 +76,12 @@ app.use('/api/teacher/profile/', auth, profileRouter);
 
 
 //Connect database
-// db.sync().then(function() {
-//      // { force: true }
-//   	console.log(`Server is listening on port ${port}`)
-// }).catch(function(err) {
-//   console.log(err)
-//   process.exit(1)
-// })
+ /*db.sync().then(function() {
+      // { force: true }
+   	console.log(`Server is listening on port ${port}`)
+ }).catch(function(err) {
+   console.log(err)
+  process.exit(1)
+})*/
 
 

@@ -11,6 +11,6 @@ router.post('/register',validate(register_schema), authController.register);
 router.post('/verify', validate(verify_schema), authController.verifyOTP);
 router.post('/login', validate(login_schema), authController.login);
 router.post('/admin/login', authController.adminLogin);
-
+router.post('/refresh_token', authController.refreshToken);
 
 module.exports = router

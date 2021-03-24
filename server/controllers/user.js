@@ -128,14 +128,14 @@ let remove = async (req, res) => {
 
 
 let changeInfo = async (req, res) => {
-    const {name, email} = req.body;
+    const {name, email, info} = req.body;
     var decoded = req.decoded;
     var userId = decoded.userId;
 
     try
     {
         await userModel.update(
-            {name, email},
+            {name, email, info},
             {where: {id: userId}}
         );
         return res.status(200).json({message: 'Success!'});
