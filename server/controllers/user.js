@@ -230,7 +230,12 @@ let getWatchList = async (req, res) => {
             },
             include: [
                 {
-                model: courseModel
+                 model: courseModel,
+                include: {
+                      
+                        model: rateTotalModel
+          
+                    }
                 }
             ]
         })
@@ -255,8 +260,13 @@ let getCourseJoin = async (req, res) => {
             },
             include: [
                 {
-                model: courseModel
-                }
+                    model: courseModel,
+                    include: {
+                      
+                        model: rateTotalModel
+          
+                    }
+                },
             ]
         })
 
@@ -281,7 +291,10 @@ let getTeachList = async (req, res) => {
             },
              include: [
                 {
-                model: courseModel
+                    model: courseModel,
+                    include: {
+                        model: rateTotalModel
+                    }
                 }
             ]
         })

@@ -167,7 +167,7 @@ let login = async (req, res) => {
 
 	try {
     const findUser = await userModel.findOne({
-      attributes: ['id','name', 'email', 'password', 'roleId'],
+      attributes: ['id','name', 'email', 'password', 'roleId', 'info'],
       where: {
         email: email,
         active: true

@@ -51,11 +51,11 @@
                       >
                     </v-col>
                     <v-col cols="8">
-                      <v-text-field
+                      <v-textarea
                         :disabled="!edit"
                         class="font-weight-bold"
                         v-model="userInfo.info"
-                      ></v-text-field>
+                      ></v-textarea>
                     </v-col>
                   </v-row>
 

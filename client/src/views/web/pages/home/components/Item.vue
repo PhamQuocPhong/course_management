@@ -28,7 +28,7 @@
               class="mx-0"
             >
               <v-rating
-                :value="getItem.rating"
+                :value="getItem.rateTotal.total"
                 color="amber"
                 dense
                 half-increments

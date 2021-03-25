@@ -268,6 +268,7 @@
 						<v-divider></v-divider>
 						<v-card-title>Họ tên: <router-link class="pl-2" :to="`/users/${item.user.id}`" >{{ item.user.name }}</router-link></v-card-title>
 						<v-card-text><b>Email:</b> {{ item.user.email }}</v-card-text>
+						<v-card-text><b>Info:</b> {{ item.user.info }}</v-card-text>
 					</div>
 
 	
