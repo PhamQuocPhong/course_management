@@ -45,7 +45,7 @@
                         <v-card-text>
                          
                           <v-rating
-                            :value="item.course.rating"
+                            :value="item.course.rateTotal.total"
                             color="amber"
                             dense
                             half-increments

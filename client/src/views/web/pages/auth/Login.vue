@@ -182,6 +182,7 @@ export default {
             CookieServices.set("refreshToken", res.data.refreshToken, 60 * 60 * 24);
             CookieServices.set("accessToken", res.data.accessToken);
             CookieServices.set("userInfo", res.data.findUser);
+            console.log(res.data.findUser);
 
 
             this.$router.push('/');
